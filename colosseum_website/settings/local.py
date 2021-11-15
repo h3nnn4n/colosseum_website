@@ -1,7 +1,7 @@
 from .base import *
 
 
-ENVIROMENT = "local"
+ENVIROMENT = "LOCAL"
 
 
 DEBUG = True

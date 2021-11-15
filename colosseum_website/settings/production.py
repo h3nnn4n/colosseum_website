@@ -3,7 +3,7 @@
 from .base import *
 
 
-ENVIROMENT = "production"
+ENVIROMENT = "PRODUCTION"
 
 ALLOWED_HOSTS = ["*"]
 
