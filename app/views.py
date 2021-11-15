@@ -1,3 +1,6 @@
+import logging
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
@@ -9,6 +12,10 @@ from rest_framework import routers, viewsets
 from app import models, serializers
 
 from .forms import NewUserForm
+
+
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("APP")
 
 
 def register_request(request):
@@ -30,6 +37,10 @@ def register_request(request):
 
 def index(request):
     context = {}
+    logger.debug("debug")
+    logger.info("info")
+    logger.warning("warning")
+    logger.error("error")
     return render(request, "home.html", context)
 
 
