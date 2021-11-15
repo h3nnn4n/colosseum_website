@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "colosseum_website"
+version = "0.1.0"
+description = "Website for colosseum"
+authors = ["h3nnn4n <colosseum@h3nnn4n.me>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^3.2.9"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
