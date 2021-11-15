@@ -75,18 +75,7 @@ WSGI_APPLICATION = "colosseum_website.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "djongo",
-        "NAME": "colosseum",
-        "CLIENT": {
-            "host": "localhost",
-            "port": 27017,
-            # "username": "",
-            # "password": "",
-            # "authSource": "",
-            # "ssl": True,
-        },
-    }
+    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
 }
 
 
