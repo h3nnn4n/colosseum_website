@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 
@@ -24,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-y5lc8xiuknt^u=x8ugmo9!5xwoug!m9^b1-)+mx08i&e9jfj$x"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -77,11 +78,11 @@ WSGI_APPLICATION = "colosseum_website.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "colosseum",
-        "USER": "colosseum",
-        "PASSWORD": "potato",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": os.environ.get("DB_NAME", "colosseum"),
+        "USER": os.environ.get("DB_USER", "postres"),
+        "PASSWORD": os.environ.get("DB_PASSWD", "postres"),
+        "HOST": os.environ.get("DB_HOST", "localhost"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
 
