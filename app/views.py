@@ -37,10 +37,6 @@ def register_request(request):
 
 def index(request):
     context = {}
-    logger.debug("debug")
-    logger.info("info")
-    logger.warning("warning")
-    logger.error("error")
     return render(request, "home.html", context)
 
 
