@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn colosseum_website.wsgi --log-file= -
+web: gunicorn colosseum_website.wsgi --log-file=-
