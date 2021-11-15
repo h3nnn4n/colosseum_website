@@ -14,4 +14,5 @@ urlpatterns = [
     path(
         "", RedirectView.as_view(url="home/", permanent=True), name="redirect_to_home"
     ),
+    path("accounts/register/", views.register_request, name="register"),
 ]

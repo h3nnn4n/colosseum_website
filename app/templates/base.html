@@ -6,6 +6,12 @@
 </head>
 <body>
   <main>
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+    {% bootstrap_messages %}
+    {% load crispy_forms_tags %}
+
     {% block content %}
     {% endblock %}
   </main>
