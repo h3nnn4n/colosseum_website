@@ -1,4 +1,4 @@
-import django_heroku
+# import django_heroku
 
 from .base import *
 
@@ -9,4 +9,4 @@ ALLOWED_HOSTS = ["*"]
 
 DEBUG = False
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
