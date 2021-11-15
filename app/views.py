@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import include, path
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers, viewsets
 
-from app.serializers import UserSerializer
+from app import models, serializers
 
 from .forms import NewUserForm
 
@@ -35,4 +35,24 @@ def index(request):
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = serializers.UserSerializer
+
+
+class AgentViewSet(viewsets.ModelViewSet):
+    queryset = models.Agent.objects.all()
+    serializer_class = serializers.AgentSerializer
+
+
+class GameViewSet(viewsets.ModelViewSet):
+    queryset = models.Game.objects.all()
+    serializer_class = serializers.GameSerializer
+
+
+class MatchViewSet(viewsets.ModelViewSet):
+    queryset = models.Match.objects.all()
+    serializer_class = serializers.MatchSerializer
+
+
+class TournamentViewSet(viewsets.ModelViewSet):
+    queryset = models.Tournament.objects.all()
+    serializer_class = serializers.TournamentSerializer

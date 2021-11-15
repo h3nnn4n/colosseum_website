@@ -7,6 +7,10 @@ from . import views
 
 router = DefaultRouter()
 router.register(r"users", views.UserViewSet)
+router.register(r"agents", views.AgentViewSet)
+router.register(r"games", views.GameViewSet)
+router.register(r"matches", views.MatchViewSet)
+router.register(r"tournaments", views.TournamentViewSet)
 
 urlpatterns = [
     path("home/", views.index, name="home"),
