@@ -33,6 +33,9 @@ def index(request):
     return render(request, "home.html", context)
 
 
+# API Views
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
