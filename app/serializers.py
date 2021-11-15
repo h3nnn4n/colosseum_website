@@ -8,7 +8,7 @@ from app import models
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ["url", "username", "created_at", "updated_at"]
+        fields = ["url", "username"]
 
 
 class AgentSerializer(serializers.HyperlinkedModelSerializer):
