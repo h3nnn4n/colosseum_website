@@ -16,7 +16,7 @@ class BaseModel(models.Model):
 class Agent(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    files = models.FileField(null=True)
+    file_path = models.CharField(max_length=255, unique=True, null=True)
 
     class Meta:
         indexes = [models.Index(fields=["name"]), models.Index(fields=["owner"])]
