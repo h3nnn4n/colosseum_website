@@ -17,13 +17,18 @@ class Agent(BaseModel):
     name = models.CharField(max_length=64)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    class Meta:
+        indexes = [models.Index(fields=["name"]), models.Index(fields=["owner"])]
+
 
 class Game(BaseModel):
     name = models.CharField(max_length=64)
 
+    class Meta:
+        indexes = [models.Index(fields=["name"])]
+
 
 class Match(BaseModel):
-    name = models.CharField(max_length=64)
     participants = models.ManyToManyField(Agent)
     ran_at = models.DateTimeField(auto_now=True)
     ran = models.BooleanField(default=False)
@@ -31,8 +36,11 @@ class Match(BaseModel):
 
 class Tournament(BaseModel):
     name = models.CharField(max_length=64)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game = models.ForeignKey("Game", on_delete=models.CASCADE)
     participants = models.ManyToManyField(Agent)
     matches = models.ManyToManyField(Match)
     started_at = models.DateTimeField()
     finished_at = models.DateTimeField()
+
+    class Meta:
+        indexes = [models.Index(fields=["name"]), models.Index(fields=["game"])]
