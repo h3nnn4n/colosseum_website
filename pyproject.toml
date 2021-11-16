@@ -18,6 +18,8 @@ djangorestframework = "^3.12.4"
 django-crispy-forms = "^1.13.0"
 django-bootstrap4 = "^21.1"
 python-dotenv = "^0.19.2"
+django-storages = "^1.12.3"
+boto3 = "^1.20.6"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.29.0"
