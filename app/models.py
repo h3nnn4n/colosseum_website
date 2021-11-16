@@ -14,7 +14,7 @@ class BaseModel(models.Model):
 
 
 class Agent(BaseModel):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
@@ -22,7 +22,7 @@ class Agent(BaseModel):
 
 
 class Game(BaseModel):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
 
     class Meta:
         indexes = [models.Index(fields=["name"])]
@@ -35,7 +35,7 @@ class Match(BaseModel):
 
 
 class Tournament(BaseModel):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
     participants = models.ManyToManyField(Agent)
     matches = models.ManyToManyField(Match)
