@@ -147,9 +147,8 @@ LOGGING = {
 
 SHELL_PLUS = "ipython"
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_STORAGE_BUCKET_NAME = "colosseum-agents-dev"
-AWS_S3_REGION_NAME = "eu-east-1"
+AWS_REGION = "eu-east-1"
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
