@@ -8,31 +8,42 @@ from app import models
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ["url", "username"]
+        fields = ["id", "url", "username"]
 
 
 class AgentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Agent
-        fields = ["name", "owner", "created_at", "updated_at"]
+        fields = ["id", "url", "name", "owner", "created_at", "updated_at"]
 
 
 class GameSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Game
-        fields = ["name", "created_at", "updated_at"]
+        fields = ["id", "url", "name", "created_at", "updated_at"]
 
 
 class MatchSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Match
-        fields = ["name", "participants", "ran", "ran_at", "created_at", "updated_at"]
+        fields = [
+            "id",
+            "url",
+            "name",
+            "participants",
+            "ran",
+            "ran_at",
+            "created_at",
+            "updated_at",
+        ]
 
 
 class TournamentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Tournament
         fields = [
+            "id",
+            "url",
             "name",
             "game",
             "participants",
