@@ -5,30 +5,29 @@ from rest_framework import routers, serializers, viewsets
 from app import models
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "url", "username"]
+        fields = ["id", "username"]
 
 
-class AgentSerializer(serializers.HyperlinkedModelSerializer):
+class AgentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Agent
-        fields = ["id", "url", "name", "owner", "created_at", "updated_at"]
+        fields = ["id", "name", "owner", "created_at", "updated_at"]
 
 
-class GameSerializer(serializers.HyperlinkedModelSerializer):
+class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Game
-        fields = ["id", "url", "name", "created_at", "updated_at"]
+        fields = ["id", "name", "created_at", "updated_at"]
 
 
-class MatchSerializer(serializers.HyperlinkedModelSerializer):
+class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Match
         fields = [
             "id",
-            "url",
             "name",
             "participants",
             "ran",
@@ -38,12 +37,11 @@ class MatchSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class TournamentSerializer(serializers.HyperlinkedModelSerializer):
+class TournamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Tournament
         fields = [
             "id",
-            "url",
             "name",
             "game",
             "participants",
