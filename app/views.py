@@ -8,6 +8,9 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import include, path
 from rest_framework import routers, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from app import models, serializers
 
@@ -51,6 +54,15 @@ class UserViewSet(viewsets.ModelViewSet):
 class AgentViewSet(viewsets.ModelViewSet):
     queryset = models.Agent.objects.all()
     serializer_class = serializers.AgentSerializer
+
+    @action(detail=True, methods=["get"])
+    def upload_url(self, request, pk=None):
+        from .services.s3 import generate_presigned_post
+
+        agent = self.get_object()
+        file_path = f"{agent.owner.username}/{agent.name}/agent"
+
+        return Response(dict(url=generate_presigned_post(file_path)))
 
 
 class GameViewSet(viewsets.ModelViewSet):
