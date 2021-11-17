@@ -13,6 +13,7 @@ router.register(r"matches", views.MatchViewSet)
 router.register(r"tournaments", views.TournamentViewSet)
 
 urlpatterns = [
+    path("agent/upload/", views.upload, name="agent_upload"),
     path("home/", views.index, name="home"),
     path("api/", include(router.urls)),
     path(

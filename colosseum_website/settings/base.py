@@ -147,6 +147,7 @@ LOGGING = {
 
 SHELL_PLUS = "ipython"
 
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_STORAGE_BUCKET_NAME = "colosseum-agents-dev"
 AWS_REGION = "eu-east-1"
 

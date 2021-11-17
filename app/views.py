@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import include, path
 from rest_framework import routers, viewsets
@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 
 from app import models, serializers
 
-from .forms import NewUserForm
+from .forms import NewAgentForm, NewUserForm
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -41,6 +41,18 @@ def register_request(request):
 def index(request):
     context = {}
     return render(request, "home.html", context)
+
+
+# FIXME: This is obviously temporary
+def upload(request):
+    if request.method == "POST":
+        form = NewAgentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/success/url/")
+    else:
+        form = NewAgentForm()
+    return render(request, "new_agent.html", {"form": form})
 
 
 # API Views

@@ -3,6 +3,8 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import models
 
+from . import utils
+
 
 class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -17,6 +19,7 @@ class Agent(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     file_path = models.CharField(max_length=255, unique=True, null=True)
+    file = models.FileField(null=True, upload_to=utils.agent_filepath)
 
     class Meta:
         indexes = [models.Index(fields=["name"]), models.Index(fields=["owner"])]
