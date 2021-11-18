@@ -47,10 +47,10 @@ def index(request):
 # FIXME: This is obviously temporary
 def upload(request):
     if request.method == "POST":
-        form = NewAgentForm(request.POST, request.FILES)
+        form = NewAgentForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect("/success/url/")
+            return HttpResponseRedirect("/agent/upload_success/")
     else:
         form = NewAgentForm()
     return render(request, "new_agent.html", {"form": form})
