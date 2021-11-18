@@ -5,6 +5,22 @@
 {% block content %}
 {% if user.is_authenticated %}
   Hi {{ user.username }}!
+
+  <table>
+    <thead>
+      <td> ID </td>
+      <td> Name </td>
+    </thead>
+    <tbody>
+      {% for agent in agents %}
+      <tr>
+        <td>{{ agent.id }}</td>
+        <td>{{ agent.name }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
   <p><a href="{% url 'logout' %}">Log Out</a></p>
 {% else %}
   <p>You are not logged in</p>

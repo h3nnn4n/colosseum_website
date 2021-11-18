@@ -39,7 +39,8 @@ def register_request(request):
 
 
 def index(request):
-    context = {}
+    agents = models.Agent.objects.filter(owner=request.user)
+    context = {"agents": agents}
     return render(request, "home.html", context)
 
 
