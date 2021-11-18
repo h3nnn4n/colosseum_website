@@ -10,12 +10,20 @@
     <thead>
       <td> ID </td>
       <td> Name </td>
+      <td> Download </td>
     </thead>
     <tbody>
       {% for agent in agents %}
       <tr>
         <td>{{ agent.id }}</td>
         <td>{{ agent.name }}</td>
+        <td>
+          {% if agent.download_url %}
+            <a href={{ agent.download_url }}>Download</a>
+          {% else %}
+            -
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>

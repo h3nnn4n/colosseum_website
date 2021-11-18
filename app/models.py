@@ -24,6 +24,12 @@ class Agent(BaseModel):
     class Meta:
         indexes = [models.Index(fields=["name"]), models.Index(fields=["owner"])]
 
+    @property
+    def download_url(self):
+        if self.file:
+            return self.file.url
+        return None
+
 
 class Game(BaseModel):
     name = models.CharField(max_length=64, unique=True)
