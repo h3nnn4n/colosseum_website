@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Agent
-        fields = ["id", "name", "owner", "created_at", "updated_at"]
+        fields = ["id", "name", "file", "owner", "created_at", "updated_at"]
 
 
 class GameSerializer(serializers.ModelSerializer):
