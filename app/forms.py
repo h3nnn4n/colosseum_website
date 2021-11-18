@@ -20,7 +20,7 @@ class NewUserForm(UserCreationForm):
         return user
 
 
-class NewAgentForm(forms.Form):
+class NewAgentForm(forms.ModelForm):
     name = forms.CharField(max_length=50)
     file = forms.FileField()
 
