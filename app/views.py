@@ -56,6 +56,10 @@ def upload(request):
     return render(request, "new_agent.html", {"form": form})
 
 
+def upload_success(request):
+    return render(request, "new_agent_success.html", {})
+
+
 # API Views
 
 
