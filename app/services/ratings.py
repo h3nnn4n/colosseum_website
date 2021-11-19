@@ -1,11 +1,38 @@
+from django.db import transaction
+from django.shortcuts import get_object_or_404
 from simple_elo import compute_updated_ratings
+
+from .. import models
+
+
+def update_record_ratings(player1_id, player2_id, result):
+    """
+    Takes two player ids and a match result and update the player ratings
+    accordingly.
+    """
+
+    # Flip around so the first player is always the winner
+    if result == 0:
+        return update_ratings(player2_id, player1_id, 1)
+
+    with transaction.atomic():
+        player1 = get_object_or_404(models.Agent, pk=player1_id)
+        player2 = get_object_or_404(models.Agent, pk=player2_id)
+        update_ratings(player1, player2, result)
+        player1.save()
+        player2.save()
 
 
 def update_ratings(player1, player2, result):
     """
     Takes two player and a match result and update the player ratings
-    accordingly. The first player is always the winner (except for draws).
+    accordingly.
     """
+
+    # Flip around so the first player is always the winner
+    if result == 0:
+        return update_ratings(player2, player1, 1)
+
     elos = {player1.id: player1.elo, player2.id: player2.elo}
     match_result = {(player1.id, player2.id): result}
     updated_elos = compute_updated_ratings(elos, match_result)
