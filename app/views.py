@@ -64,9 +64,11 @@ def register_request(request):
 
 
 def index(request):
-    agents = models.Agent.objects.filter(owner=request.user)
-    context = {"agents": agents}
-    return render(request, "home.html", context)
+    return render(request, "home.html")
+
+
+def wip(request):
+    return render(request, "wip.html")
 
 
 # FIXME: This is obviously temporary
