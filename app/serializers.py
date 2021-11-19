@@ -24,6 +24,7 @@ class AgentSerializer(serializers.ModelSerializer):
             "draws",
             "elo",
             "owner",
+            "games_played",
             "created_at",
             "updated_at",
         ]
@@ -40,6 +41,7 @@ class MatchSerializer(serializers.ModelSerializer):
         model = models.Match
         fields = [
             "id",
+            "participants",
             "player1",
             "player2",
             "result",

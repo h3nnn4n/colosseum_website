@@ -31,6 +31,10 @@ class Agent(BaseModel):
         indexes = [models.Index(fields=["name"]), models.Index(fields=["owner"])]
 
     @property
+    def games_played(self):
+        return self.matches.filter(ran=True).count()
+
+    @property
     def download_url(self):
         if self.file:
             return self.file.url
@@ -45,6 +49,7 @@ class Game(BaseModel):
 
 
 class Match(BaseModel):
+    participants = models.ManyToManyField(Agent, related_name="matches")
     player1 = models.ForeignKey(
         Agent, null=True, related_name="+", on_delete=models.CASCADE
     )
