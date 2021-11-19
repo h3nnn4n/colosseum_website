@@ -117,7 +117,7 @@ class GameViewSet(viewsets.ModelViewSet):
 
 
 class MatchViewSet(viewsets.ModelViewSet):
-    queryset = models.Match.objects.all()
+    queryset = models.Match.objects.all()[0:25]
     serializer_class = serializers.MatchSerializer
 
     def create(self, request, *args, **kwargs):
