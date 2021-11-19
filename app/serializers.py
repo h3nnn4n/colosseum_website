@@ -53,3 +53,12 @@ class TournamentSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+    def create(self, validated_data):
+        participants = validated_data.pop("participants")
+        tournament = models.Tournament.objects.create(**validated_data)
+
+        tournament.participants.add(*participants)
+        tournament.save()
+
+        return tournament
