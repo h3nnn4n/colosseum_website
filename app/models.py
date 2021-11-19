@@ -31,6 +31,15 @@ class Agent(BaseModel):
         return None
 
 
+class AgentRating(BaseModel):
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
+    wins = models.IntegerField(default=0)
+    loses = models.IntegerField(default=0)
+    draws = models.IntegerField(default=0)
+    score = models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    elo = models.DecimalField(default=1500, decimal_places=2, max_digits=10)
+
+
 class Game(BaseModel):
     name = models.CharField(max_length=64, unique=True)
 

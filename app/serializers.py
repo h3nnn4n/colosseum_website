@@ -11,10 +11,27 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "username"]
 
 
-class AgentSerializer(serializers.ModelSerializer):
+class AgentRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Agent
-        fields = ["id", "name", "file", "owner", "created_at", "updated_at"]
+        fields = [
+            "id",
+            "agent",
+            "wins",
+            "loses",
+            "draws",
+            "elo",
+            "created_at",
+            "updated_at",
+        ]
+
+
+class AgentSerializer(serializers.ModelSerializer):
+    ratings = AgentRatingSerializer(read_only=True)
+
+    class Meta:
+        model = models.Agent
+        fields = ["id", "name", "file", "ratings", "owner", "created_at", "updated_at"]
 
 
 class GameSerializer(serializers.ModelSerializer):
