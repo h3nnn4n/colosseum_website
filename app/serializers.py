@@ -38,6 +38,9 @@ class MatchSerializer(serializers.ModelSerializer):
 
 
 class TournamentSerializer(serializers.ModelSerializer):
+    started_at = serializers.DateTimeField(required=False)
+    finished_at = serializers.DateTimeField(required=False)
+
     class Meta:
         model = models.Tournament
         fields = [
@@ -45,7 +48,6 @@ class TournamentSerializer(serializers.ModelSerializer):
             "name",
             "game",
             "participants",
-            "matches",
             "started_at",
             "finished_at",
             "created_at",

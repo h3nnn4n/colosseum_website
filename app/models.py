@@ -49,8 +49,8 @@ class Tournament(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
     participants = models.ManyToManyField(Agent)
-    started_at = models.DateTimeField()
-    finished_at = models.DateTimeField()
+    started_at = models.DateTimeField(null=True)
+    finished_at = models.DateTimeField(null=True)
 
     class Meta:
         indexes = [models.Index(fields=["name"]), models.Index(fields=["game"])]
