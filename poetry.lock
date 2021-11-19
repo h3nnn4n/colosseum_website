@@ -392,6 +392,14 @@ botocore = ">=1.12.36,<2.0a.0"
 crt = ["botocore[crt] (>=1.20.29,<2.0a.0)"]
 
 [[package]]
+name = "simple-elo"
+version = "0.1.1"
+description = "Library implementing simple functions to implement the Elo system"
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -469,7 +477,7 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.0"
-content-hash = "69190daef8a40ef5457c760b49b0cc3baa22f9917f6f8779fddf5bfd9e72dacb"
+content-hash = "85226544a490542a2f13492f297c1e3750af2fa2144332532dc97ddef02b16c4"
 
 [metadata.files]
 appnope = [
@@ -611,6 +619,10 @@ pytz = [
 s3transfer = [
     {file = "s3transfer-0.5.0-py3-none-any.whl", hash = "sha256:9c1dc369814391a6bda20ebbf4b70a0f34630592c9aa520856bf384916af2803"},
     {file = "s3transfer-0.5.0.tar.gz", hash = "sha256:50ed823e1dc5868ad40c8dc92072f757aa0e653a192845c94a3b676f4a62da4c"},
+]
+simple-elo = [
+    {file = "simple-elo-0.1.1.tar.gz", hash = "sha256:817f60a5efafd930746f03fec04be01243a093427f405d690145363bc021c58b"},
+    {file = "simple_elo-0.1.1-py3-none-any.whl", hash = "sha256:fee8da75eb2a741fcea3c1c8fee71be731c52575236720bc1c248c5f2347c350"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},

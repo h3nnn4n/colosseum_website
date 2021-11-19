@@ -1,11 +1,13 @@
+import json
 import logging
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+from django.db import transaction
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import include, path
 from rest_framework import routers, viewsets
 from rest_framework.decorators import action
@@ -15,6 +17,7 @@ from rest_framework.views import APIView
 from app import models, serializers
 
 from .forms import NewAgentForm, NewUserForm
+from .services.ratings import update_ratings
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -80,6 +83,48 @@ class AgentViewSet(viewsets.ModelViewSet):
         file_path = f"{agent.owner.username}/{agent.name}/agent"
 
         return Response(dict(url=generate_presigned_post(file_path)))
+
+    @action(detail=True, methods=["post"])
+    def win(self, request, pk=None):
+        data = json.loads(request.body)
+        versus = data.get("versus")
+
+        with transaction.atomic():
+            agent = get_object_or_404(models.Agent, pk=pk)
+            versus = get_object_or_404(models.Agent, pk=versus)
+            update_ratings(agent, versus, 1)
+            agent.save()
+            versus.save()
+
+        return Response({})
+
+    @action(detail=True, methods=["post"])
+    def lose(self, request, pk=None):
+        data = json.loads(request.body)
+        versus = data.get("versus")
+
+        with transaction.atomic():
+            agent = get_object_or_404(models.Agent, pk=pk)
+            versus = get_object_or_404(models.Agent, pk=versus)
+            update_ratings(versus, agent, 1)
+            agent.save()
+            versus.save()
+
+        return Response({})
+
+    @action(detail=True, methods=["post"])
+    def draw(self, request, pk=None):
+        data = json.loads(request.body)
+        versus = data.get("versus")
+
+        with transaction.atomic():
+            agent = get_object_or_404(models.Agent, pk=pk)
+            versus = get_object_or_404(models.Agent, pk=versus)
+            update_ratings(agent, versus, 0.5)
+            agent.save()
+            versus.save()
+
+        return Response({})
 
 
 class GameViewSet(viewsets.ModelViewSet):
