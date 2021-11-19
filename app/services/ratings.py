@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from simple_elo import compute_updated_ratings
@@ -46,10 +48,10 @@ def update_ratings(player1, player2, result):
         player1.score += 1
         player2.loses += 1
     elif result == 0.5:
-        player1.wins += 0.5
-        player1.score += 0.5
-        player2.wins += 0.5
-        player2.score += 0.5
+        player1.wins += Decimal("0.5")
+        player1.score += Decimal("0.5")
+        player2.wins += Decimal("0.5")
+        player2.score += Decimal("0.5")
 
     player1.elo = updated_elos[player1_id]
     player2.elo = updated_elos[player2_id]
