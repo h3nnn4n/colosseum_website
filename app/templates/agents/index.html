@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Agents{% endblock %}
+
+{% block content %}
+<h1> Agents </h1>
+
+<div>
+  <table>
+    <thead>
+      <td> Name </td>
+      <td> Elo Rating </td>
+      <td> Wins </td>
+      <td> Loses </td>
+      <td> Draws </td>
+      <td> Score </td>
+      <td> Games </td>
+      <td> Files </td>
+    </thead>
+    <tbody>
+      {% for agent in agents %}
+      <tr>
+        <td>
+          <a href={% url 'agent_edit' agent.id %}>
+            {{ agent.name }}
+          </a>
+        </td>
+
+        <td>{{ agent.elo }}</td>
+        <td>{{ agent.wins }}</td>
+        <td>{{ agent.loses }}</td>
+        <td>{{ agent.draws }}</td>
+        <td>{{ agent.score }}</td>
+        <td>{{ - }}</td>
+
+        <td>
+          {% if agent.download_url %}
+            <a href={{ agent.download_url }}>Download</a>
+          {% else %}
+            -
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p>
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'agents' %}">Agents</a>
+    <a href="{% url 'agent_upload' %}">New Agent</a>
+  </p>
+<div>
+
+{% endblock %}

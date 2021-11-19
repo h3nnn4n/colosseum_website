@@ -14,6 +14,9 @@ router.register(r"tournaments", views.TournamentViewSet)
 
 urlpatterns = [
     # FIXME: This is obviously temporary
+    path("agents/", views.AgentListView.as_view(), name="agents"),
+    path("agents/<str:pk>/", views.AgentDetailView.as_view(), name="agent_detail"),
+    path("agents/<str:pk>/edit/", views.AgentUpdateView.as_view(), name="agent_edit"),
     path("agent/upload/", views.upload, name="agent_upload"),
     path("agent/upload_success/", views.upload_success, name="agent_upload_success"),
     path("home/", views.index, name="home"),

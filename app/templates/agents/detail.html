@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<h1>{{ object.Name }}</h1>
+<p>{{ object.id }}</p>
+<p>Wins: {{ object.wins }}</p>
+<p>Loses: {{ object.loses }}</p>
+<p>Draws: {{ object.draws }}</p>
+<p>Score: {{ object.score }}</p>
+<p>Elo: {{ object.elo }}</p>
+<p>Created: {{ object.created_at|date }}</p>
+
+{% endblock %}

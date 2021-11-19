@@ -9,6 +9,8 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import include, path
+from django.views import generic
+from django.views.generic.edit import FormView
 from rest_framework import routers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -22,6 +24,26 @@ from .services.ratings import update_ratings, update_record_ratings
 
 logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("APP")
+
+
+class AgentListView(generic.ListView):
+    template_name = "agents/index.html"
+    context_object_name = "agents"
+
+    def get_queryset(self):
+        return models.Agent.objects.order_by("name")
+
+
+class AgentDetailView(generic.DetailView):
+    model = models.Agent
+    template_name = "agents/detail.html"
+
+
+class AgentUpdateView(generic.UpdateView):
+    model = models.Agent
+    template_name = "agents/edit.html"
+    fields = ["name", "file"]
+    success_url = "/agents/"
 
 
 def register_request(request):
