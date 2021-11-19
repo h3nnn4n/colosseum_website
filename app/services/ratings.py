@@ -13,7 +13,7 @@ def update_record_ratings(player1_id, player2_id, result):
 
     # Flip around so the first player is always the winner
     if result == 0:
-        return update_ratings(player2_id, player1_id, 1)
+        return update_record_ratings(player2_id, player1_id, 1)
 
     with transaction.atomic():
         player1 = get_object_or_404(models.Agent, pk=player1_id)

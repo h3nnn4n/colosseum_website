@@ -9,7 +9,7 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import include, path
-from rest_framework import routers, viewsets
+from rest_framework import routers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 from app import models, serializers
 
 from .forms import NewAgentForm, NewUserForm
-from .services.ratings import update_ratings
+from .services.ratings import update_ratings, update_record_ratings
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -135,6 +135,29 @@ class GameViewSet(viewsets.ModelViewSet):
 class MatchViewSet(viewsets.ModelViewSet):
     queryset = models.Match.objects.all()
     serializer_class = serializers.MatchSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        if len(data["participants"]) != 2:
+            return Response(
+                dict(error="Only 2 participants are supported at this moment"),
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+
+        self.perform_create(serializer)
+
+        update_record_ratings(
+            data["participants"][0], data["participants"][1], data["result"]
+        )
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
 
 class TournamentViewSet(viewsets.ModelViewSet):
