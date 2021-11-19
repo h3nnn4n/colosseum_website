@@ -42,13 +42,13 @@ class Match(BaseModel):
     participants = models.ManyToManyField(Agent)
     ran_at = models.DateTimeField(auto_now=True)
     ran = models.BooleanField(default=False)
+    tournament = models.ForeignKey("Tournament", null=True, on_delete=models.CASCADE)
 
 
 class Tournament(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
     participants = models.ManyToManyField(Agent)
-    matches = models.ManyToManyField(Match)
     started_at = models.DateTimeField()
     finished_at = models.DateTimeField()
 
