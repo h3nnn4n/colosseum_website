@@ -4,6 +4,8 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseRedirect
@@ -39,7 +41,7 @@ class AgentDetailView(generic.DetailView):
     template_name = "agents/detail.html"
 
 
-class AgentUpdateView(generic.UpdateView):
+class AgentUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Agent
     template_name = "agents/edit.html"
     fields = ["name", "file"]
@@ -72,6 +74,7 @@ def wip(request):
 
 
 # FIXME: This is obviously temporary
+@login_required()
 def upload(request):
     if request.method == "POST":
         form = NewAgentForm(request.POST, request.FILES, user=request.user)

@@ -34,7 +34,7 @@
         <td> - </td>
 
         <td>
-          {% if agent.download_url %}
+          {% if agent.download_url and user.is_authenticated %}
             <a href={{ agent.download_url }}>Download</a>
           {% else %}
             -
