@@ -75,15 +75,6 @@ class AgentViewSet(viewsets.ModelViewSet):
     queryset = models.Agent.objects.all()
     serializer_class = serializers.AgentSerializer
 
-    @action(detail=True, methods=["get"])
-    def upload_url(self, request, pk=None):
-        from .services.s3 import generate_presigned_post
-
-        agent = self.get_object()
-        file_path = f"{agent.owner.username}/{agent.name}/agent"
-
-        return Response(dict(url=generate_presigned_post(file_path)))
-
 
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
