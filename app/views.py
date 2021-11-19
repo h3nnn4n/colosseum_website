@@ -86,12 +86,15 @@ class MatchViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MatchSerializer
 
     def create(self, request, *args, **kwargs):
-        data = request.data
-
+        data = dict(request.data)
+        participants = data["participants"]
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        if len(data["participants"]) != 2:
+        if len(participants) != 2:
+            logging.info(
+                f"dropped match because it didnt have 2 participants! It had {len(participants)} {participants}. payload: {data}"
+            )
             return Response(
                 dict(error="Only 2 participants are supported at this moment"),
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY,
