@@ -84,48 +84,6 @@ class AgentViewSet(viewsets.ModelViewSet):
 
         return Response(dict(url=generate_presigned_post(file_path)))
 
-    @action(detail=True, methods=["post"])
-    def win(self, request, pk=None):
-        data = json.loads(request.body)
-        versus = data.get("versus")
-
-        with transaction.atomic():
-            agent = get_object_or_404(models.Agent, pk=pk)
-            versus = get_object_or_404(models.Agent, pk=versus)
-            update_ratings(agent, versus, 1)
-            agent.save()
-            versus.save()
-
-        return Response({})
-
-    @action(detail=True, methods=["post"])
-    def lose(self, request, pk=None):
-        data = json.loads(request.body)
-        versus = data.get("versus")
-
-        with transaction.atomic():
-            agent = get_object_or_404(models.Agent, pk=pk)
-            versus = get_object_or_404(models.Agent, pk=versus)
-            update_ratings(versus, agent, 1)
-            agent.save()
-            versus.save()
-
-        return Response({})
-
-    @action(detail=True, methods=["post"])
-    def draw(self, request, pk=None):
-        data = json.loads(request.body)
-        versus = data.get("versus")
-
-        with transaction.atomic():
-            agent = get_object_or_404(models.Agent, pk=pk)
-            versus = get_object_or_404(models.Agent, pk=versus)
-            update_ratings(agent, versus, 0.5)
-            agent.save()
-            versus.save()
-
-        return Response({})
-
 
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
