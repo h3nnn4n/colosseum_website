@@ -21,6 +21,12 @@ class Agent(BaseModel):
     file_path = models.CharField(max_length=255, unique=True, null=True)
     file = models.FileField(null=True, upload_to=utils.agent_filepath)
 
+    wins = models.IntegerField(default=0)
+    loses = models.IntegerField(default=0)
+    draws = models.IntegerField(default=0)
+    score = models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    elo = models.DecimalField(default=1500, decimal_places=2, max_digits=10)
+
     class Meta:
         indexes = [models.Index(fields=["name"]), models.Index(fields=["owner"])]
 
@@ -29,15 +35,6 @@ class Agent(BaseModel):
         if self.file:
             return self.file.url
         return None
-
-
-class AgentRating(BaseModel):
-    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
-    wins = models.IntegerField(default=0)
-    loses = models.IntegerField(default=0)
-    draws = models.IntegerField(default=0)
-    score = models.DecimalField(default=0, decimal_places=2, max_digits=10)
-    elo = models.DecimalField(default=1500, decimal_places=2, max_digits=10)
 
 
 class Game(BaseModel):
