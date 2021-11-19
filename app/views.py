@@ -48,6 +48,14 @@ class AgentUpdateView(LoginRequiredMixin, generic.UpdateView):
     success_url = "/agents/"
 
 
+class MatchListView(generic.ListView):
+    template_name = "matches/index.html"
+    context_object_name = "matches"
+
+    def get_queryset(self):
+        return models.Match.objects.order_by("-created_at")
+
+
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
@@ -115,7 +123,9 @@ class MatchViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = dict(request.data)
         participants = data["participants"]
-        serializer = self.get_serializer(data=request.data)
+        data["player1"] = participants[0]
+        data["player2"] = participants[1]
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
 
         if len(participants) != 2:

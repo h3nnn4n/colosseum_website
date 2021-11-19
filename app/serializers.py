@@ -40,7 +40,8 @@ class MatchSerializer(serializers.ModelSerializer):
         model = models.Match
         fields = [
             "id",
-            "participants",
+            "player1",
+            "player2",
             "result",
             "data",
             "ran",

@@ -45,12 +45,25 @@ class Game(BaseModel):
 
 
 class Match(BaseModel):
-    participants = models.ManyToManyField(Agent, related_name="matches")
+    player1 = models.ForeignKey(
+        Agent, null=True, related_name="+", on_delete=models.CASCADE
+    )
+    player2 = models.ForeignKey(
+        Agent, null=True, related_name="+", on_delete=models.CASCADE
+    )
     ran_at = models.DateTimeField(auto_now=True)
     ran = models.BooleanField(default=False)
     tournament = models.ForeignKey("Tournament", null=True, on_delete=models.CASCADE)
     result = models.DecimalField(default=-1, decimal_places=1, max_digits=3)
     data = models.JSONField(default=dict)
+
+    @property
+    def pretty_result(self):
+        if self.result == 0:
+            return "0 - 1"
+        if self.result == 1:
+            return "1 - 0"
+        return "0.5 - 0.5"
 
 
 class Tournament(BaseModel):
