@@ -6,16 +6,16 @@
 <h1> Agents </h1>
 
 <div>
-  <table>
+  <table class="table table-hover table-striped table-sm">
     <thead>
-      <td> Name </td>
-      <td> Elo Rating </td>
-      <td> Wins </td>
-      <td> Loses </td>
-      <td> Draws </td>
-      <td> Score </td>
-      <td> Games </td>
-      <td> Files </td>
+      <th scope="col"> Name </th>
+      <th scope="col"> Elo Rating </th>
+      <th scope="col"> Wins </th>
+      <th scope="col"> Loses </th>
+      <th scope="col"> Draws </th>
+      <th scope="col"> Score </th>
+      <th scope="col"> Games </th>
+      <th scope="col"> Files </th>
     </thead>
     <tbody>
       {% for agent in agents %}
@@ -31,7 +31,7 @@
         <td>{{ agent.loses }}</td>
         <td>{{ agent.draws }}</td>
         <td>{{ agent.score }}</td>
-        <td>{{ - }}</td>
+        <td> - </td>
 
         <td>
           {% if agent.download_url %}
