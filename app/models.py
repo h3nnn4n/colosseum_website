@@ -39,7 +39,7 @@ class Game(BaseModel):
 
 
 class Match(BaseModel):
-    participants = models.ManyToManyField(Agent)
+    participants = models.ManyToManyField(Agent, related_name="matches")
     ran_at = models.DateTimeField(auto_now=True)
     ran = models.BooleanField(default=False)
     tournament = models.ForeignKey("Tournament", null=True, on_delete=models.CASCADE)
@@ -48,7 +48,7 @@ class Match(BaseModel):
 class Tournament(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
-    participants = models.ManyToManyField(Agent)
+    participants = models.ManyToManyField(Agent, related_name="tournaments")
     started_at = models.DateTimeField(null=True)
     finished_at = models.DateTimeField(null=True)
 
