@@ -102,9 +102,12 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         self.perform_create(serializer)
 
-        update_record_ratings(
-            data["participants"][0], data["participants"][1], data["result"]
-        )
+        # HACK: Tbh I have no idea why or how this is happening, but this fixes it
+        result = data["result"]
+        if isinstance(result, (list, tuple)):
+            result = float(result[0])
+
+        update_record_ratings(data["participants"][0], data["participants"][1], result)
 
         headers = self.get_success_headers(serializer.data)
         return Response(

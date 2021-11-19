@@ -33,8 +33,12 @@ def update_ratings(player1, player2, result):
     if result == 0:
         return update_ratings(player2, player1, 1)
 
-    elos = {player1.id: player1.elo, player2.id: player2.elo}
-    match_result = {(player1.id, player2.id): result}
+    player1_id = str(player1.name)
+    player2_id = str(player2.name)
+
+    elos = {player1_id: float(player1.elo), player2_id: float(player2.elo)}
+    match_result = {(player1_id, player2_id): result}
+
     updated_elos = compute_updated_ratings(elos, match_result)
 
     if result == 1:
@@ -47,5 +51,5 @@ def update_ratings(player1, player2, result):
         player2.wins += 0.5
         player2.score += 0.5
 
-    player1.elo = updated_elos[player1.id]
-    player2.elo = updated_elos[player2.id]
+    player1.elo = updated_elos[player1_id]
+    player2.elo = updated_elos[player2_id]
