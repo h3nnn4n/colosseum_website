@@ -33,7 +33,7 @@ class AgentListView(generic.ListView):
     context_object_name = "agents"
 
     def get_queryset(self):
-        return models.Agent.objects.order_by("name")
+        return models.Agent.objects.order_by("-elo")
 
 
 class AgentDetailView(generic.DetailView):
