@@ -53,7 +53,7 @@ class MatchListView(generic.ListView):
     context_object_name = "matches"
 
     def get_queryset(self):
-        return models.Match.objects.order_by("-created_at")
+        return models.Match.objects.order_by("-created_at")[0:25]
 
 
 def register_request(request):
@@ -117,7 +117,7 @@ class GameViewSet(viewsets.ModelViewSet):
 
 
 class MatchViewSet(viewsets.ModelViewSet):
-    queryset = models.Match.objects.all()[0:25]
+    queryset = models.Match.objects.all()
     serializer_class = serializers.MatchSerializer
 
     def create(self, request, *args, **kwargs):
