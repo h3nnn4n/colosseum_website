@@ -4,13 +4,39 @@
 
 {% load crispy_forms_tags %}
 
-<h1>{{ object.Name }}</h1>
-<p>{{ object.id }}</p>
-<p>Wins: {{ object.wins }}</p>
-<p>Loses: {{ object.loses }}</p>
-<p>Draws: {{ object.draws }}</p>
-<p>Score: {{ object.score }}</p>
-<p>Elo: {{ object.elo }}</p>
-<p>Created: {{ object.created_at|date }}</p>
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <h1>{{ object.name }}</h1>
+      <p>{{ object.id }}</p>
+    </div>
+  </div>
+
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-2">
+      <p>Wins: {{ object.wins }}</p>
+    </div>
+    <div class="col-md-auto">
+      <p>Loses: {{ object.loses }}</p>
+    </div>
+    <div class="col col-lg-2">
+      <p>Draws: {{ object.draws }}</p>
+    </div>
+  </div>
+
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-2">
+      <p>Score: {{ object.score }}</p>
+    </div>
+    <div class="col col-lg-2">
+      <p>Elo: {{ object.elo }}</p>
+    </div>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-2">
+      <p>Created: {{ object.created_at|date }}</p>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
