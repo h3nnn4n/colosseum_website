@@ -167,6 +167,9 @@ class TournamentViewSet(viewsets.ModelViewSet):
     queryset = models.Tournament.objects.all()
     serializer_class = serializers.TournamentSerializer
 
+    def perform_create(self, serializer):
+        return serializer.save()
+
     def create(self, request, *args, **kwargs):
         if not request.data.get("participants"):
             # TODO: We should probably filter by only active agents or something
@@ -176,4 +179,12 @@ class TournamentViewSet(viewsets.ModelViewSet):
             print(participant_ids)
             request.data["participants"] = participant_ids
 
-        return super(TournamentViewSet, self).create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        tournament = self.perform_create(serializer)
+        tournament.create_matches()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )

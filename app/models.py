@@ -1,3 +1,4 @@
+import itertools
 import uuid
 
 from django.contrib.auth.models import User
@@ -126,3 +127,21 @@ class Tournament(BaseModel):
             return self.start_date <= now and now <= self.end_date
 
         return self.matches.filter(ran=False).exists()
+
+    def create_matches(self):
+        n_rounds = 1
+
+        if self.mode == "DOUBLE_ROUND_ROBIN":
+            n_rounds = 2
+
+        if self.mode == "TRIPLE_ROUND_ROBIN":
+            n_rounds = 3
+
+        participants = list(self.participants.all())
+        for _ in range(n_rounds):
+            for bracket in itertools.combinations(participants, 2):
+                bracket = list(bracket)
+                match = Match.objects.create(
+                    ran=False, player1=bracket[0], player2=bracket[1], ran_at=None
+                )
+                match.participants.add(*bracket)
