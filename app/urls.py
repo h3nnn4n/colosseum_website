@@ -21,6 +21,11 @@ urlpatterns = [
     path("matches/", views.MatchListView.as_view(), name="matches"),
     # Tournaments
     path("tournaments/", views.TournamentListView.as_view(), name="tournaments"),
+    path(
+        "tournaments/<str:pk>/",
+        views.TournamentDetailView.as_view(),
+        name="tournament_detail",
+    ),
     # FIXME: This is obviously temporary
     path("agent/upload/", views.upload, name="agent_upload"),
     path("agent/upload_success/", views.upload_success, name="agent_upload_success"),

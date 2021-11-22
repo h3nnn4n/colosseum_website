@@ -1,6 +1,7 @@
 import itertools
 import logging
 import uuid
+from collections import defaultdict
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -149,6 +150,23 @@ class Tournament(BaseModel):
     def pending_matches(self):
         return self.matches.filter(ran=False).count()
 
+    @property
+    def ratings(self):
+        score = defaultdict(int)
+
+        for match in self.matches.all():
+            if match.result == 0:
+                score[match.player2.name] += 1
+            if match.result == 0.5:
+                score[match.player1.name] += 0.5
+                score[match.player2.name] += 0.5
+            if match.result == 1:
+                score[match.player1.name] += 1
+
+        sorted_score = sorted(score.items(), key=lambda x: x[1], reverse=True)
+
+        return [TournamentResult(name, score) for name, score in sorted_score]
+
     def create_matches(self):
         logger.info(
             f"Creating matches for tournament {self.id} {self.name} {self.mode} with {self.pending_matches} matches"
@@ -178,3 +196,11 @@ class Tournament(BaseModel):
         logger.info(
             f"Tournament {self.id} {self.name} {self.mode} has {self.pending_matches} matches now"
         )
+
+
+# Non ORM models.  Just stuff to make passing data around easier, but
+# that is ephemeral and not persisted on the database.
+class TournamentResult:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score

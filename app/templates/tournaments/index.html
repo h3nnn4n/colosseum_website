@@ -16,7 +16,11 @@
     <tbody>
       {% for tournament in tournaments %}
       <tr>
-        <td> {{ tournament.name }} </td>
+        <td>
+          <a href={% url 'tournament_detail' tournament.id %}>
+            {{ tournament.name }}
+          </a>
+        </td>
         <td> {{ tournament.mode }} </td>
         <td> {{ tournament.pending_matches }} </td>
         <td> {{ tournament.created_at|date:"Y-m-d H:i:s" }} </td>

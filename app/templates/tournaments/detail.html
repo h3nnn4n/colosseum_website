@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<h1>{{ object.name }}</h1>
+
+<p>
+  Matches (pending / total): {{ object.pending_matches }} / {{ object.matches.count }}
+</p>
+
+<div>
+  <h4> Rankings: </h4>
+  <table class="table table-hover table-striped table-sm">
+    <thead>
+      <th scope="col"> Name </th>
+      <th scope="col"> Score </th>
+    </thead>
+    <tbody>
+      {% for entry in object.ratings %}
+      <tr>
+        <td>{{ entry.name }}</td>
+        <td>{{ entry.score|floatformat:1 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+<div>
+
+<h3> Participants </h3>
+
+<div>
+  <table class="table table-hover table-striped table-sm">
+    <thead>
+      <th scope="col"> Name </th>
+      <th scope="col"> Elo Rating </th>
+      <th scope="col"> Win Ratio </th>
+      <th scope="col"> Wins </th>
+      <th scope="col"> Loses </th>
+      <th scope="col"> Draws </th>
+      <th scope="col"> Games </th>
+    </thead>
+    <tbody>
+      {% for agent in object.participants.all %}
+      <tr>
+        <td>
+          <a href={% url 'agent_edit' agent.id %}>
+            {{ agent.name }}
+          </a>
+        </td>
+
+        <td>{{ agent.elo }}</td>
+        <td>{{ agent.win_ratio|floatformat:2 }}</td>
+        <td>{{ agent.wins }}</td>
+        <td>{{ agent.loses }}</td>
+        <td>{{ agent.draws }}</td>
+        <td>{{ agent.games_played }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+<div>
+
+{% endblock %}

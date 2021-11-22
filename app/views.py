@@ -70,6 +70,11 @@ class TournamentListView(generic.ListView):
         return models.Tournament.objects.order_by("-created_at")[0:25]
 
 
+class TournamentDetailView(generic.DetailView):
+    model = models.Tournament
+    template_name = "tournaments/detail.html"
+
+
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
