@@ -46,6 +46,12 @@ class Agent(BaseModel):
         return self.wins / self.games_played
 
     @property
+    def pretty_win_ratio(self):
+        if self.games_played == 0:
+            return "0"
+        return f"{(self.wins / self.games_played) * 100.0:.2f}"
+
+    @property
     def games_played(self):
         return self.matches.filter(ran=True).count()
 
