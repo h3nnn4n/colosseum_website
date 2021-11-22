@@ -59,7 +59,7 @@ class MatchListView(generic.ListView):
     context_object_name = "matches"
 
     def get_queryset(self):
-        return models.Match.objects.order_by("-created_at")[0:25]
+        return models.Match.objects.filter(ran=True).order_by("-created_at")[0:25]
 
 
 def register_request(request):
