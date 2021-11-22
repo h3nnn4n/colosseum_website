@@ -15,7 +15,6 @@
       <th scope="col"> Loses </th>
       <th scope="col"> Draws </th>
       <th scope="col"> Games </th>
-      <th scope="col"> Files </th>
     </thead>
     <tbody>
       {% for agent in agents %}
@@ -32,14 +31,6 @@
         <td>{{ agent.loses }}</td>
         <td>{{ agent.draws }}</td>
         <td>{{ agent.games_played }}</td>
-
-        <td>
-          {% if agent.download_url and user.is_authenticated %}
-            <a href={{ agent.download_url }}>Download</a>
-          {% else %}
-            -
-          {% endif %}
-        </td>
       </tr>
       {% endfor %}
     </tbody>
