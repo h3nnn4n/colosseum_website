@@ -70,7 +70,7 @@ class Match(BaseModel):
     player2 = models.ForeignKey(
         Agent, null=True, related_name="+", on_delete=models.CASCADE
     )
-    ran_at = models.DateTimeField(auto_now=True)
+    ran_at = models.DateTimeField(null=True)
     ran = models.BooleanField(default=False)
     tournament = models.ForeignKey(
         "Tournament", null=True, on_delete=models.CASCADE, related_name="matches"

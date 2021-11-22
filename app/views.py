@@ -59,7 +59,7 @@ class MatchListView(generic.ListView):
     context_object_name = "matches"
 
     def get_queryset(self):
-        return models.Match.objects.filter(ran=True).order_by("-created_at")[0:25]
+        return models.Match.objects.filter(ran=True).order_by("-ran_at")[0:25]
 
 
 def register_request(request):
@@ -163,43 +163,6 @@ class MatchViewSet(viewsets.ModelViewSet):
     queryset = models.Match.objects.all()
     serializer_class = serializers.MatchSerializer
 
-    def perform_create(self, serializer):
-        return serializer.save()
-
-    def create(self, request, *args, **kwargs):
-        data = dict(request.data)
-        participants = data["participants"]
-        data["player1"] = participants[0]
-        data["player2"] = participants[1]
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-
-        if len(participants) != 2:
-            logging.info(
-                f"dropped match because it didnt have 2 participants! It had {len(participants)} {participants}. payload: {data}"
-            )
-            return Response(
-                dict(error="Only 2 participants are supported at this moment"),
-                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            )
-
-        match = self.perform_create(serializer)
-
-        # HACK: Tbh I have no idea why or how this is happening, but this fixes it
-        result = data["result"]
-        if isinstance(result, (list, tuple)):
-            result = float(result[0])
-
-        update_elo_change_before(match)
-        update_record_ratings(data["participants"][0], data["participants"][1], result)
-        update_elo_change_after(match)
-        match.save()
-
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
-
 
 class TournamentViewSet(viewsets.ModelViewSet):
     queryset = models.Tournament.objects.all()
@@ -208,6 +171,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         return serializer.save()
 
+    # FIXME: This should be in the serializer
     def create(self, request, *args, **kwargs):
         if not request.data.get("participants"):
             # TODO: We should probably filter by only active agents or something
