@@ -44,6 +44,12 @@
       {% endfor %}
     </tbody>
   </table>
+
+  {% if user.is_authenticated %}
+    <p>
+      <a href='{% url 'agent_upload' %}'> New Agent </a>
+    </p>
+  {% endif %}
 <div>
 
 {% endblock %}
