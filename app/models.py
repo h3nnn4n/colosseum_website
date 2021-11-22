@@ -84,6 +84,8 @@ class Match(BaseModel):
             return "0 - 1"
         if self.result == 1:
             return "1 - 0"
+        if self.result < 0:
+            return "-"
         return "0.5 - 0.5"
 
     @property
