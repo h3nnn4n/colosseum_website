@@ -176,7 +176,9 @@ class TournamentViewSet(viewsets.ModelViewSet):
             participant_ids = list(
                 models.Agent.objects.all().values_list("id", flat=True)
             )
-            print(participant_ids)
+            logger.info(
+                "tournament is being created with no participants, defaulting to all"
+            )
             request.data["participants"] = participant_ids
 
         serializer = self.get_serializer(data=request.data)
