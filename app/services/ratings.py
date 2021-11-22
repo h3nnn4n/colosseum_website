@@ -55,3 +55,30 @@ def update_ratings(player1, player2, result):
 
     player1.elo = updated_elos[player1_id]
     player2.elo = updated_elos[player2_id]
+
+
+def update_elo_change_before(match):
+    player1_id = str(match.player1.id)
+    player2_id = str(match.player2.id)
+
+    match.data = {}
+    match.data["elo_before"] = {}
+    match.data["elo_before"][player1_id] = float(match.player1.elo)
+    match.data["elo_before"][player2_id] = float(match.player2.elo)
+
+
+def update_elo_change_after(match):
+    player1_id = str(match.player1.id)
+    player2_id = str(match.player2.id)
+
+    match.data["elo_after"] = {}
+    match.data["elo_after"][player1_id] = float(match.player1.elo)
+    match.data["elo_after"][player2_id] = float(match.player2.elo)
+
+    match.data["elo_change"] = {}
+    match.data["elo_change"][player1_id] = (
+        match.data["elo_after"][player1_id] - match.data["elo_before"][player1_id]
+    )
+    match.data["elo_change"][player2_id] = (
+        match.data["elo_after"][player2_id] - match.data["elo_before"][player2_id]
+    )

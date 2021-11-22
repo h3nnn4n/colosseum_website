@@ -21,7 +21,12 @@ from rest_framework.views import APIView
 from app import models, serializers
 
 from .forms import NewAgentForm, NewUserForm
-from .services.ratings import update_ratings, update_record_ratings
+from .services.ratings import (
+    update_elo_change_after,
+    update_elo_change_before,
+    update_ratings,
+    update_record_ratings,
+)
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -120,6 +125,9 @@ class MatchViewSet(viewsets.ModelViewSet):
     queryset = models.Match.objects.all()
     serializer_class = serializers.MatchSerializer
 
+    def perform_create(self, serializer):
+        return serializer.save()
+
     def create(self, request, *args, **kwargs):
         data = dict(request.data)
         participants = data["participants"]
@@ -137,14 +145,17 @@ class MatchViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY,
             )
 
-        self.perform_create(serializer)
+        match = self.perform_create(serializer)
 
         # HACK: Tbh I have no idea why or how this is happening, but this fixes it
         result = data["result"]
         if isinstance(result, (list, tuple)):
             result = float(result[0])
 
+        update_elo_change_before(match)
         update_record_ratings(data["participants"][0], data["participants"][1], result)
+        update_elo_change_after(match)
+        match.save()
 
         headers = self.get_success_headers(serializer.data)
         return Response(
