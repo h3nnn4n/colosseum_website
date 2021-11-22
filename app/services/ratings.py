@@ -39,7 +39,7 @@ def update_ratings(player1, player2, result):
     player2_id = str(player2.name)
 
     elos = {player1_id: float(player1.elo), player2_id: float(player2.elo)}
-    match_result = {(player1_id, player2_id): result}
+    match_result = {(player1_id, player2_id): float(result)}
 
     updated_elos = compute_updated_ratings(elos, match_result)
 
