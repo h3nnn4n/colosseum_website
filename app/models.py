@@ -80,13 +80,18 @@ class Match(BaseModel):
 
     @property
     def pretty_result(self):
+        if not self.ran:
+            return "-"
+
         if self.result == 0:
             return "0 - 1"
         if self.result == 1:
             return "1 - 0"
-        if self.result < 0:
-            return "-"
-        return "0.5 - 0.5"
+        if self.result > 0 and self.result < 1:
+            return "0.5 - 0.5"
+        raise ValueError(
+            f"Only 0, 1, or 0.5 are valid results. Got {self.result} instead"
+        )
 
     @property
     def player1_elo_change(self):
