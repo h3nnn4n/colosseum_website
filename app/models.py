@@ -1,11 +1,17 @@
 import itertools
+import logging
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
 from . import utils
+
+
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("APP")
 
 
 class BaseModel(models.Model):
@@ -126,9 +132,20 @@ class Tournament(BaseModel):
             now = timezone.now()
             return self.start_date <= now and now <= self.end_date
 
+        return self.has_pending_matches
+
+    @property
+    def has_pending_matches(self):
         return self.matches.filter(ran=False).exists()
 
+    @property
+    def pending_matches(self):
+        return self.matches.filter(ran=False).count()
+
     def create_matches(self):
+        logger.info(
+            f"Creating matches for tournament {self.id} {self.name} {self.mode} with {self.pending_matches} matches"
+        )
         n_rounds = 1
 
         if self.mode == "DOUBLE_ROUND_ROBIN":
@@ -142,6 +159,15 @@ class Tournament(BaseModel):
             for bracket in itertools.combinations(participants, 2):
                 bracket = list(bracket)
                 match = Match.objects.create(
-                    ran=False, player1=bracket[0], player2=bracket[1], ran_at=None
+                    player1=bracket[0],
+                    player2=bracket[1],
+                    ran=False,
+                    ran_at=None,
+                    tournament=self,
                 )
                 match.participants.add(*bracket)
+                match.save()
+
+        logger.info(
+            f"Tournament {self.id} {self.name} {self.mode} has {self.pending_matches} matches now"
+        )

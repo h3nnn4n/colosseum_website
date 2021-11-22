@@ -49,3 +49,16 @@ class TournamentTestCase(TestCase):
             end_date=timezone.now() - timedelta(hours=1),
         )
         self.assertFalse(tournament.is_active)
+
+    def test_create_matches(self):
+        agents = [factories.AgentFactory() for x in range(5)]
+        tournament = factories.TournamentFactory(mode="ROUND_ROBIN")
+        tournament.participants.set(agents)
+
+        self.assertEqual(
+            models.Match.objects.filter(tournament_id=tournament.id).count(), 0
+        )
+        tournament.create_matches()
+        self.assertEqual(
+            models.Match.objects.filter(tournament_id=tournament.id).count(), 10
+        )

@@ -29,6 +29,7 @@ urlpatterns = [
     path("home/", views.index, name="home"),
     # API
     path("api/", include(router.urls)),
+    path("api/next_match/", views.NextMatchAPIView.as_view(), name="next_match"),
     # Register page
     path("accounts/register/", views.register_request, name="register"),
     # WIP pages

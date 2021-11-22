@@ -1,5 +1,6 @@
 import json
 import logging
+from random import choice
 
 from django.conf import settings
 from django.contrib import messages
@@ -104,6 +105,43 @@ def upload_success(request):
 
 
 # API Views
+
+
+class NextMatchAPIView(APIView):
+    """
+    Returns a next match to be ran. Intended to run multiple tournaments at the
+    same time while using a generic worker.
+
+    Current implementation picks a random match from a random tournament to run
+    and returns it. In the future this may be improved to better balance
+    matches between tournaments.
+    """
+
+    def get(self, request):
+        # FIXME: This wont work for very long, specially on a high traffic and
+        # mission critical endpoint like this one.
+        tournaments = [t for t in models.Tournament.objects.all() if t.is_active]
+        tournament = choice(tournaments)
+        logger.info(
+            f"Selected tournament {tournament.id} {tournament.name} {tournament.mode} from {len(tournaments)} tournaments"
+        )
+
+        response = {}
+        if tournament.mode == "TIMED" and tournament.pending_matches <= 10:
+            logger.info(
+                f"TIMED Tournament {tournament.id} has a low number of matches left: {tournament.pending_matches}"
+            )
+            tournament.create_matches()
+
+        # In case something goes wrong and no matches were created we return
+        # nothing and let the consumer handle it (possibly with a retry)
+        if not tournament.matches.exists():
+            return Response({})
+
+        match_id = choice(list(tournament.matches.all().values_list("id", flat=True)))
+        response["id"] = match_id
+
+        return Response(response)
 
 
 class UserViewSet(viewsets.ModelViewSet):
