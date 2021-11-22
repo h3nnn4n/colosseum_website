@@ -50,7 +50,7 @@ class AgentDetailView(generic.DetailView):
 class AgentUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = models.Agent
     template_name = "agents/edit.html"
-    fields = ["name", "file"]
+    fields = ["name", "active", "file"]
     success_url = "/agents/"
 
 
