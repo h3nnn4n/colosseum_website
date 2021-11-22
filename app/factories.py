@@ -33,12 +33,16 @@ class GameFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Game
 
-    game = "test_game"
+    name = factory.Sequence(lambda n: "test_game %03d" % n)
 
 
 class TournamentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Tournament
+
+    name = factory.Sequence(lambda n: "Tournament %03d" % n)
+    mode = "ROUND_ROBIN"
+    game = factory.SubFactory(GameFactory)
 
 
 class MatchFactory(factory.django.DjangoModelFactory):
@@ -46,3 +50,4 @@ class MatchFactory(factory.django.DjangoModelFactory):
         model = models.Match
 
     tournament = factory.SubFactory(TournamentFactory)
+    ran = False

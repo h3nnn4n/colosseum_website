@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 from . import utils
 
@@ -117,3 +118,11 @@ class Tournament(BaseModel):
 
     class Meta:
         indexes = [models.Index(fields=["name"]), models.Index(fields=["game"])]
+
+    @property
+    def is_active(self):
+        if self.mode == "TIMED":
+            now = timezone.now()
+            return self.start_date <= now and now <= self.end_date
+
+        return self.matches.filter(ran=False).exists()
