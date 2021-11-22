@@ -109,8 +109,13 @@ class MatchSerializer(serializers.ModelSerializer):
 
 
 class TournamentSerializer(serializers.ModelSerializer):
+    start_date = serializers.DateTimeField(required=False)
+    end_date = serializers.DateTimeField(required=False)
     started_at = serializers.DateTimeField(required=False)
     finished_at = serializers.DateTimeField(required=False)
+    participants = serializers.PrimaryKeyRelatedField(
+        queryset=models.Agent.objects.all(), many=True, required=False
+    )
 
     class Meta:
         model = models.Tournament
@@ -128,11 +133,23 @@ class TournamentSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+    def validate(self, data):
+        if not data.get("participants"):
+            logger.info(
+                "tournament is being created with no participants, defaulting to all"
+            )
+            data["participants"] = list(
+                models.Agent.objects.all().values_list("id", flat=True)
+            )
+
+        return data
+
     def create(self, validated_data):
         participants = validated_data.pop("participants")
-        tournament = models.Tournament.objects.create(**validated_data)
 
+        tournament = models.Tournament.objects.create(**validated_data)
         tournament.participants.add(*participants)
         tournament.save()
+        tournament.create_matches()
 
         return tournament
