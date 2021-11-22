@@ -103,6 +103,7 @@ class MatchSerializer(serializers.ModelSerializer):
                 instance.player1.id, instance.player2.id, instance.result
             )
             update_elo_change_after(instance)
+            instance.save()
 
         return instance
 
