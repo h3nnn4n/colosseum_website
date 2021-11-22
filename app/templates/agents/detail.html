@@ -29,13 +29,20 @@
       <p>Score: {{ object.score }}</p>
     </div>
     <div class="col col-lg-2">
+      <p>Win Ratio: {{ object.win_ratio }} </p>
+    </div>
+    <div class="col col-lg-2">
       <p>Elo: {{ object.elo }}</p>
     </div>
   </div>
+
   <div class="row justify-content-md-center">
     <div class="col col-lg-2">
       <p>Created: {{ object.created_at|date }}</p>
     </div>
+
+    <div class="col col-lg-2">
+      <a href={% url 'agent_edit' object.id %}>Edit</a>
   </div>
 </div>
 
