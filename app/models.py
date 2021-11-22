@@ -100,7 +100,7 @@ class Tournament(BaseModel):
         ("ROUND_ROBIN", "Round Robin"),
         ("DOUBLE_ROUND_ROBIN", "Double Round Robin"),
         ("TRIPLE_ROUND_ROBIN", "Triple Round Robin"),
-        ("DAILY", "Daily"),
+        ("TIMED", "Timed"),
     ]
 
     name = models.CharField(max_length=64, unique=True)
