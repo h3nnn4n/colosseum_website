@@ -58,6 +58,9 @@ def update_ratings(player1, player2, result):
 
 
 def update_elo_change_before(match):
+    match.player1.refresh_from_db()
+    match.player2.refresh_from_db()
+
     player1_id = str(match.player1.id)
     player2_id = str(match.player2.id)
 
@@ -68,6 +71,9 @@ def update_elo_change_before(match):
 
 
 def update_elo_change_after(match):
+    match.player1.refresh_from_db()
+    match.player2.refresh_from_db()
+
     player1_id = str(match.player1.id)
     player2_id = str(match.player2.id)
 
