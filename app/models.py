@@ -94,11 +94,24 @@ class Match(BaseModel):
 
 
 class Tournament(BaseModel):
+    MODES = [
+        ("ROUND_ROBIN", "Round Robin"),
+        ("DOUBLE_ROUND_ROBIN", "Double Round Robin"),
+        ("TRIPLE_ROUND_ROBIN", "Triple Round Robin"),
+        ("DAILY", "Daily"),
+    ]
+
     name = models.CharField(max_length=64, unique=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
     participants = models.ManyToManyField(Agent, related_name="tournaments")
+
+    mode = models.CharField(max_length=64, choices=MODES)
+
     started_at = models.DateTimeField(null=True)
     finished_at = models.DateTimeField(null=True)
+
+    start_date = models.DateTimeField(null=True)
+    end_date = models.DateTimeField(null=True)
 
     class Meta:
         indexes = [models.Index(fields=["name"]), models.Index(fields=["game"])]
