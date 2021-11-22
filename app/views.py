@@ -166,3 +166,14 @@ class MatchViewSet(viewsets.ModelViewSet):
 class TournamentViewSet(viewsets.ModelViewSet):
     queryset = models.Tournament.objects.all()
     serializer_class = serializers.TournamentSerializer
+
+    def create(self, request, *args, **kwargs):
+        if not request.data.get("participants"):
+            # TODO: We should probably filter by only active agents or something
+            participant_ids = list(
+                models.Agent.objects.all().values_list("id", flat=True)
+            )
+            print(participant_ids)
+            request.data["participants"] = participant_ids
+
+        return super(TournamentViewSet, self).create(request, *args, **kwargs)
