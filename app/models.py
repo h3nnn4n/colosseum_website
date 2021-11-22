@@ -31,6 +31,10 @@ class Agent(BaseModel):
         indexes = [models.Index(fields=["name"]), models.Index(fields=["owner"])]
 
     @property
+    def win_ratio(self):
+        return self.wins / self.games_played
+
+    @property
     def games_played(self):
         return self.matches.filter(ran=True).count()
 
