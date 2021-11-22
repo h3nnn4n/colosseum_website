@@ -76,6 +76,22 @@ class Match(BaseModel):
             return "1 - 0"
         return "0.5 - 0.5"
 
+    @property
+    def player1_elo_change(self):
+        try:
+            player1_id = str(self.player1.id)
+            return self.data["elo_change"][player1_id]
+        except KeyError:
+            return None
+
+    @property
+    def player2_elo_change(self):
+        try:
+            player2_id = str(self.player2.id)
+            return self.data["elo_change"][player2_id]
+        except KeyError:
+            return None
+
 
 class Tournament(BaseModel):
     name = models.CharField(max_length=64, unique=True)
