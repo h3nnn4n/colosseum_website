@@ -62,6 +62,14 @@ class MatchListView(generic.ListView):
         return models.Match.objects.filter(ran=True).order_by("-ran_at")[0:25]
 
 
+class TournamentListView(generic.ListView):
+    template_name = "tournaments/index.html"
+    context_object_name = "tournaments"
+
+    def get_queryset(self):
+        return models.Tournament.objects.order_by("-created_at")[0:25]
+
+
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
