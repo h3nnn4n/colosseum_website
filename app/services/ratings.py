@@ -48,9 +48,9 @@ def update_ratings(player1, player2, result):
         player1.score += 1
         player2.loses += 1
     elif result == 0.5:
-        player1.wins += Decimal("0.5")
+        player1.draws += 1
         player1.score += Decimal("0.5")
-        player2.wins += Decimal("0.5")
+        player2.draws += 1
         player2.score += Decimal("0.5")
 
     player1.elo = updated_elos[player1_id]
