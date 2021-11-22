@@ -129,6 +129,9 @@ class NextMatchAPIView(APIView):
         # FIXME: This wont work for very long, specially on a high traffic and
         # mission critical endpoint like this one.
         tournaments = [t for t in models.Tournament.objects.all() if t.is_active]
+        if not tournaments:
+            return Response({})
+
         tournament = choice(tournaments)
         logger.info(
             f"Selected tournament {tournament.id} {tournament.name} {tournament.mode} from {len(tournaments)} tournaments"
