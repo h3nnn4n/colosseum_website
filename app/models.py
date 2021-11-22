@@ -64,7 +64,9 @@ class Match(BaseModel):
     )
     ran_at = models.DateTimeField(auto_now=True)
     ran = models.BooleanField(default=False)
-    tournament = models.ForeignKey("Tournament", null=True, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(
+        "Tournament", null=True, on_delete=models.CASCADE, related_name="matches"
+    )
     result = models.DecimalField(default=-1, decimal_places=1, max_digits=3)
     data = models.JSONField(default=dict)
 
