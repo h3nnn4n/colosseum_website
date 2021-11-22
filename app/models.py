@@ -32,6 +32,8 @@ class Agent(BaseModel):
 
     @property
     def win_ratio(self):
+        if self.games_played == 0:
+            return 0
         return self.wins / self.games_played
 
     @property
