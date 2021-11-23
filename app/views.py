@@ -133,31 +133,23 @@ class NextMatchAPIView(APIView):
     def get(self, request):
         # FIXME: This wont work for very long, specially on a high traffic and
         # mission critical endpoint like this one.
-        tournaments = [t for t in models.Tournament.objects.all() if t.is_active]
+        tournaments = [
+            t for t in models.Tournament.objects.filter(mode="TIMED") if t.is_active
+        ]
         if not tournaments:
             return Response({})
 
-        tournament = choice(tournaments)
-        logger.info(
-            f"Selected tournament {tournament.id} {tournament.name} {tournament.mode} from {len(tournaments)} tournaments"
-        )
+        for tournament in tournaments:
+            if tournament.pending_matches <= 10:
+                logger.info(
+                    f"TIMED Tournament {tournament.id} has a low number of matches left: {tournament.pending_matches}"
+                )
+                tournament.create_matches()
 
-        response = {}
-        if tournament.mode == "TIMED" and tournament.pending_matches <= 10:
-            logger.info(
-                f"TIMED Tournament {tournament.id} has a low number of matches left: {tournament.pending_matches}"
-            )
-            tournament.create_matches()
+        match_ids = models.Match.objects.filter(ran=False).values_list("id", flat=True)
+        match_id = choice(list(match_ids))
 
-        # In case something goes wrong and no matches were created we return
-        # nothing and let the consumer handle it (possibly with a retry)
-        if not tournament.matches.exists():
-            return Response({})
-
-        match_id = choice(list(tournament.matches.all().values_list("id", flat=True)))
-        response["id"] = match_id
-
-        return Response(response)
+        return Response({"id": match_id})
 
 
 class UserViewSet(viewsets.ModelViewSet):
