@@ -9,6 +9,7 @@
   <table class="table table-hover table-striped table-sm">
     <thead>
       <th scope="col"> Name </th>
+      <th scope="col"> Active </th>
       <th scope="col"> Mode </th>
       <th scope="col"> Matches left </th>
       <th scope="col"> Created At </th>
@@ -21,6 +22,7 @@
             {{ tournament.name }}
           </a>
         </td>
+        <td> {{ tournament.is_active | yesno:"Yes,No" }} </td>
         <td> {{ tournament.mode }} </td>
         <td> {{ tournament.pending_matches }} </td>
         <td> {{ tournament.created_at|date:"Y-m-d H:i:s" }} </td>
