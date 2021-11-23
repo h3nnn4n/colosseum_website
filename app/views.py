@@ -133,16 +133,19 @@ class NextMatchAPIView(APIView):
     def get(self, request):
         # FIXME: This wont work for very long, specially on a high traffic and
         # mission critical endpoint like this one.
-        tournaments = [
-            t for t in models.Tournament.objects.filter(mode="TIMED") if t.is_active
-        ]
+        tournaments = [t for t in models.Tournament.objects.all() if t.is_active]
         if not tournaments:
             return Response({})
 
         for tournament in tournaments:
-            if tournament.pending_matches <= 10:
+            if tournament.mode == "TIMED" and tournament.pending_matches <= 10:
                 logger.info(
                     f"TIMED Tournament {tournament.id} has a low number of matches left: {tournament.pending_matches}"
+                )
+                tournament.create_matches()
+            elif tournament.matches.count() == 0:
+                logger.info(
+                    f"{tournament.mode} Tournament {tournament.id} is missing matches. Creating"
                 )
                 tournament.create_matches()
 
