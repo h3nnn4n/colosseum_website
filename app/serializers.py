@@ -123,6 +123,8 @@ class TournamentSerializer(serializers.ModelSerializer):
             "name",
             "game",
             "mode",
+            "is_automated",
+            "automated_number",
             "participants",
             "start_date",
             "end_date",
