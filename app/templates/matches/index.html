@@ -12,6 +12,7 @@
       <th scope="col"> Agent 2 </th>
       <th scope="col"> Result </th>
       <th scope="col"> When </th>
+      <th scope="col"> Replay </th>
     </thead>
     <tbody>
       {% for match in matches %}
@@ -23,6 +24,7 @@
         <td>
           {{ match.ran_at | date:"Y-m-d H:i:s" }}
         </td>
+        <td> <a href={{ match.replay.url }}> Download </a> </td>
       </tr>
       {% endfor %}
     </tbody>
