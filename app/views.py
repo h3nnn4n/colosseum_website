@@ -186,7 +186,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         match = self.get_object()
         file = request.data["file"]
         data_out = lzma.compress(file.read())
-        match.replay.save(file.name + ".lzma", ContentFile(data_out))
+        match.replay.save("replay.jsonl.xz", ContentFile(data_out))
         match.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
