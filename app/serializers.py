@@ -63,6 +63,7 @@ class MatchSerializer(serializers.ModelSerializer):
             "data",
             "ran",
             "ran_at",
+            "replay",
             "created_at",
             "updated_at",
         ]

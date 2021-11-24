@@ -179,6 +179,14 @@ class MatchViewSet(viewsets.ModelViewSet):
     queryset = models.Match.objects.all()
     serializer_class = serializers.MatchSerializer
 
+    @action(detail=True, methods=["post"])
+    def upload_replay(self, request, pk=None):
+        match = self.get_object()
+        file = request.data["file"]
+        match.replay = file
+        match.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class TournamentViewSet(viewsets.ModelViewSet):
     queryset = models.Tournament.objects.all()
