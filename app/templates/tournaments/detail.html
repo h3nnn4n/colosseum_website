@@ -10,6 +10,12 @@
   Matches (pending / total): {{ object.pending_matches }} / {{ object.matches.count }}
 </p>
 
+{% if object.mode == "TIMED" %}
+<p>
+  Date: {{ object.start_date|date:"Y-m-d H:i:s" }} / {{ object.end_date|date:"Y-m-d H:i:s" }}
+</p>
+{% endif %}
+
 <div>
   <h4> Rankings: </h4>
   <table class="table table-hover table-striped table-sm">
