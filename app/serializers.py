@@ -111,8 +111,6 @@ class MatchSerializer(serializers.ModelSerializer):
 class TournamentSerializer(serializers.ModelSerializer):
     start_date = serializers.DateTimeField(required=False)
     end_date = serializers.DateTimeField(required=False)
-    started_at = serializers.DateTimeField(required=False)
-    finished_at = serializers.DateTimeField(required=False)
     participants = serializers.PrimaryKeyRelatedField(
         queryset=models.Agent.objects.all(), many=True, required=False
     )
@@ -125,8 +123,6 @@ class TournamentSerializer(serializers.ModelSerializer):
             "game",
             "mode",
             "participants",
-            "started_at",
-            "finished_at",
             "start_date",
             "end_date",
             "created_at",

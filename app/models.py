@@ -131,9 +131,6 @@ class Tournament(BaseModel):
 
     mode = models.CharField(max_length=64, choices=MODES)
 
-    started_at = models.DateTimeField(null=True)
-    finished_at = models.DateTimeField(null=True)
-
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
 
