@@ -1,5 +1,6 @@
 import json
 import logging
+import lzma
 from random import choice
 
 from django.conf import settings
@@ -8,6 +9,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
@@ -183,7 +185,8 @@ class MatchViewSet(viewsets.ModelViewSet):
     def upload_replay(self, request, pk=None):
         match = self.get_object()
         file = request.data["file"]
-        match.replay = file
+        data_out = lzma.compress(file.read())
+        match.replay.save(file.name + ".lzma", ContentFile(data_out))
         match.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
