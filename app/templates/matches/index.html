@@ -11,6 +11,7 @@
       <th scope="col"> Agent 1 </th>
       <th scope="col"> Agent 2 </th>
       <th scope="col"> Result </th>
+      <th scope="col"> Tournament </th>
       <th scope="col"> When </th>
       <th scope="col"> Replay </th>
     </thead>
@@ -20,10 +21,13 @@
         <td> {{ match.player1_elo_change }} {{ match.player1.name }} </td>
         <td> {{ match.player2_elo_change }} {{ match.player2.name }} </td>
         <td> {{ match.pretty_result }} </td>
-
         <td>
-          {{ match.ran_at | date:"Y-m-d H:i:s" }}
+          <a href={% url 'tournament_detail' match.tournament.id %}>
+            {{ match.tournament.name }}
+          </a>
         </td>
+        <td> {{ match.ran_at | date:"Y-m-d H:i:s" }} </td>
+
         {% if match.replay %}
           <td> <a href={{ match.replay.url }}> Download </a> </td>
         {% else %}
