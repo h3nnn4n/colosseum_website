@@ -194,3 +194,10 @@ class MatchViewSet(viewsets.ModelViewSet):
 class TournamentViewSet(viewsets.ModelViewSet):
     queryset = models.Tournament.objects.all()
     serializer_class = serializers.TournamentSerializer
+
+    @action(detail=False, methods=["post"])
+    def create_automated_tournaments(self, request):
+        from .services.automated_tournaments import create_automated_tournaments
+
+        create_automated_tournaments()
+        return Response(status=status.HTTP_204_NO_CONTENT)
