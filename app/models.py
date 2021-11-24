@@ -135,6 +135,8 @@ class Tournament(BaseModel):
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
 
+    automated = models.BooleanField(null=True, default=False)
+
     class Meta:
         indexes = [models.Index(fields=["name"]), models.Index(fields=["game"])]
 
