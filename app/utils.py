@@ -1,6 +1,6 @@
 def agent_filepath(agent, filename):
-    return f"{agent.owner.username}/{agent.name}/{filename}"
+    return f"agents/{agent.owner.id}/{agent.id}/{filename}"
 
 
 def replay_filepath(match, filename):
-    return f"{match.tournament.id}/{match.id}/{filename}"
+    return f"replays/{match.tournament.id}/{match.id}/{filename}"
