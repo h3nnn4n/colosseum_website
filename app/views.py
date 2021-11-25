@@ -89,6 +89,12 @@ class AboutView(generic.TemplateView):
         context["games_ran_in_the_last_day"] = models.Match.objects.filter(
             ran=True, ran_at__gte=timezone.now() - timedelta(days=1)
         ).count()
+        context["games_ran_in_the_last_hour"] = models.Match.objects.filter(
+            ran=True, ran_at__gte=timezone.now() - timedelta(hours=1)
+        ).count()
+        context["games_ran_in_the_last_minute"] = models.Match.objects.filter(
+            ran=True, ran_at__gte=timezone.now() - timedelta(minutes=1)
+        ).count()
         context["n_agents"] = (
             models.Match.objects.filter(
                 ran=True, ran_at__gte=timezone.now() - timedelta(days=1)

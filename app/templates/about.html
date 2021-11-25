@@ -29,11 +29,11 @@
   </p>
 
   <p>
-    In the past 24 hours we have ran
-    <a href={% url 'matches' %}>{{ games_ran_in_the_last_day }}</a> matches
-    with
-    <a href={% url 'agents' %}>{{ n_agents }}</a>
-    different agents.
+    In the past 24 hours we had
+    <a href={% url 'agents' %}>{{ n_agents }}</a> agents competing in
+    <a href={% url 'matches' %}>{{ games_ran_in_the_last_day }}</a> matches.
+    In the last hour {{ games_ran_in_the_last_hour }} matches ran, and in the
+    last minute it was {{ games_ran_in_the_last_minute }}.
   </p>
   <img src={% url 'matches_per_day' %}></img>
 </div>
