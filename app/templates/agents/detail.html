@@ -8,8 +8,9 @@
   <div class="row justify-content-md-center">
     <div class="col-md-auto">
       <h1>{{ object.name }}</h1>
-      <p>{{ object.id }}</p>
-      <p>{{ object.file_hash }}</p>
+      <p>by: {{ object.owner.username }}</p>
+      <p>Agent id: {{ object.id }}</p>
+      <p>Agent version: {{ object.file_hash }}</p>
     </div>
   </div>
 
