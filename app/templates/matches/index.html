@@ -18,8 +18,16 @@
     <tbody>
       {% for match in matches %}
       <tr>
-        <td> {{ match.player1_elo_change }} {{ match.player1.name }} </td>
-        <td> {{ match.player2_elo_change }} {{ match.player2.name }} </td>
+        <td> {{ match.player1_elo_change }}
+          <a href={% url 'agent_detail' match.player1.id %}>
+            {{ match.player1.name }}
+          </a>
+        </td>
+        <td> {{ match.player2_elo_change }}
+          <a href={% url 'agent_detail' match.player2.id %}>
+            {{ match.player2.name }}
+          </a>
+        </td>
         <td> {{ match.pretty_result }} </td>
         <td>
           <a href={% url 'tournament_detail' match.tournament.id %}>
