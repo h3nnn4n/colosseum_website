@@ -33,6 +33,7 @@ class AgentSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "file",
+            "file_hash",
             "score",
             "wins",
             "loses",

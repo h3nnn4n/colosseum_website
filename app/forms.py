@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from . import models
+from . import models, utils
 
 
 class NewUserForm(UserCreationForm):
@@ -35,6 +35,7 @@ class NewAgentForm(forms.ModelForm):
     def save(self, commit=True):
         agent = super(NewAgentForm, self).save(commit=False)
         agent.owner_id = self.user.id
+        agent.file_hash = utils.hash_file(agent.file)
         if commit:
             agent.save()
         return agent

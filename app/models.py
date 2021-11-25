@@ -28,6 +28,7 @@ class Agent(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     file = models.FileField(null=True, upload_to=utils.agent_filepath)
+    file_hash = models.CharField(max_length=128, unique=True, null=True)
     active = models.BooleanField(default=True)
 
     wins = models.IntegerField(default=0)
