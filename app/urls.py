@@ -26,6 +26,8 @@ urlpatterns = [
         views.TournamentDetailView.as_view(),
         name="tournament_detail",
     ),
+    # About page
+    path("about/", views.AboutView.as_view(), name="about"),
     # FIXME: This is obviously temporary
     path("agent/upload/", views.upload, name="agent_upload"),
     path("agent/upload_success/", views.upload_success, name="agent_upload_success"),
@@ -39,7 +41,6 @@ urlpatterns = [
     path("api/next_match/", views.NextMatchAPIView.as_view(), name="next_match"),
     # Register page
     path("accounts/register/", views.register_request, name="register"),
-    path("about/", views.wip, name="about"),
     # Plots
     path("plots/matches_per_day/", views.plot_matches_per_day, name="matches_per_day"),
 ]

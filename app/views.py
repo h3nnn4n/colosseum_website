@@ -1,6 +1,7 @@
 import json
 import logging
 import lzma
+from datetime import timedelta
 from random import choice
 
 from django.conf import settings
@@ -14,6 +15,7 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import include, path
+from django.utils import timezone
 from django.views import generic
 from django.views.generic.edit import FormView
 from rest_framework import routers, status, viewsets
@@ -76,6 +78,25 @@ class TournamentListView(generic.ListView):
 class TournamentDetailView(generic.DetailView):
     model = models.Tournament
     template_name = "tournaments/detail.html"
+
+
+class AboutView(generic.TemplateView):
+    template_name = "about.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = {}
+        context["games_ran_in_the_last_day"] = models.Match.objects.filter(
+            ran=True, ran_at__gte=timezone.now() - timedelta(days=1)
+        ).count()
+        context["n_agents"] = (
+            models.Match.objects.filter(
+                ran=True, ran_at__gte=timezone.now() - timedelta(days=1)
+            )
+            .distinct("player1")
+            .count()
+        )
+
+        return context
 
 
 def register_request(request):

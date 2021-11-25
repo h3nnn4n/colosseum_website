@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="container py-5">
+  <h1>Colosseum</h1>
+  <p>
+    Hi, welcome to the Colosseum!
+  </p>
+  <p>
+    Colosseum is a modular framework for automated tournaments between AI
+    Agents. It was born out of passion. I wanted it to be what I wish I had
+    during college: A place where I can test myself against others, do AI,
+    compete and have fun.
+  </p>
+  <p>
+    Currently Colosseum is a functional work in progress. It is 100% automated.
+    People can upload their agents, and the agents are automatically paired
+    agaisnt each other in multiple competition formats. Their ratings are
+    updated accordingly. Replays of the games can be downloaded and vizualized
+    with a renderer.
+  </p>
+  <p>
+    The project is fully opensource and available on
+    <a href=https://github.com/h3nnn4n/colosseum>github</a> and
+    <a href=https://gitea.h3nnn4n.me/h3nnn4n/colosseum>gitea</a>.
+  </p>
+
+  <p>
+    In the past 24 hours we have ran
+    <a href={% url 'matches' %}>{{ games_ran_in_the_last_day }}</a> matches
+    with
+    <a href={% url 'agents' %}>{{ n_agents }}</a>
+    different agents.
+  </p>
+  <img src={% url 'matches_per_day' %}></img>
+</div>
+
+{% endblock %}
