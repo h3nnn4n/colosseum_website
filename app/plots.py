@@ -46,6 +46,27 @@ def matches_per_day():
     return _make_response(figure)
 
 
+def agent_elo_plot(agent):
+    sns.set_theme(style="whitegrid")
+    sns.set_color_codes("pastel")
+
+    elo_key = f"data__elo_after__{agent.id}"
+    data = agent.matches.filter(ran=True).order_by("ran_at").values("ran_at", elo_key)
+
+    with sns.axes_style("whitegrid"):
+        figure, ax = plt.subplots(figsize=(8, 6))
+        sns.lineplot(x=[d["ran_at"] for d in data], y=[d[elo_key] for d in data])
+
+    sns.despine(top=True, right=True, left=True, bottom=True)
+
+    ax.set_title("Agent Elo")
+    ax.set_ylabel("Elo")
+
+    figure.tight_layout()
+
+    return _make_response(figure)
+
+
 def _make_response(fig):
     from matplotlib.backends.backend_agg import FigureCanvasAgg
 

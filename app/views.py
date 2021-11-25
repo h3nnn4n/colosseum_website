@@ -254,3 +254,8 @@ class TournamentViewSet(viewsets.ModelViewSet):
 
 def plot_matches_per_day(request):
     return plots.matches_per_day()
+
+
+def plot_agent_elo(request, pk):
+    agent = models.Agent.objects.get(id=pk)
+    return plots.agent_elo_plot(agent)

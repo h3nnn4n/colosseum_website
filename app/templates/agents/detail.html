@@ -48,6 +48,13 @@
     </div>
     {% endif %}
   </div>
+
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <img src={% url 'agent_elo_plot' object.id %}>
+      </img>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

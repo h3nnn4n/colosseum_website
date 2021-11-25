@@ -41,4 +41,5 @@ urlpatterns = [
     path("accounts/register/", views.register_request, name="register"),
     # Plots
     path("plots/matches_per_day/", views.plot_matches_per_day, name="matches_per_day"),
+    path("plots/agent_elo_plot/<str:pk>/", views.plot_agent_elo, name="agent_elo_plot"),
 ]
