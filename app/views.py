@@ -152,6 +152,11 @@ class NextMatchAPIView(APIView):
     Current implementation picks a random match from a random tournament to run
     and returns it. In the future this may be improved to better balance
     matches between tournaments.
+
+    This view also checks if there are any tournaments where the matches
+    weren't created, and creates new matches accordingly. For timed matches
+    this is whenever the pending match count is less or equal to 10, otherwise
+    it is when there are no matches for the tournament.
     """
 
     def get(self, request):
