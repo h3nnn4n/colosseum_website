@@ -23,10 +23,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app import models, permissions, serializers
+from app import forms, models, permissions, serializers
 
 from . import plots
-from .forms import NewAgentForm, NewUserForm
 from .services.ratings import (
     update_elo_change_after,
     update_elo_change_before,
@@ -52,12 +51,31 @@ class AgentDetailView(generic.DetailView):
     template_name = "agents/detail.html"
 
 
+class AgentCreateView(LoginRequiredMixin, generic.CreateView):
+    model = models.Agent
+    template_name = "agents/create.html"
+    success_url = "/agents/"
+    form_class = forms.AgentForm
+
+    def get_form_kwargs(self):
+        kwargs = super(AgentCreateView, self).get_form_kwargs()
+        if hasattr(self, "object"):
+            kwargs.update({"instance": self.object})
+        kwargs["user"] = self.request.user
+        return kwargs
+
+
 class AgentUpdateView(permissions.IsOwnerPermissionMixin, generic.UpdateView):
     model_permission_user_field = "owner"
     model = models.Agent
     template_name = "agents/edit.html"
-    fields = ["name", "active", "file"]
     success_url = "/agents/"
+    form_class = forms.AgentForm
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.owner = request.user
+        return super().post(request, *args, **kwargs)
 
 
 class MatchListView(generic.ListView):
@@ -108,14 +126,14 @@ class AboutView(generic.TemplateView):
 
 def register_request(request):
     if request.method == "POST":
-        form = NewUserForm(request.POST)
+        form = forms.NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful.")
             return redirect("home")
         messages.error(request, "Unsuccessful registration. Invalid information.")
-    form = NewUserForm()
+    form = forms.NewUserForm()
     return render(
         request=request,
         template_name="registration/register.html",
@@ -125,27 +143,6 @@ def register_request(request):
 
 def index(request):
     return render(request, "home.html")
-
-
-def wip(request):
-    return render(request, "wip.html")
-
-
-# FIXME: This is obviously temporary
-@login_required()
-def upload(request):
-    if request.method == "POST":
-        form = NewAgentForm(request.POST, request.FILES, user=request.user)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/agent/upload_success/")
-    else:
-        form = NewAgentForm()
-    return render(request, "new_agent.html", {"form": form})
-
-
-def upload_success(request):
-    return render(request, "new_agent_success.html", {})
 
 
 # API Views

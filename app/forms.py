@@ -20,22 +20,28 @@ class NewUserForm(UserCreationForm):
         return user
 
 
-class NewAgentForm(forms.ModelForm):
+class AgentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
-        super(NewAgentForm, self).__init__(*args, **kwargs)
+        super(AgentForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(max_length=50)
+    active = forms.BooleanField()
     file = forms.FileField()
 
     class Meta:
         model = models.Agent
-        fields = ("name", "file")
+        fields = ("name", "active", "file")
 
     def save(self, commit=True):
-        agent = super(NewAgentForm, self).save(commit=False)
-        agent.owner_id = self.user.id
+        agent = super(AgentForm, self).save(commit=False)
+
+        if self.user:
+            agent.owner = self.user
+
         agent.file_hash = utils.hash_file(agent.file)
+
         if commit:
             agent.save()
+
         return agent
