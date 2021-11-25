@@ -41,8 +41,11 @@
       <p>Created: {{ object.created_at|date }}</p>
     </div>
 
+    {% if object.owner == request.user %}
     <div class="col col-lg-2">
       <a href={% url 'agent_edit' object.id %}>Edit</a>
+    </div>
+    {% endif %}
   </div>
 </div>
 
