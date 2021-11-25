@@ -159,6 +159,8 @@ class NextMatchAPIView(APIView):
     it is when there are no matches for the tournament.
     """
 
+    queryset = models.Match.objects.none()
+
     def get(self, request):
         # FIXME: This wont work for very long, specially on a high traffic and
         # mission critical endpoint like this one.
