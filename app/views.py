@@ -23,7 +23,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app import forms, models, permissions, serializers
+from app import forms, models, permissions, serializers, utils
 
 from . import plots
 from .services.ratings import (
@@ -206,6 +206,13 @@ class AgentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = models.Agent.objects.all()
     serializer_class = serializers.AgentSerializer
+
+    @action(detail=True, methods=["post"])
+    def update_hash(self, request, pk=None):
+        obj = self.get_object()
+        obj.file_hash = utils.hash_file(obj.file)
+        obj.save()
+        return Response(obj.file_hash, status=status.HTTP_200_OK)
 
 
 class GameViewSet(viewsets.ModelViewSet):
