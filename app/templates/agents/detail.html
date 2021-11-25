@@ -42,6 +42,10 @@
       <p>Created: {{ object.created_at|date }}</p>
     </div>
 
+    <div class="col col-lg-2">
+      <p>Most recent game: {{ object.most_recent_match.ran_at | date:"Y-m-d H:i:s" }}</p>
+    </div>
+
     {% if object.owner == request.user %}
     <div class="col col-lg-2">
       <a href={% url 'agent_edit' object.id %}>Edit</a>

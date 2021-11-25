@@ -62,6 +62,10 @@ class Agent(BaseModel):
         return self.matches.filter(ran=True).count()
 
     @property
+    def most_recent_match(self):
+        return self.matches.filter(ran=True).order_by("-ran_at").first()
+
+    @property
     def download_url(self):
         if self.file:
             return self.file.url
