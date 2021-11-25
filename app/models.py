@@ -28,7 +28,7 @@ class Agent(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     file = models.FileField(null=True, upload_to=utils.agent_filepath)
-    file_hash = models.CharField(max_length=128, unique=True, null=True)
+    file_hash = models.CharField(max_length=128, null=True)
     active = models.BooleanField(default=True)
 
     wins = models.IntegerField(default=0)
@@ -38,7 +38,12 @@ class Agent(BaseModel):
     elo = models.DecimalField(default=1500, decimal_places=2, max_digits=10)
 
     class Meta:
-        indexes = [models.Index(fields=["name"]), models.Index(fields=["owner"])]
+        indexes = [
+            models.Index(fields=["elo"]),
+            models.Index(fields=["file_hash"]),
+            models.Index(fields=["name"]),
+            models.Index(fields=["owner"]),
+        ]
 
     @property
     def win_ratio(self):
