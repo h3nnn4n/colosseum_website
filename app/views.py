@@ -23,6 +23,7 @@ from rest_framework.views import APIView
 
 from app import models, serializers
 
+from . import plots
 from .forms import NewAgentForm, NewUserForm
 from .services.ratings import (
     update_elo_change_after,
@@ -201,3 +202,10 @@ class TournamentViewSet(viewsets.ModelViewSet):
 
         create_automated_tournaments()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# Plots
+
+
+def plot_matches_per_day(request):
+    return plots.matches_per_day()

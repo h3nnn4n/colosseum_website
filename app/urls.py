@@ -40,4 +40,6 @@ urlpatterns = [
     # Register page
     path("accounts/register/", views.register_request, name="register"),
     path("about/", views.wip, name="about"),
+    # Plots
+    path("plots/matches_per_day/", views.plot_matches_per_day, name="matches_per_day"),
 ]
