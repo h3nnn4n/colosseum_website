@@ -23,7 +23,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app import models, serializers
+from app import models, permissions, serializers
 
 from . import plots
 from .forms import NewAgentForm, NewUserForm
@@ -52,7 +52,8 @@ class AgentDetailView(generic.DetailView):
     template_name = "agents/detail.html"
 
 
-class AgentUpdateView(LoginRequiredMixin, generic.UpdateView):
+class AgentUpdateView(permissions.IsOwnerPermissionMixin, generic.UpdateView):
+    model_permission_user_field = "owner"
     model = models.Agent
     template_name = "agents/edit.html"
     fields = ["name", "active", "file"]
@@ -159,6 +160,7 @@ class NextMatchAPIView(APIView):
     it is when there are no matches for the tournament.
     """
 
+    permission_classes = [permissions.IsAdminUser]
     queryset = models.Match.objects.none()
 
     def get(self, request):
@@ -192,21 +194,25 @@ class NextMatchAPIView(APIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
 
 
 class AgentViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = models.Agent.objects.all()
     serializer_class = serializers.AgentSerializer
 
 
 class GameViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
 
 
 class MatchViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = models.Match.objects.all()
     serializer_class = serializers.MatchSerializer
 
@@ -221,6 +227,7 @@ class MatchViewSet(viewsets.ModelViewSet):
 
 
 class TournamentViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = models.Tournament.objects.all()
     serializer_class = serializers.TournamentSerializer
 
