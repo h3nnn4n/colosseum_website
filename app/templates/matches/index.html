@@ -30,9 +30,13 @@
         </td>
         <td> {{ match.pretty_result }} </td>
         <td>
+          {% if match.tournament %}
           <a href={% url 'tournament_detail' match.tournament.id %}>
             {{ match.tournament.name }}
           </a>
+          {% else %}
+          <span> - </span>
+          {% endif %}
         </td>
         <td> {{ match.ran_at | date:"Y-m-d H:i:s" }} </td>
 
