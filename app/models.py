@@ -97,6 +97,9 @@ class Match(BaseModel):
     errors = models.JSONField(default=dict)
     replay = models.FileField(null=True, upload_to=utils.replay_filepath)
 
+    class Meta:
+        indexes = [models.Index(fields=["ran"])]
+
     @property
     def pretty_result(self):
         if not self.ran:
