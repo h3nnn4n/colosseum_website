@@ -94,6 +94,7 @@ class Match(BaseModel):
     )
     result = models.DecimalField(default=-1, decimal_places=1, max_digits=3)
     data = models.JSONField(default=dict)
+    errors = models.JSONField(default=dict)
     replay = models.FileField(null=True, upload_to=utils.replay_filepath)
 
     @property

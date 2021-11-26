@@ -61,6 +61,7 @@ class MatchSerializer(serializers.ModelSerializer):
             "player1",
             "player2",
             "result",
+            "errors",
             "data",
             "ran",
             "ran_at",
