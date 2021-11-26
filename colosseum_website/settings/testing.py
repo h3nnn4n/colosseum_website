@@ -1,6 +1,6 @@
 from .base import *
 
 
-ENVIROMENT = "TESTING"
+ENVIRONMENT = "TESTING"
 
 DEBUG = True
