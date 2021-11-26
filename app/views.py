@@ -167,7 +167,7 @@ class NextMatchAPIView(APIView):
     queryset = models.Match.objects.none()
 
     def get(self, request):
-        # FIXME: This wont work for very long, specially on a high traffic and
+        # FIXME: This won't work for very long, specially on a high traffic and
         # mission critical endpoint like this one.
         tournaments = models.Tournament.objects.all()
 
