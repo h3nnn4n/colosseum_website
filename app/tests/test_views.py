@@ -46,6 +46,20 @@ class NextMatchAPIViewTestCase(TestCase):
         tournament.participants.set([self.agent1.id, self.agent2.id, self.agent3.id])
         response = self.api_client.get("/api/next_match/")
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {})
+
+    def test_no_match_active_timed_tournament_with_post(self):
+        self.api_client.force_authenticate(user=self.admin_user)
+
+        tournament = factories.TournamentFactory(
+            mode="TIMED",
+            start_date=timezone.now() - timedelta(hours=1),
+            end_date=timezone.now() + timedelta(hours=1),
+        )
+        tournament.participants.set([self.agent1.id, self.agent2.id, self.agent3.id])
+        response = self.api_client.post("/api/next_match/")
+        response = self.api_client.get("/api/next_match/")
+        self.assertEqual(response.status_code, 200)
         self.assertIn(
             UUID(response.json()["id"]), tournament.matches.values_list("id", flat=True)
         )

@@ -150,23 +150,32 @@ def index(request):
 
 class NextMatchAPIView(APIView):
     """
-    Returns a next match to be ran. Intended to run multiple tournaments at the
-    same time while using a generic worker.
+    GET returns a next match to be ran. Intended to run multiple tournaments at
+    the same time while using a generic worker.
 
     Current implementation picks a random match from a random tournament to run
     and returns it. In the future this may be improved to better balance
     matches between tournaments.
 
-    This view also checks if there are any tournaments where the matches
-    weren't created, and creates new matches accordingly. For timed matches
-    this is whenever the pending match count is less or equal to 10, otherwise
-    it is when there are no matches for the tournament.
+    Doing a POST to this view checks if there are any tournaments where the
+    matches weren't created, and creates new matches accordingly. For timed
+    matches this is whenever the pending match count is less or equal to 10,
+    otherwise it is when there are no matches for the tournament.
     """
 
     permission_classes = [permissions.IsAdminUser]
     queryset = models.Match.objects.none()
 
     def get(self, request):
+        match_ids = models.Match.objects.filter(ran=False).values_list("id", flat=True)
+        if not match_ids:
+            return Response({})
+
+        match_id = choice(list(match_ids))
+
+        return Response({"id": match_id})
+
+    def post(self, request):
         # FIXME: This won't work for very long, specially on a high traffic and
         # mission critical endpoint like this one.
         tournaments = models.Tournament.objects.all()
@@ -187,13 +196,7 @@ class NextMatchAPIView(APIView):
                 )
                 tournament.create_matches()
 
-        match_ids = models.Match.objects.filter(ran=False).values_list("id", flat=True)
-        if not match_ids:
-            return Response({})
-
-        match_id = choice(list(match_ids))
-
-        return Response({"id": match_id})
+        return Response()
 
 
 class UserViewSet(viewsets.ModelViewSet):
