@@ -17,13 +17,32 @@ import matplotlib.pyplot as plt  # noqa
 import seaborn as sns  # noqa
 
 
+# https://stackoverflow.com/a/27681394
+# def running_mean(x, N):
+# cumsum = np.cumsum(np.insert(x, 0, 0))
+# return (cumsum[N:] - cumsum[:-N]) / float(N)
+
+
+def running_mean(data, size):
+    new_data = []
+
+    for i in range(len(data)):
+        if i < size:
+            x = sum(data[0:i]) / size
+        else:
+            x = sum(data[i - size : i]) / size
+        new_data.append(x)
+
+    return new_data
+
+
 def matches_per_day():
     sns.set_theme(style="whitegrid")
     sns.set_color_codes("pastel")
 
     data = (
         models.Match.objects.filter(
-            ran=True, ran_at__gte=timezone.now() - timedelta(days=1)
+            ran=True, ran_at__gte=timezone.now() - timedelta(days=1, hours=1)
         )
         .annotate(date=TruncMinute("ran_at"))
         .values("date")
@@ -32,9 +51,17 @@ def matches_per_day():
         .order_by("date")
     )
 
+    # HACK: This is hacky and slow and I dont like it, but it works (for now)
+    window_size = 30
+    x = [d["date"] for d in data][window_size:-1]
+    raw_values = [d["count"] for d in data]
+    tailing_avg_values = running_mean(raw_values, window_size)[window_size:-1]
+    raw_values = raw_values[window_size:-1]
+
     with sns.axes_style("whitegrid"):
         figure, ax = plt.subplots(figsize=(12, 8))
-        sns.lineplot(x=[d["date"] for d in data], y=[d["count"] for d in data])
+        sns.lineplot(x=x, y=raw_values)
+        sns.lineplot(x=x, y=tailing_avg_values)
 
     sns.despine(top=True, right=True, left=True, bottom=True)
 
@@ -53,9 +80,17 @@ def agent_elo_plot(agent):
     elo_key = f"data__elo_after__{agent.id}"
     data = agent.matches.filter(ran=True).order_by("ran_at").values("ran_at", elo_key)
 
+    # HACK: This is hacky and slow and I dont like it, but it works (for now)
+    window_size = 250
+    x = [d["ran_at"] for d in data][window_size:-1]
+    raw_values = [d[elo_key] for d in data]
+    tailing_avg_values = running_mean(raw_values, window_size)[window_size:-1]
+    raw_values = raw_values[window_size:-1]
+
     with sns.axes_style("whitegrid"):
         figure, ax = plt.subplots(figsize=(8, 6))
-        sns.lineplot(x=[d["ran_at"] for d in data], y=[d[elo_key] for d in data])
+        sns.lineplot(x=x, y=raw_values)
+        sns.lineplot(x=x, y=tailing_avg_values)
 
     sns.despine(top=True, right=True, left=True, bottom=True)
 
