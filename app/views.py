@@ -178,7 +178,7 @@ class NextMatchAPIView(APIView):
     def post(self, request):
         # FIXME: This won't work for very long, specially on a high traffic and
         # mission critical endpoint like this one.
-        tournaments = models.Tournament.objects.all()
+        tournaments = models.Tournament.objects.filter(done=False)
 
         for tournament in tournaments:
             if (
@@ -195,6 +195,13 @@ class NextMatchAPIView(APIView):
                     f"{tournament.mode} Tournament {tournament.id} is missing matches. Creating"
                 )
                 tournament.create_matches()
+
+            if not tournament.is_active:
+                tournament.done = True
+                tournament.save(update_fields=["done"])
+                logger.info(
+                    f"{tournament.mode} Tournament {tournament.id} was set to done=true"
+                )
 
         return Response()
 
