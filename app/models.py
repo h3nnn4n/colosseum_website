@@ -102,6 +102,7 @@ class Match(BaseModel):
             models.Index(fields=["player1"]),
             models.Index(fields=["player2"]),
             models.Index(fields=["ran"]),
+            models.Index(fields=["ran_at"]),
             models.Index(fields=["tournament"]),
         ]
 
