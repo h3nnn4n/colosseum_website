@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
 
 from . import utils
 
@@ -47,19 +48,21 @@ class Agent(BaseModel):
 
     @property
     def win_ratio(self):
-        if self.games_played == 0:
+        if self.games_played_count == 0:
             return 0
-        return self.wins / self.games_played
+        return self.wins / self.games_played_count
 
     @property
     def pretty_win_ratio(self):
-        if self.games_played == 0:
-            return "0"
-        return f"{(self.wins / self.games_played) * 100.0:.2f}"
+        return f"{self.win_ratio * 100.0:.2f}"
 
-    @property
+    @cached_property
+    def games_played_count(self):
+        return self.games_played.count()
+
+    @cached_property
     def games_played(self):
-        return self.matches.filter(ran=True).count()
+        return self.matches.filter(ran=True)
 
     @property
     def most_recent_match(self):

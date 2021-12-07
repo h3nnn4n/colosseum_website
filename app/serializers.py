@@ -40,7 +40,7 @@ class AgentSerializer(serializers.ModelSerializer):
             "draws",
             "elo",
             "owner",
-            "games_played",
+            "games_played_count",
             "created_at",
             "updated_at",
         ]
