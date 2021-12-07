@@ -98,7 +98,12 @@ class Match(BaseModel):
     replay = models.FileField(null=True, upload_to=utils.replay_filepath)
 
     class Meta:
-        indexes = [models.Index(fields=["ran"])]
+        indexes = [
+            models.Index(fields=["player1"]),
+            models.Index(fields=["player2"]),
+            models.Index(fields=["ran"]),
+            models.Index(fields=["tournament"]),
+        ]
 
     @property
     def pretty_result(self):
@@ -157,9 +162,11 @@ class Tournament(BaseModel):
 
     class Meta:
         indexes = [
-            models.Index(fields=["name"]),
-            models.Index(fields=["game"]),
             models.Index(fields=["done"]),
+            models.Index(fields=["game"]),
+            models.Index(fields=["is_automated"]),
+            models.Index(fields=["mode"]),
+            models.Index(fields=["name"]),
         ]
 
     @property
