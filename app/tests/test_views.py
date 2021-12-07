@@ -68,6 +68,26 @@ class NextMatchAPIViewTestCase(TestCase):
         response = self.api_client.get("/api/next_match/")
         self.assertEqual(response.status_code, 401)
 
+    def test_mark_completed_tournaments_as_done(self):
+        self.api_client.force_authenticate(user=self.admin_user)
+
+        tournament = factories.TournamentFactory(
+            mode="ROUND_ROBIN",
+            start_date=timezone.now() - timedelta(hours=1),
+            end_date=timezone.now() + timedelta(hours=1),
+        )
+        tournament.participants.set([self.agent1.id, self.agent2.id, self.agent3.id])
+        self.api_client.post("/api/next_match/")
+        self.api_client.get("/api/next_match/")
+        tournament.refresh_from_db()
+        self.assertFalse(tournament.done)
+
+        tournament.matches.update(ran=True)
+
+        self.api_client.post("/api/next_match/")
+        tournament.refresh_from_db()
+        self.assertTrue(tournament.done)
+
 
 class TournamentViewSetTestCase(TestCase):
     def setUp(self):
