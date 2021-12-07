@@ -32,6 +32,8 @@ class Agent(BaseModel):
     file_hash = models.CharField(max_length=128, null=True)
     active = models.BooleanField(default=True)
 
+    game = models.ForeignKey("Game", on_delete=models.CASCADE)
+
     wins = models.IntegerField(default=0)
     loses = models.IntegerField(default=0)
     draws = models.IntegerField(default=0)
@@ -42,6 +44,7 @@ class Agent(BaseModel):
         indexes = [
             models.Index(fields=["elo"]),
             models.Index(fields=["file_hash"]),
+            models.Index(fields=["game"]),
             models.Index(fields=["name"]),
             models.Index(fields=["owner"]),
         ]

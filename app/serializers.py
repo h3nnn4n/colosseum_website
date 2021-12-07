@@ -32,6 +32,7 @@ class AgentSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
+            "game",
             "file",
             "file_hash",
             "score",
