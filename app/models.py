@@ -156,7 +156,11 @@ class Tournament(BaseModel):
     done = models.BooleanField(null=True, default=False)
 
     class Meta:
-        indexes = [models.Index(fields=["name"]), models.Index(fields=["game"])]
+        indexes = [
+            models.Index(fields=["name"]),
+            models.Index(fields=["game"]),
+            models.Index(fields=["done"]),
+        ]
 
     @property
     def is_active(self):
