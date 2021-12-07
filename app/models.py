@@ -146,11 +146,14 @@ class Tournament(BaseModel):
 
     mode = models.CharField(max_length=64, choices=MODES)
 
+    # For timed tournaments, this is when they start and end at
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
 
     is_automated = models.BooleanField(null=True, default=False)
     automated_number = models.IntegerField(null=True)
+
+    done = models.BooleanField(null=True, default=False)
 
     class Meta:
         indexes = [models.Index(fields=["name"]), models.Index(fields=["game"])]

@@ -119,3 +119,19 @@ class TournamentViewSetTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, 401)
+
+    def test_get_tournament(self):
+        self.api_client.force_authenticate(user=self.admin_user)
+        response = self.api_client.post(
+            "/api/tournaments/",
+            {
+                "name": "foo",
+                "game": self.game.id,
+                "mode": "ROUND_ROBIN",
+                "participants": [self.agent1.id, self.agent2.id],
+            },
+        )
+        self.assertEqual(response.status_code, 201)
+
+        data = response.json()
+        self.assertFalse(data["done"])
