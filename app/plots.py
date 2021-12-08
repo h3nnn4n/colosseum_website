@@ -4,8 +4,8 @@ from datetime import timedelta
 
 import matplotlib
 import numpy as np
-from django.db.models import Count
-from django.db.models.functions import TruncMinute
+from django.db.models import Count, F, FloatField, Sum
+from django.db.models.functions import Cast, TruncHour, TruncMinute
 from django.http import HttpResponse
 from django.utils import timezone
 
@@ -76,11 +76,24 @@ def agent_elo_plot(agent):
     sns.set_color_codes("pastel")
 
     elo_key = f"data__elo_after__{agent.id}"
-    data = agent.matches.filter(ran=True).order_by("ran_at").values("ran_at", elo_key)
+
+    data = (
+        agent.matches.filter(ran=True)
+        .annotate(
+            date=TruncHour("ran_at"), elo=Cast(F(elo_key), output_field=FloatField())
+        )
+        .values("date", elo_key)
+        .annotate(mean_elo=Sum("elo") / Count("date"))
+        .values("date", "mean_elo")
+        .order_by("date")
+    )
+
+    x = [d["date"] for d in data]
+    y = [d["mean_elo"] for d in data]
 
     with sns.axes_style("whitegrid"):
         figure, ax = plt.subplots(figsize=(8, 6))
-        sns.lineplot(x=[d["ran_at"] for d in data], y=[d[elo_key] for d in data])
+        sns.lineplot(x=x, y=y)
 
     sns.despine(top=True, right=True, left=True, bottom=True)
 
