@@ -32,9 +32,34 @@ def matches_per_day():
         .order_by("date")
     )
 
+    x_ = [d["date"] for d in data]
+    y_ = [d["count"] for d in data]
+    x = []
+    y = []
+
+    for i in range(len(x_)):
+        date = x_[i]
+        count = y_[i]
+
+        if len(x) == 0:
+            x.append(date)
+            y.append(count)
+            continue
+
+        date_ = x_[i - 1]
+        gap = (date - date_).total_seconds()
+        missing_minutes = int((gap / 60.0) - 1)
+
+        for missing_minute in range(missing_minutes):
+            x.append(date_ + timedelta(minutes=missing_minute))
+            y.append(count)
+
+        x.append(date)
+        y.append(count)
+
     with sns.axes_style("whitegrid"):
         figure, ax = plt.subplots(figsize=(12, 8))
-        sns.lineplot(x=[d["date"] for d in data], y=[d["count"] for d in data])
+        sns.lineplot(x=x, y=y)
 
     sns.despine(top=True, right=True, left=True, bottom=True)
 
