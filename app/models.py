@@ -103,6 +103,8 @@ class Match(BaseModel):
     errors = models.JSONField(default=dict)
     replay = models.FileField(null=True, upload_to=utils.replay_filepath)
 
+    game = models.ForeignKey("Game", on_delete=models.CASCADE)
+
     class Meta:
         indexes = [
             models.Index(fields=["player1"]),
@@ -110,6 +112,7 @@ class Match(BaseModel):
             models.Index(fields=["ran"]),
             models.Index(fields=["ran_at"]),
             models.Index(fields=["tournament"]),
+            models.Index(fields=["game"]),
         ]
 
     @property
@@ -231,6 +234,7 @@ class Tournament(BaseModel):
                     ran=False,
                     ran_at=None,
                     tournament=self,
+                    game=self.game,
                 )
                 match.participants.add(*bracket)
                 match.save()

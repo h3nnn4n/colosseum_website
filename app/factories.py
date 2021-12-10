@@ -17,6 +17,13 @@ class UserFactory(factory.django.DjangoModelFactory):
     is_active = True
 
 
+class GameFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Game
+
+    name = factory.Sequence(lambda n: "test_game %03d" % n)
+
+
 class AgentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Agent
@@ -24,19 +31,13 @@ class AgentFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: "Agent %03d" % n)
 
     owner = factory.SubFactory(UserFactory)
+    game = factory.SubFactory(GameFactory)
 
     wins = FuzzyInteger(0, 100)
     loses = FuzzyInteger(0, 100)
     draws = FuzzyInteger(0, 100)
     score = factory.LazyAttribute(lambda o: o.wins + o.draws)
     elo = FuzzyInteger(1000, 2000)
-
-
-class GameFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.Game
-
-    name = factory.Sequence(lambda n: "test_game %03d" % n)
 
 
 class TournamentFactory(factory.django.DjangoModelFactory):
@@ -53,4 +54,6 @@ class MatchFactory(factory.django.DjangoModelFactory):
         model = models.Match
 
     tournament = factory.SubFactory(TournamentFactory)
+    game = factory.SubFactory(GameFactory)
+
     ran = False
