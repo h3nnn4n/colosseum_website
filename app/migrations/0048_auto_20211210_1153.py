@@ -9,7 +9,7 @@ def populate_match_game(apps, schema_editor):
 
     game = Game.objects.first()
 
-    for match in Match.objects.all():
+    for match in Match.objects.all().iterator():
         match.game = game
         match.save(update_fields=["game"])
 
