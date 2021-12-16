@@ -26,6 +26,7 @@ matplotlib = "^3.5.0"
 seaborn = "^0.11.2"
 notebook = "^6.4.6"
 ipywidgets = "^7.6.5"
+django-debug-toolbar = "^3.2.4"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.29.0"
