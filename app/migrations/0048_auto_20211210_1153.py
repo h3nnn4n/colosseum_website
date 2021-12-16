@@ -8,7 +8,7 @@ def populate_match_game(apps, schema_editor):
     Game = apps.get_model("app", "Game")
 
     game = Game.objects.first()
-    Match.objects.all().update(game=game)
+    Match.objects.filter(game__isnull=True).update(game=game)
 
 
 class Migration(migrations.Migration):
