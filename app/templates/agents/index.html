@@ -15,7 +15,6 @@
       <th scope="col"> Wins </th>
       <th scope="col"> Loses </th>
       <th scope="col"> Draws </th>
-      <th scope="col"> Games </th>
     </thead>
     <tbody>
       {% for agent in agents %}
@@ -32,7 +31,6 @@
         <td>{{ agent.wins }}</td>
         <td>{{ agent.loses }}</td>
         <td>{{ agent.draws }}</td>
-        <td>{{ agent.games_played_count }}</td>
       </tr>
       {% endfor %}
     </tbody>
