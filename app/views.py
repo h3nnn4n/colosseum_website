@@ -39,6 +39,18 @@ logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("APP")
 
 
+class CacheMixin:
+    cache_timeout = 60
+
+    def get_cache_timeout(self):
+        return self.cache_timeout
+
+    def dispatch(self, *args, **kwargs):
+        return cache_page(self.get_cache_timeout())(super(CacheMixin, self).dispatch)(
+            *args, **kwargs
+        )
+
+
 class AgentListView(generic.ListView):
     template_name = "agents/index.html"
     context_object_name = "agents"
