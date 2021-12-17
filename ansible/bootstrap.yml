@@ -1,0 +1,41 @@
+---
+- name: Setup basic server stuff
+  gather_facts: false
+  hosts: all
+
+  tasks:
+    - name: Refresh apt and install base packages
+      apt:
+        pkg:
+          - sudo
+        state: present
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Make sure we have a 'wheel' group
+      group:
+        name: wheel
+        state: present
+
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Add devops user
+      user:
+        name: devops
+        groups: wheel
+        append: yes
+        state: present
+        createhome: yes
+        shell: /bin/bash
+
+    - name: Set authorized keys
+      ansible.posix.authorized_key:
+        user: devops
+        state: present
+        key: https://github.com/h3nnn4n/colosseum_website
