@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
+import socket
 from pathlib import Path
 
 import dj_database_url
@@ -173,7 +174,7 @@ INFLUXDB_PORT = os.environ.get("INFLUXDB_PORT")
 INFLUXDB_USER = os.environ.get("INFLUXDB_USER")
 INFLUXDB_PASSWORD = os.environ.get("INFLUXDB_PASSWORD")
 INFLUXDB_DATABASE = os.environ.get("INFLUXDB_DATABASE")
-INFLUXDB_TAGS_HOST = "your_hostname"
+INFLUXDB_TAGS_HOST = socket.gethostname()
 INFLUXDB_TIMEOUT = 5
 INFLUXDB_USE_CELERY = False
 INFLUXDB_USE_THREADING = True
