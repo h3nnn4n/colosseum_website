@@ -148,6 +148,18 @@ def index(request):
 # API Views
 
 
+class RedisInfoAPIView(APIView):
+    permission_classes = []
+    queryset = models.Match.objects.none()
+
+    def get(self, request):
+        from django_redis import get_redis_connection
+
+        con = get_redis_connection("default")
+        data = con.ping()
+        return Response({"foo": data})
+
+
 class NextMatchAPIView(APIView):
     """
     GET returns a next match to be ran. Intended to run multiple tournaments at

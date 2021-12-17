@@ -42,4 +42,6 @@ urlpatterns = [
     # Plots
     path("plots/matches_per_day/", views.plot_matches_per_day, name="matches_per_day"),
     path("plots/agent_elo_plot/<str:pk>/", views.plot_agent_elo, name="agent_elo_plot"),
+    # Debug
+    path("api/debug/redis_info/", views.RedisInfoAPIView.as_view(), name="redis_info"),
 ]
