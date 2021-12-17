@@ -257,6 +257,17 @@ psycopg2 = "*"
 whitenoise = "*"
 
 [[package]]
+name = "django-memoize"
+version = "2.3.1"
+description = "An implementation of memoization technique for Django."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-redis"
 version = "5.1.0"
 description = "Full featured redis cache backend for Django."
@@ -1291,7 +1302,7 @@ notebook = ">=4.4.1"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.0"
-content-hash = "aa8d84ffaf6b128751dbb22a681018d4af7f0741c84f406a6482e1fab98cfe3a"
+content-hash = "6b7f2a477ffb61e79067b346b0a47de85f1290364c88f82ad2c10689384f7148"
 
 [metadata.files]
 appnope = [
@@ -1461,6 +1472,9 @@ django-extensions = [
 django-heroku = [
     {file = "django-heroku-0.3.1.tar.gz", hash = "sha256:6af4bc3ae4a9b55eaad6dbe5164918982d2762661aebc9f83d9fa49f6009514e"},
     {file = "django_heroku-0.3.1-py2.py3-none-any.whl", hash = "sha256:2bc690aab89eedbe01311752320a9a12e7548e3b0ed102681acc5736a41a4762"},
+]
+django-memoize = [
+    {file = "django-memoize-2.3.1.tar.gz", hash = "sha256:62ac4807710ecf22a7397d008d64d0f798e7230482d4b6072d916cac852a47cd"},
 ]
 django-redis = [
     {file = "django-redis-5.1.0.tar.gz", hash = "sha256:98fb3d31633a1addea1aeb558a647359908bbcf78c0833f99496c5348fe3c1b4"},

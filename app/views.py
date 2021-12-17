@@ -17,6 +17,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import include, path
 from django.utils import timezone
 from django.views import generic
+from django.views.decorators.cache import cache_page
 from django.views.generic.edit import FormView
 from rest_framework import routers, status, viewsets
 from rest_framework.decorators import action

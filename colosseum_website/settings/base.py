@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "crispy_forms",
     "django_extensions",
+    "memoize",
     "debug_toolbar",
     "app",
 ]
