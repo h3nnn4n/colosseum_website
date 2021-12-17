@@ -46,10 +46,12 @@ INSTALLED_APPS = [
     "django_extensions",
     "memoize",
     "debug_toolbar",
+    "influxdb_metrics",
     "app",
 ]
 
 MIDDLEWARE = [
+    "influxdb_metrics.middleware.InfluxDBRequestMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -163,3 +165,17 @@ AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
 INTERNAL_IPS = ["127.0.0.1"]
+
+
+# InfluxDB settings
+INFLUXDB_HOST = os.environ.get("INFLUXDB_HOST")
+INFLUXDB_PORT = os.environ.get("INFLUXDB_PORT")
+INFLUXDB_USER = os.environ.get("INFLUXDB_USER")
+INFLUXDB_PASSWORD = os.environ.get("INFLUXDB_PASSWORD")
+INFLUXDB_DATABASE = os.environ.get("INFLUXDB_DATABASE")
+INFLUXDB_TAGS_HOST = "your_hostname"
+INFLUXDB_TIMEOUT = 5
+INFLUXDB_USE_CELERY = False
+INFLUXDB_USE_THREADING = True
+
+INFLUXDB_PREFIX = "web"
