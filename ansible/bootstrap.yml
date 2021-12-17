@@ -4,10 +4,15 @@
   hosts: all
 
   tasks:
+    - name: Add deadsnakes ppa
+      ansible.builtin.apt_repository:
+        repo: 'ppa:deadsnakes/ppa'
+
     - name: Refresh apt and install base packages
       apt:
         pkg:
           - sudo
+          - python3.10-full
         state: present
         update_cache: yes
         cache_valid_time: 3600
@@ -39,3 +44,25 @@
         user: devops
         state: present
         key: https://raw.githubusercontent.com/h3nnn4n/colosseum_website/develop/ansible/authorized_keys
+
+    - name: Checkout colosseum
+      ansible.builtin.git:
+        repo: 'https://github.com/h3nnn4n/colosseum'
+        dest: /opt/colosseum/
+        version: develop  # FIXME: Should be a release branch
+
+    - name: Checkout colosseum_website
+      ansible.builtin.git:
+        repo: 'https://github.com/h3nnn4n/colosseum_website'
+        dest: /opt/colosseum_website/
+        version: develop  # FIXME: Should be a release branch
+
+    - name: Setup poetry
+      ansible.builtin.shell: |
+        python3.10 -m ensurepip
+        python3.10 -m pip install poetry
+      become: yes
+      become_method: sudo
+      become_user: devops
+      vars:
+        allow_world_readable_tmpfiles: true
