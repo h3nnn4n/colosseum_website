@@ -149,6 +149,13 @@ def index(request):
 # API Views
 
 
+class PingAPIView(APIView):
+    permission_classes = []
+
+    def get(self, _request):
+        return Response({"ping": "pong"})
+
+
 class RedisInfoAPIView(APIView):
     permission_classes = []
     queryset = models.Match.objects.none()
