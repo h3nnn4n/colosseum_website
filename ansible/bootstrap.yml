@@ -38,4 +38,4 @@
       ansible.posix.authorized_key:
         user: devops
         state: present
-        key: https://github.com/h3nnn4n/colosseum_website
+        key: https://raw.githubusercontent.com/h3nnn4n/colosseum_website/develop/ansible/authorized_keys
