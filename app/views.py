@@ -155,9 +155,8 @@ class RedisInfoAPIView(APIView):
     def get(self, request):
         from django_redis import get_redis_connection
 
-        con = get_redis_connection("default")
-        data = con.ping()
-        return Response({"foo": data})
+        conn = get_redis_connection("default")
+        return Response({"ping": conn.ping(), "info": conn.info()})
 
 
 class NextMatchAPIView(APIView):
