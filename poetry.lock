@@ -282,12 +282,19 @@ description = "A reusable Django app that sends metrics about your project to In
 category = "main"
 optional = false
 python-versions = "*"
+develop = false
 
 [package.dependencies]
 django = ">=1.6"
 influxdb = ">=2.9.1"
 python-server-metrics = ">=0.1.9"
 tld = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/realdanurbano/django-influxdb-metrics"
+reference = "bugfix/shared-task-factory-when-celery-not-available"
+resolved_reference = "e5b5f02bd6a79aab6d3d458a3c2237e45b0c5bc1"
 
 [[package]]
 name = "django-memoize"
@@ -1417,7 +1424,7 @@ notebook = ">=4.4.1"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.0"
-content-hash = "7698bbef4ee3d99fa3541020e3ea1aced1aa40887f0b0ab4a05b221b06fa5941"
+content-hash = "63ea4fdc2f7907dfee2c9971f7d4fa7a86fb6aef2af95ce2fc40f2dc0e16519f"
 
 [metadata.files]
 appnope = [
@@ -1596,10 +1603,7 @@ django-heroku = [
     {file = "django-heroku-0.3.1.tar.gz", hash = "sha256:6af4bc3ae4a9b55eaad6dbe5164918982d2762661aebc9f83d9fa49f6009514e"},
     {file = "django_heroku-0.3.1-py2.py3-none-any.whl", hash = "sha256:2bc690aab89eedbe01311752320a9a12e7548e3b0ed102681acc5736a41a4762"},
 ]
-django-influxdb-metrics = [
-    {file = "django-influxdb-metrics-1.5.0.tar.gz", hash = "sha256:b726d2d741376ff63d47c445748080026b9afa897dc9c259c32c3aa7b7791fef"},
-    {file = "django_influxdb_metrics-1.5.0-py3-none-any.whl", hash = "sha256:68f53bd5f181b9e48c8ea903fc6950e05a1bd61b0efd467652cabe23bd2e0b3a"},
-]
+django-influxdb-metrics = []
 django-memoize = [
     {file = "django-memoize-2.3.1.tar.gz", hash = "sha256:62ac4807710ecf22a7397d008d64d0f798e7230482d4b6072d916cac852a47cd"},
 ]
