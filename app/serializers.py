@@ -99,7 +99,9 @@ class MatchSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        super(MatchSerializer, self).update(instance, validated_data)
+        # Never change a match result
+        if not instance.ran:
+            super(MatchSerializer, self).update(instance, validated_data)
 
         # If it ran but data is empty, we need to update the player ratings
         if instance.ran and not instance.data:
