@@ -281,7 +281,7 @@ class TournamentViewSet(viewsets.ModelViewSet):
 # Plots
 
 
-# We cache one second off the plot update interval to ensure that it wont
+# We cache one second off the plot update interval to ensure that it won't
 # (possibly) have persistent artefacts near the boundaries that are updated
 # on the minute.
 @cache_page(constants.ONE_MINUTE - 1)
