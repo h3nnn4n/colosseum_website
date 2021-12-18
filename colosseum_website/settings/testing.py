@@ -3,6 +3,6 @@ from .base import *
 
 ENVIRONMENT = "TESTING"
 
-DEBUG = True
+DEBUG = False
 
 INFLUXDB_DISABLED = True
