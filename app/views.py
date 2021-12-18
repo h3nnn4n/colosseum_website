@@ -262,7 +262,8 @@ class MatchViewSet(viewsets.ModelViewSet):
         mime = utils.guess_mime(file)
         replay_file = None
 
-        if mime == "application/json":
+        # A jsonl is a weird format that libmime gets very confused about
+        if mime in ("application/json", "application/csv"):
             data_out = lzma.compress(file.read())
             replay_file = ContentFile(data_out)
             logger.info("compressing replay file")
