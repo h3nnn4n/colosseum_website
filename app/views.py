@@ -266,9 +266,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         if mime in ("application/json", "application/csv", "text/plain"):
             data_out = lzma.compress(file.read())
             replay_file = ContentFile(data_out)
-            logger.info("compressing replay file")
         elif mime == "application/x-xz":
-            logger.info(f"not compressing replay file of type {mime}")
             replay_file = file
         else:
             logger.warn(
