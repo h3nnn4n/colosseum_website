@@ -24,7 +24,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app import forms, models, permissions, serializers, utils
+from app import constants, forms, models, permissions, serializers, utils
 
 from . import plots
 from .services.ratings import (
@@ -281,10 +281,15 @@ class TournamentViewSet(viewsets.ModelViewSet):
 # Plots
 
 
+# We cache one second off the plot update interval to ensure that it won't
+# (possibly) have persistent artefacts near the boundaries that are updated
+# on the minute.
+@cache_page(constants.ONE_MINUTE - 1)
 def plot_matches_per_day(request):
     return plots.matches_per_day()
 
 
+@cache_page(constants.TEN_MINUTES)
 def plot_agent_elo(request, pk):
     agent = models.Agent.objects.get(id=pk)
     return plots.agent_elo_plot(agent)
