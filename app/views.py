@@ -270,6 +270,9 @@ class MatchViewSet(viewsets.ModelViewSet):
             logger.info(f"not compressing replay file of type {mime}")
             replay_file = file
         else:
+            logger.warn(
+                f"file of type {mime} is invalid. Must be json or xz. Not processing"
+            )
             return Response(
                 f"file of type {mime} is invalid. Must be json or xz",
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY,
