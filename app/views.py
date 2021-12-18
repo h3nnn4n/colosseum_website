@@ -24,7 +24,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app import constants, forms, models, permissions, serializers, utils
+from app import constants, forms, metrics, models, permissions, serializers, utils
 
 from . import plots
 from .services.ratings import (
@@ -281,6 +281,8 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         match.replay.save("replay.jsonl.xz", replay_file)
         match.save()
+
+        metrics.register_replay()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
