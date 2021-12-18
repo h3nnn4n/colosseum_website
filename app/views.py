@@ -259,9 +259,25 @@ class MatchViewSet(viewsets.ModelViewSet):
     def upload_replay(self, request, pk=None):
         match = self.get_object()
         file = request.data["file"]
-        data_out = lzma.compress(file.read())
-        match.replay.save("replay.jsonl.xz", ContentFile(data_out))
+        mime = utils.guess_mime(file)
+        replay_file = None
+
+        if mime == "application/json":
+            data_out = lzma.compress(file.read())
+            replay_file = ContentFile(data_out)
+            logger.info("compressing replay file")
+        elif mime == "application/x-xz":
+            logger.info(f"not compressing replay file of type {mime}")
+            replay_file = file
+        else:
+            return Response(
+                f"file of type {mime} is invalid. Must be json or xz",
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+
+        match.replay.save("replay.jsonl.xz", replay_file)
         match.save()
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

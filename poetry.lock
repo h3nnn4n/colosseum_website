@@ -1258,6 +1258,14 @@ python-versions = ">=3.5"
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "python-magic"
+version = "0.4.24"
+description = "File type identification using libmagic"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
 name = "python-server-metrics"
 version = "0.2.2"
 description = "A very simple set of methods to collect metrics about your servers"
@@ -1572,7 +1580,7 @@ notebook = ">=4.4.1"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.0"
-content-hash = "64d9f4cee8d0d93d63ed9aee2b0f4eb4c6de126350d550ff2a6264fdfcefc5f8"
+content-hash = "76a9e820d6aaf85e159631b34a26495a39a8b58ef5d22102d7a93035bdc6cba1"
 
 [metadata.files]
 amqp = [
@@ -2353,6 +2361,10 @@ python-dateutil = [
 python-dotenv = [
     {file = "python-dotenv-0.19.2.tar.gz", hash = "sha256:a5de49a31e953b45ff2d2fd434bbc2670e8db5273606c1e737cc6b93eff3655f"},
     {file = "python_dotenv-0.19.2-py2.py3-none-any.whl", hash = "sha256:32b2bdc1873fd3a3c346da1c6db83d0053c3c62f28f1f38516070c4c8971b1d3"},
+]
+python-magic = [
+    {file = "python-magic-0.4.24.tar.gz", hash = "sha256:de800df9fb50f8ec5974761054a708af6e4246b03b4bdaee993f948947b0ebcf"},
+    {file = "python_magic-0.4.24-py2.py3-none-any.whl", hash = "sha256:4fec8ee805fea30c07afccd1592c0f17977089895bdfaae5fec870a84e997626"},
 ]
 python-server-metrics = [
     {file = "python-server-metrics-0.2.2.tar.gz", hash = "sha256:8a0872c36c3bdc298a7ed1cbe4ba3715cebf04855e965b1006d0516a49013fbd"},
