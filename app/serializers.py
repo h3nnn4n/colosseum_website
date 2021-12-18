@@ -6,7 +6,7 @@ from django.urls import include, path
 from django.utils import timezone
 from rest_framework import exceptions, routers, serializers, viewsets
 
-from app import models
+from app import metrics, models
 
 from .services.ratings import (
     update_elo_change_after,
@@ -109,6 +109,7 @@ class MatchSerializer(serializers.ModelSerializer):
             )
             update_elo_change_after(instance)
             instance.save()
+            metrics.register_match_played()
 
         return instance
 
