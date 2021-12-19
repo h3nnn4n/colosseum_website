@@ -195,8 +195,6 @@ class NextMatchAPIView(APIView):
         return Response({"id": match_id})
 
     def post(self, request):
-        # FIXME: This won't work for very long, specially on a high traffic and
-        # mission critical endpoint like this one.
         tournaments = models.Tournament.objects.filter(done=False)
 
         for tournament in tournaments:
