@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django_redis import get_redis_connection
 from memoize import memoize
 
 from . import utils
@@ -226,6 +227,7 @@ class Tournament(BaseModel):
             n_rounds = 3
 
         participants = list(self.participants.all())
+        redis = get_redis_connection("default")
         for _ in range(n_rounds):
             for bracket in itertools.combinations(participants, 2):
                 bracket = list(bracket)
@@ -239,6 +241,7 @@ class Tournament(BaseModel):
                 )
                 match.participants.add(*bracket)
                 match.save()
+                redis.sadd(settings.MATCH_QUEUE_KEY, str(match.id))
 
         logger.info(
             f"Tournament {self.id} {self.name} {self.mode} has {self.pending_matches} matches now"
