@@ -19,12 +19,22 @@ from django.utils import timezone
 from django.views import generic
 from django.views.decorators.cache import cache_page
 from django.views.generic.edit import FormView
+from django_redis import get_redis_connection
 from rest_framework import routers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app import constants, forms, metrics, models, permissions, serializers, utils
+from app import (
+    constants,
+    forms,
+    metrics,
+    models,
+    permissions,
+    serializers,
+    services,
+    utils,
+)
 
 from . import plots
 from .services.ratings import (
@@ -161,8 +171,6 @@ class RedisInfoAPIView(APIView):
     queryset = models.Match.objects.none()
 
     def get(self, request):
-        from django_redis import get_redis_connection
-
         conn = get_redis_connection("default")
         return Response({"ping": conn.ping(), "info": conn.info()})
 
@@ -186,39 +194,26 @@ class NextMatchAPIView(APIView):
     queryset = models.Match.objects.none()
 
     def get(self, request):
-        match_ids = models.Match.objects.filter(ran=False).values_list("id", flat=True)
-        if not match_ids:
-            return Response({})
+        redis = get_redis_connection("default")
+        while True:
+            match_id = redis.spop(settings.MATCH_QUEUE_KEY)
 
-        match_id = choice(list(match_ids))
+            # Queue is empty. Nothing to do
+            if not match_id:
+                break
 
-        return Response({"id": match_id})
+            match_id = match_id.decode()
+
+            if models.Match.objects.filter(id=match_id, ran=False).exists():
+                return Response({"id": match_id})
+
+        return Response({})
 
     def post(self, request):
         tournaments = models.Tournament.objects.filter(done=False)
 
         for tournament in tournaments:
-            if (
-                tournament.mode == "TIMED"
-                and tournament.is_active
-                and tournament.pending_matches <= 10
-            ):
-                logger.info(
-                    f"TIMED Tournament {tournament.id} has a low number of matches left: {tournament.pending_matches}"
-                )
-                tournament.create_matches()
-            elif tournament.matches.count() == 0:
-                logger.info(
-                    f"{tournament.mode} Tournament {tournament.id} is missing matches. Creating"
-                )
-                tournament.create_matches()
-
-            if not tournament.is_active:
-                tournament.done = True
-                tournament.save(update_fields=["done"])
-                logger.info(
-                    f"{tournament.mode} Tournament {tournament.id} was set to done=true"
-                )
+            services.update_tournament_state(tournament)
 
         return Response()
 
