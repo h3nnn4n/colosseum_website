@@ -12,6 +12,7 @@
       <th scope="col"> Agent 2 </th>
       <th scope="col"> Result </th>
       <th scope="col"> Tournament </th>
+      <th scope="col"> Game </th>
       <th scope="col"> When </th>
       <th scope="col"> Replay </th>
     </thead>
@@ -38,6 +39,8 @@
           <span> - </span>
           {% endif %}
         </td>
+
+        <td> {{ match.game.name }} </td>
         <td> {{ match.ran_at | date:"Y-m-d H:i:s" }} </td>
 
         {% if match.replay %}
