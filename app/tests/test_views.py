@@ -132,6 +132,24 @@ class TournamentViewSetTestCase(TestCase):
         tournament = models.Tournament.objects.get(id=id)
         self.assertEqual(tournament.participants.count(), 2)
 
+    def test_create_tournament_with_participants_of_wrong_game(self):
+        self.api_client.force_authenticate(user=self.admin_user)
+        response = self.api_client.post(
+            "/api/tournaments/",
+            {
+                "name": "foo",
+                "game_id": self.game.id,
+                "mode": "ROUND_ROBIN",
+                "participants": [
+                    self.agent1.id,
+                    self.agent2.id,
+                    self.agent3.id,
+                    self.agent4.id,
+                ],
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+
     def test_create_tournament_without_auth(self):
         response = self.api_client.post(
             "/api/tournaments/",

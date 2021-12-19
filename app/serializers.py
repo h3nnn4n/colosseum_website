@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -146,6 +147,16 @@ class TournamentSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+    def validate_participants(self, data):
+        game_id = self.initial_data["game_id"]
+        for agent in data:
+            if agent.game_id != UUID(game_id):
+                raise exceptions.ValidationError(
+                    f"participant {agent.id} game {agent.game_id} doesn't match tournament game {game_id}"
+                )
+
+        return data
 
     def validate(self, data):
         if not data.get("participants"):
