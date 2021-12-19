@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django_redis import get_redis_connection
 
 from .. import models
 
@@ -41,3 +42,10 @@ def update_tournament_state(tournament):
         logger.info(
             f"{tournament.mode} Tournament {tournament.id} was set to done=true"
         )
+
+    pending_match_ids = tournament.matches.filter(ran=False).values_list(
+        "id", flat=True
+    )
+    pending_match_ids = map(str, pending_match_ids)
+    redis = get_redis_connection("default")
+    redis.sadd(settings.MATCH_QUEUE_KEY, *pending_match_ids)
