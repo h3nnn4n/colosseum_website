@@ -26,7 +26,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "username"]
 
 
+class GameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Game
+        fields = ["id", "name", "created_at", "updated_at"]
+
+
 class AgentSerializer(serializers.ModelSerializer):
+    game = GameSerializer(read_only=True)
+
     class Meta:
         model = models.Agent
         fields = [
@@ -47,13 +55,9 @@ class AgentSerializer(serializers.ModelSerializer):
         ]
 
 
-class GameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Game
-        fields = ["id", "name", "created_at", "updated_at"]
-
-
 class MatchSerializer(serializers.ModelSerializer):
+    game = GameSerializer(read_only=True)
+
     class Meta:
         model = models.Match
         fields = [
@@ -122,6 +126,7 @@ class TournamentSerializer(serializers.ModelSerializer):
     participants = serializers.PrimaryKeyRelatedField(
         queryset=models.Agent.objects.all(), many=True, required=False
     )
+    game = GameSerializer(read_only=True)
 
     class Meta:
         model = models.Tournament
