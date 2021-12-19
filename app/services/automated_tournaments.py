@@ -49,17 +49,18 @@ def _create_automated_tournament(name, mode, game):
 
     name = name.format(game.name, next_number)
 
-    logger.info(f'Creating automated tournament "{name}"')
-
     data = {
         "mode": mode,
         "start_date": start_date,
         "end_date": end_date,
-        "game": game,
+        "game_id": str(game.id),
         "name": name,
         "is_automated": True,
         "automated_number": next_number,
     }
     serializer = serializers.TournamentSerializer(data=data)
     if serializer.is_valid():
+        logger.info(f'creating automated tournament "{name}"')
         serializer.save()
+    else:
+        logger.warning(f'failed to create tournamend "{name}"')
