@@ -46,6 +46,7 @@ def update_tournament_state(tournament):
     pending_match_ids = tournament.matches.filter(ran=False).values_list(
         "id", flat=True
     )
-    pending_match_ids = map(str, pending_match_ids)
+    pending_match_ids = list(map(str, pending_match_ids))
     redis = get_redis_connection("default")
-    redis.sadd(settings.MATCH_QUEUE_KEY, *pending_match_ids)
+    for id in pending_match_ids:
+        redis.sadd(settings.MATCH_QUEUE_KEY, id)
