@@ -5,15 +5,15 @@ from .. import models, serializers
 
 def create_automated_tournaments():
     for game in models.Game.objects.all():
-        _create_automated_tournament("Automated Daily Tournament #{}", "TIMED", game)
+        _create_automated_tournament("Automated {} Daily Tournament #{}", "TIMED", game)
         _create_automated_tournament(
-            "Automated Round Robin Tournament #{}", "ROUND_ROBIN", game
+            "Automated {} Round Robin Tournament #{}", "ROUND_ROBIN", game
         )
         _create_automated_tournament(
-            "Automated Double Round Robin Tournament #{}", "DOUBLE_ROUND_ROBIN", game
+            "Automated {} Double Round Robin Tournament #{}", "DOUBLE_ROUND_ROBIN", game
         )
         _create_automated_tournament(
-            "Automated Triple Round Robin Tournament #{}", "TRIPLE_ROUND_ROBIN", game
+            "Automated {} Triple Round Robin Tournament #{}", "TRIPLE_ROUND_ROBIN", game
         )
 
 
@@ -40,7 +40,7 @@ def _create_automated_tournament(name, mode, game):
     if last_automated_tournament and last_automated_tournament.is_active:
         return {"status": "active tournament already exists"}
 
-    name = name.format(next_number)
+    name = name.format(game.name, next_number)
 
     data = {
         "mode": mode,
