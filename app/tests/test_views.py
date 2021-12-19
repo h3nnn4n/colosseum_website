@@ -103,7 +103,7 @@ class TournamentViewSetTestCase(TestCase):
         self.api_client.force_authenticate(user=self.admin_user)
         response = self.api_client.post(
             "/api/tournaments/",
-            {"name": "foo", "game": self.game.id, "mode": "ROUND_ROBIN"},
+            {"name": "foo", "game_id": self.game.id, "mode": "ROUND_ROBIN"},
         )
         self.assertEqual(response.status_code, 201)
 
@@ -117,7 +117,7 @@ class TournamentViewSetTestCase(TestCase):
             "/api/tournaments/",
             {
                 "name": "foo",
-                "game": self.game.id,
+                "game_id": self.game.id,
                 "mode": "ROUND_ROBIN",
                 "participants": [self.agent1.id, self.agent2.id],
             },
@@ -146,7 +146,7 @@ class TournamentViewSetTestCase(TestCase):
             "/api/tournaments/",
             {
                 "name": "foo",
-                "game": self.game.id,
+                "game_id": self.game.id,
                 "mode": "ROUND_ROBIN",
                 "participants": [self.agent1.id, self.agent2.id],
             },

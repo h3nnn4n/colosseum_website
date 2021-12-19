@@ -127,6 +127,7 @@ class TournamentSerializer(serializers.ModelSerializer):
         queryset=models.Agent.objects.all(), many=True, required=False
     )
     game = GameSerializer(read_only=True)
+    game_id = serializers.CharField(max_length=255, write_only=True)
 
     class Meta:
         model = models.Tournament
@@ -134,6 +135,7 @@ class TournamentSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "game",
+            "game_id",
             "mode",
             "is_automated",
             "automated_number",

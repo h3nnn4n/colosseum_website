@@ -4,24 +4,24 @@ from .. import models, serializers
 
 
 def create_automated_tournaments():
-    _create_automated_tournament("Automated Daily Tournament #{}", "TIMED")
-    _create_automated_tournament("Automated Round Robin Tournament #{}", "ROUND_ROBIN")
-    _create_automated_tournament(
-        "Automated Double Round Robin Tournament #{}", "DOUBLE_ROUND_ROBIN"
-    )
-    _create_automated_tournament(
-        "Automated Triple Round Robin Tournament #{}", "TRIPLE_ROUND_ROBIN"
-    )
+    for game in models.Game.objects.all():
+        _create_automated_tournament("Automated Daily Tournament #{}", "TIMED", game)
+        _create_automated_tournament(
+            "Automated Round Robin Tournament #{}", "ROUND_ROBIN", game
+        )
+        _create_automated_tournament(
+            "Automated Double Round Robin Tournament #{}", "DOUBLE_ROUND_ROBIN", game
+        )
+        _create_automated_tournament(
+            "Automated Triple Round Robin Tournament #{}", "TRIPLE_ROUND_ROBIN", game
+        )
 
 
-def _create_automated_tournament(name, mode):
+def _create_automated_tournament(name, mode, game):
     """
     Creates an automated tournament. If such a tournament already exists it
     does nothing, otherwise it creates a new one.
     """
-    # FIXME: This should not be hardcoded
-    game = models.Game.objects.first().id
-
     now = timezone.now()
     start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
     end_date = now.replace(hour=23, minute=59, second=59, microsecond=999)
