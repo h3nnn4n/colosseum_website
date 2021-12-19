@@ -27,7 +27,7 @@ def _create_automated_tournament(name, mode, game):
     end_date = now.replace(hour=23, minute=59, second=59, microsecond=999)
 
     last_automated_tournament = (
-        models.Tournament.objects.filter(mode=mode, is_automated=True)
+        models.Tournament.objects.filter(mode=mode, is_automated=True, game=game)
         .order_by("-automated_number")
         .first()
     )
