@@ -92,9 +92,13 @@ class NextMatchAPIViewTestCase(TestCase):
 class TournamentViewSetTestCase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
-        self.agent1 = factories.AgentFactory()
-        self.agent2 = factories.AgentFactory()
-        self.agent3 = factories.AgentFactory()
+        self.game2 = factories.GameFactory()
+
+        self.agent1 = factories.AgentFactory(game=self.game)
+        self.agent2 = factories.AgentFactory(game=self.game)
+        self.agent3 = factories.AgentFactory(game=self.game)
+        self.agent4 = factories.AgentFactory(game=self.game2)
+        self.agent5 = factories.AgentFactory(game=self.game2)
 
         self.admin_user = factories.UserFactory(is_staff=True)
         self.api_client = APIClient()

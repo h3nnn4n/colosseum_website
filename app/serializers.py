@@ -152,8 +152,11 @@ class TournamentSerializer(serializers.ModelSerializer):
             logger.info(
                 "tournament is being created with no participants, defaulting to all"
             )
+            game_id = data["game_id"]
             data["participants"] = list(
-                models.Agent.objects.all().values_list("id", flat=True)
+                models.Agent.objects.filter(game_id=game_id).values_list(
+                    "id", flat=True
+                )
             )
 
         return data
