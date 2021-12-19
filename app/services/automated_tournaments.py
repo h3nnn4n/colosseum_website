@@ -1,6 +1,13 @@
+import logging
+
+from django.conf import settings
 from django.utils import timezone
 
 from .. import models, serializers
+
+
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("AUTOMATED_TOURNAMENTS")
 
 
 def create_automated_tournaments():
@@ -41,6 +48,8 @@ def _create_automated_tournament(name, mode, game):
         return {"status": "active tournament already exists"}
 
     name = name.format(game.name, next_number)
+
+    logger.info(f'Creating automated tournament "{name}"')
 
     data = {
         "mode": mode,
