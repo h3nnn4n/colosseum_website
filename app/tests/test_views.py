@@ -92,9 +92,13 @@ class NextMatchAPIViewTestCase(TestCase):
 class TournamentViewSetTestCase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
-        self.agent1 = factories.AgentFactory()
-        self.agent2 = factories.AgentFactory()
-        self.agent3 = factories.AgentFactory()
+        self.game2 = factories.GameFactory()
+
+        self.agent1 = factories.AgentFactory(game=self.game)
+        self.agent2 = factories.AgentFactory(game=self.game)
+        self.agent3 = factories.AgentFactory(game=self.game)
+        self.agent4 = factories.AgentFactory(game=self.game2)
+        self.agent5 = factories.AgentFactory(game=self.game2)
 
         self.admin_user = factories.UserFactory(is_staff=True)
         self.api_client = APIClient()
@@ -103,7 +107,7 @@ class TournamentViewSetTestCase(TestCase):
         self.api_client.force_authenticate(user=self.admin_user)
         response = self.api_client.post(
             "/api/tournaments/",
-            {"name": "foo", "game": self.game.id, "mode": "ROUND_ROBIN"},
+            {"name": "foo", "game_id": self.game.id, "mode": "ROUND_ROBIN"},
         )
         self.assertEqual(response.status_code, 201)
 
@@ -117,7 +121,7 @@ class TournamentViewSetTestCase(TestCase):
             "/api/tournaments/",
             {
                 "name": "foo",
-                "game": self.game.id,
+                "game_id": self.game.id,
                 "mode": "ROUND_ROBIN",
                 "participants": [self.agent1.id, self.agent2.id],
             },
@@ -127,6 +131,24 @@ class TournamentViewSetTestCase(TestCase):
         id = response.json()["id"]
         tournament = models.Tournament.objects.get(id=id)
         self.assertEqual(tournament.participants.count(), 2)
+
+    def test_create_tournament_with_participants_of_wrong_game(self):
+        self.api_client.force_authenticate(user=self.admin_user)
+        response = self.api_client.post(
+            "/api/tournaments/",
+            {
+                "name": "foo",
+                "game_id": self.game.id,
+                "mode": "ROUND_ROBIN",
+                "participants": [
+                    self.agent1.id,
+                    self.agent2.id,
+                    self.agent3.id,
+                    self.agent4.id,
+                ],
+            },
+        )
+        self.assertEqual(response.status_code, 400)
 
     def test_create_tournament_without_auth(self):
         response = self.api_client.post(
@@ -146,7 +168,7 @@ class TournamentViewSetTestCase(TestCase):
             "/api/tournaments/",
             {
                 "name": "foo",
-                "game": self.game.id,
+                "game_id": self.game.id,
                 "mode": "ROUND_ROBIN",
                 "participants": [self.agent1.id, self.agent2.id],
             },

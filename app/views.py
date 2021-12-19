@@ -102,7 +102,9 @@ class TournamentListView(generic.ListView):
     context_object_name = "tournaments"
 
     def get_queryset(self):
-        return models.Tournament.objects.order_by("-created_at")[0:25]
+        return models.Tournament.objects.filter(done=False).order_by("-created_at")[
+            0:25
+        ]
 
 
 class TournamentDetailView(generic.DetailView):

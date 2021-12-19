@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -26,7 +27,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "username"]
 
 
+class GameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Game
+        fields = ["id", "name", "created_at", "updated_at"]
+
+
 class AgentSerializer(serializers.ModelSerializer):
+    game = GameSerializer(read_only=True)
+
     class Meta:
         model = models.Agent
         fields = [
@@ -47,13 +56,9 @@ class AgentSerializer(serializers.ModelSerializer):
         ]
 
 
-class GameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Game
-        fields = ["id", "name", "created_at", "updated_at"]
-
-
 class MatchSerializer(serializers.ModelSerializer):
+    game = GameSerializer(read_only=True)
+
     class Meta:
         model = models.Match
         fields = [
@@ -122,6 +127,8 @@ class TournamentSerializer(serializers.ModelSerializer):
     participants = serializers.PrimaryKeyRelatedField(
         queryset=models.Agent.objects.all(), many=True, required=False
     )
+    game = GameSerializer(read_only=True)
+    game_id = serializers.CharField(max_length=255, write_only=True)
 
     class Meta:
         model = models.Tournament
@@ -129,6 +136,7 @@ class TournamentSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "game",
+            "game_id",
             "mode",
             "is_automated",
             "automated_number",
@@ -140,13 +148,26 @@ class TournamentSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+    def validate_participants(self, data):
+        game_id = self.initial_data["game_id"]
+        for agent in data:
+            if agent.game_id != UUID(game_id):
+                raise exceptions.ValidationError(
+                    f"participant {agent.id} game {agent.game_id} doesn't match tournament game {game_id}"
+                )
+
+        return data
+
     def validate(self, data):
         if not data.get("participants"):
             logger.info(
                 "tournament is being created with no participants, defaulting to all"
             )
+            game_id = data["game_id"]
             data["participants"] = list(
-                models.Agent.objects.all().values_list("id", flat=True)
+                models.Agent.objects.filter(game_id=game_id).values_list(
+                    "id", flat=True
+                )
             )
 
         return data

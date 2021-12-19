@@ -9,6 +9,7 @@
   <table class="table table-hover table-striped table-sm">
     <thead>
       <th scope="col"> Name </th>
+      <th scope="col"> Game </th>
       <th scope="col"> Owner </th>
       <th scope="col"> Elo Rating </th>
       <th scope="col"> Win Ratio </th>
@@ -26,6 +27,7 @@
           </a>
         </td>
 
+        <td>{{ agent.game.name }}</td>
         <td>{{ agent.owner.username }}</td>
         <td>{{ agent.elo }}</td>
         <td>{{ agent.pretty_win_ratio }}%</td>
