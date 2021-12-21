@@ -4,8 +4,25 @@
 
 {% block content %}
 
-<span>
-  Hi
-</span>
+<div class="container py-5">
+  <h1>Colosseum</h1>
+  <p>
+    Hi, welcome to the Colosseum!
+  </p>
+  {% if not user.is_authenticated %}
+    <p>
+      To participate please
+      <a href="{% url 'register' %}">Register</a>
+      or
+      <a href="{% url 'login' %}">Login</a>.
+    </p>
+  {% endif %}
+
+  <p>
+    To get started please take a look at
+    <a href='https://github.com/h3nnn4n/colosseum_agents'>colosseum_agents</a>
+    for a collection of sample agents.
+  </p>
+</div>
 
 {% endblock %}
