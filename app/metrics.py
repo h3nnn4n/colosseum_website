@@ -9,6 +9,7 @@ from app import models
 
 
 logger = logging.getLogger("METRICS")
+INFLUXDB_DISABLED = settings.INFLUXDB_DISABLED
 
 
 def _influxdb():
@@ -25,11 +26,14 @@ def _influxdb():
 
 
 def _push_metric(data):
+    if INFLUXDB_DISABLED:
+        return
+
     thread = Thread(target=_process_points, args=(data,))
     thread.start()
 
 
-def _process_points(client, data):
+def _process_points(data):
     try:
         client = _influxdb()
         client.write_points(data)
