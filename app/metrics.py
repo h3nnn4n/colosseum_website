@@ -29,6 +29,9 @@ def _push_metric(data):
     if INFLUXDB_DISABLED:
         return
 
+    if not isinstance(data, list):
+        data = [data]
+
     thread = Thread(target=_process_points, args=(data,))
     thread.start()
 
