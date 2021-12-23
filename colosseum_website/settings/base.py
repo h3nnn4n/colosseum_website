@@ -47,12 +47,10 @@ INSTALLED_APPS = [
     "django_extensions",
     "memoize",
     "debug_toolbar",
-    # "influxdb_metrics",
     "app",
 ]
 
 MIDDLEWARE = [
-    # "influxdb_metrics.middleware.InfluxDBRequestMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -176,10 +174,6 @@ INFLUXDB_PASSWORD = os.environ.get("INFLUXDB_PASSWORD")
 INFLUXDB_DATABASE = os.environ.get("INFLUXDB_DATABASE")
 INFLUXDB_TAGS_HOST = socket.gethostname()
 INFLUXDB_TIMEOUT = 5
-INFLUXDB_USE_CELERY = False
-INFLUXDB_USE_THREADING = True
-
-INFLUXDB_PREFIX = "web"
 
 
 MATCH_QUEUE_KEY = "match_queue"

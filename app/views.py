@@ -275,7 +275,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         match.replay.save("replay.jsonl.xz", replay_file)
         match.save()
 
-        metrics.register_replay()
+        metrics.register_replay(match.game.name)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 

@@ -116,7 +116,7 @@ class MatchSerializer(serializers.ModelSerializer):
             )
             update_elo_change_after(instance)
             instance.save()
-            metrics.register_match_played()
+            metrics.register_match_played(instance.game.name)
 
         return instance
 
