@@ -11,7 +11,7 @@ logger = logging.getLogger("AUTOMATED_TOURNAMENTS")
 
 
 def create_automated_tournaments():
-    for game in models.Game.objects.all():
+    for game in models.Game.objects.filter(active=True):
         _create_automated_tournament("Automated {} Daily Tournament #{}", "TIMED", game)
         _create_automated_tournament(
             "Automated {} Round Robin Tournament #{}", "ROUND_ROBIN", game

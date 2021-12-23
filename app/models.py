@@ -82,6 +82,7 @@ class Agent(BaseModel):
 
 class Game(BaseModel):
     name = models.CharField(max_length=64, unique=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         indexes = [models.Index(fields=["name"])]
