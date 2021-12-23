@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "memoize",
     "debug_toolbar",
-    "influxdb_metrics",
+    # "influxdb_metrics",
     "app",
 ]
 
