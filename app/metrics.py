@@ -39,7 +39,7 @@ def _process_points(data):
         client.write_points(data)
     except Exception:
         if getattr(settings, "INFLUXDB_FAIL_SILENTLY", True):
-            logger.exception("Error while writing data points")
+            logger.exception(f"Error while writing data points: {data}")
         else:
             raise
 
