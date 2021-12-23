@@ -196,6 +196,7 @@ class NextMatchAPIView(APIView):
     queryset = models.Match.objects.none()
 
     def get(self, request):
+        metrics.register_get_next_match()
         redis = get_redis_connection("default")
         while True:
             match_id = redis.spop(settings.MATCH_QUEUE_KEY)

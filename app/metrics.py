@@ -60,3 +60,13 @@ def register_match_played(game_name):
             "time": timezone.now().isoformat(),
         }
     )
+
+
+def register_get_next_match():
+    _push_metric(
+        {
+            "fields": {"value": 1},
+            "measurement": "get_next_match",
+            "time": timezone.now().isoformat(),
+        }
+    )
