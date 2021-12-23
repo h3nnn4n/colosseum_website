@@ -69,7 +69,7 @@ def register_match_played(game_name):
 def register_get_next_match():
     _push_metric(
         {
-            "fields": {"value": 1},
+            "fields": {"count": 1},
             "measurement": "get_next_match",
             "time": timezone.now().isoformat(),
         }
