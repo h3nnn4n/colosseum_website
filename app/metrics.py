@@ -5,7 +5,8 @@ from app import models
 
 
 def _push_metric(data):
-    influxdb_metrics.utils.write_points([data])
+    # influxdb_metrics.utils.write_points([data])
+    pass
 
 
 def register_replay():
