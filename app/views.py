@@ -198,6 +198,9 @@ class NextMatchAPIView(APIView):
     def get(self, request):
         metrics.register_get_next_match()
         redis = get_redis_connection("default")
+        if redis.get("disable_next_match_api") == b"1":
+            return Response({"_state": "killswitch engaged"})
+
         while True:
             match_id = redis.spop(settings.MATCH_QUEUE_KEY)
 
