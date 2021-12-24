@@ -80,6 +80,16 @@ class Agent(BaseModel):
         return None
 
 
+class Season(BaseModel):
+    name = models.CharField(max_length=64, unique=True)
+    active = models.BooleanField(default=True)
+    start_date = models.DateTimeField(null=True)
+    end_date = models.DateTimeField(null=True)
+
+    class Meta:
+        indexes = [models.Index(fields=["name"])]
+
+
 class Game(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     active = models.BooleanField(default=True)
