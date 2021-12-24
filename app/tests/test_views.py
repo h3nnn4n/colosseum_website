@@ -119,6 +119,7 @@ class TournamentViewSetTestCase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
         self.game2 = factories.GameFactory()
+        self.season = factories.SeasonFactory()
 
         self.agent1 = factories.AgentFactory(game=self.game)
         self.agent2 = factories.AgentFactory(game=self.game)

@@ -254,6 +254,7 @@ class Tournament(BaseModel):
                     ran_at=None,
                     tournament=self,
                     game=self.game,
+                    season=self.season,
                 )
                 match.participants.add(*bracket)
                 match.save()

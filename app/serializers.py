@@ -129,6 +129,7 @@ class TournamentSerializer(serializers.ModelSerializer):
     )
     game = GameSerializer(read_only=True)
     game_id = serializers.CharField(max_length=255, write_only=True)
+    season_id = serializers.CharField(max_length=255, write_only=True, required=False)
 
     class Meta:
         model = models.Tournament
@@ -137,6 +138,7 @@ class TournamentSerializer(serializers.ModelSerializer):
             "name",
             "game",
             "game_id",
+            "season_id",
             "mode",
             "is_automated",
             "automated_number",
@@ -158,6 +160,12 @@ class TournamentSerializer(serializers.ModelSerializer):
 
         return data
 
+    def validate_season_id(self, value):
+        if not models.Season.objects.get(id=value):
+            raise exceptions.ValidationError(f"season with id {value} does not exist")
+
+        return value
+
     def validate(self, data):
         if not data.get("participants"):
             logger.info(
@@ -169,6 +177,10 @@ class TournamentSerializer(serializers.ModelSerializer):
                     "id", flat=True
                 )
             )
+
+        if not data.get("season_id"):
+            season = models.Season.objects.get(active=True, main=True)
+            data["season_id"] = str(season.id)
 
         return data
 

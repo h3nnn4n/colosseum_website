@@ -17,6 +17,13 @@ class UserFactory(factory.django.DjangoModelFactory):
     is_active = True
 
 
+class SeasonFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Season
+
+    name = factory.Sequence(lambda n: "test_season %03d" % n)
+
+
 class GameFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Game
@@ -47,6 +54,7 @@ class TournamentFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: "Tournament %03d" % n)
     mode = "ROUND_ROBIN"
     game = factory.SubFactory(GameFactory)
+    season = factory.SubFactory(SeasonFactory)
 
 
 class MatchFactory(factory.django.DjangoModelFactory):
@@ -55,5 +63,6 @@ class MatchFactory(factory.django.DjangoModelFactory):
 
     tournament = factory.SubFactory(TournamentFactory)
     game = factory.SubFactory(GameFactory)
+    season = factory.SubFactory(SeasonFactory)
 
     ran = False
