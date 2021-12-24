@@ -40,12 +40,6 @@ class AgentFactory(factory.django.DjangoModelFactory):
     owner = factory.SubFactory(UserFactory)
     game = factory.SubFactory(GameFactory)
 
-    wins = FuzzyInteger(0, 100)
-    loses = FuzzyInteger(0, 100)
-    draws = FuzzyInteger(0, 100)
-    score = factory.LazyAttribute(lambda o: o.wins + o.draws)
-    elo = FuzzyInteger(1000, 2000)
-
 
 class TournamentFactory(factory.django.DjangoModelFactory):
     class Meta:

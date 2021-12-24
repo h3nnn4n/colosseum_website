@@ -8,6 +8,9 @@ from app import factories, models
 
 
 class AgentTestCase(TestCase):
+    def setUp(self):
+        factories.SeasonFactory()
+
     def test_score(self):
         agent = factories.AgentFactory()
         self.assertEqual(agent.wins + agent.draws, agent.score)

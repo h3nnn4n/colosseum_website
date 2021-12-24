@@ -35,20 +35,25 @@ class Agent(BaseModel):
 
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
 
-    wins = models.IntegerField(default=0)
-    loses = models.IntegerField(default=0)
-    draws = models.IntegerField(default=0)
-    score = models.DecimalField(default=0, decimal_places=2, max_digits=10)
-    elo = models.DecimalField(default=1500, decimal_places=2, max_digits=10)
-
     class Meta:
         indexes = [
-            models.Index(fields=["elo"]),
             models.Index(fields=["file_hash"]),
             models.Index(fields=["game"]),
             models.Index(fields=["name"]),
             models.Index(fields=["owner"]),
         ]
+
+    @property
+    def current_ratings(self):
+        # TODO: Cache this so we are not querrying the database all the time.
+        # We might also use a try except instead, since the excep path is much
+        # more unlikely to get executed anyways. It might mess up transactions
+        # thought, so idk if it is worth it.
+        if not self.ratings.filter(season__active=True, season__main=True).exists():
+            season = Season.objects.get(active=True, main=True)
+            AgentRatings.objects.create(season=season, agent=self, game=self.game)
+
+        return self.ratings.get(season__active=True, season__main=True)
 
     @property
     def win_ratio(self):
@@ -78,6 +83,26 @@ class Agent(BaseModel):
         if self.file:
             return self.file.url
         return None
+
+    @property
+    def wins(self):
+        return self.current_ratings.wins
+
+    @property
+    def loses(self):
+        return self.current_ratings.loses
+
+    @property
+    def draws(self):
+        return self.current_ratings.draws
+
+    @property
+    def score(self):
+        return self.current_ratings.score
+
+    @property
+    def elo(self):
+        return self.current_ratings.elo
 
 
 class AgentRatings(BaseModel):
