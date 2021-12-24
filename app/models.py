@@ -117,7 +117,7 @@ class Match(BaseModel):
     replay = models.FileField(null=True, upload_to=utils.replay_filepath)
 
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
-    season = models.ForeignKey("Season", on_delete=models.CASCADE, null=True)
+    season = models.ForeignKey("Season", on_delete=models.CASCADE)
 
     class Meta:
         indexes = [
@@ -172,7 +172,7 @@ class Tournament(BaseModel):
 
     name = models.CharField(max_length=64, unique=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
-    season = models.ForeignKey("Season", on_delete=models.CASCADE, null=True)
+    season = models.ForeignKey("Season", on_delete=models.CASCADE)
     participants = models.ManyToManyField(Agent, related_name="tournaments")
 
     mode = models.CharField(max_length=64, choices=MODES)
