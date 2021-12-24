@@ -81,7 +81,7 @@ class Agent(BaseModel):
 
 
 class AgentRatings(BaseModel):
-    agent = models.ForeignKey("Agent", on_delete=models.CASCADE)
+    agent = models.ForeignKey("Agent", on_delete=models.CASCADE, related_name="ratings")
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
     season = models.ForeignKey("Season", on_delete=models.CASCADE)
 
@@ -90,6 +90,14 @@ class AgentRatings(BaseModel):
     draws = models.IntegerField(default=0)
     score = models.DecimalField(default=0, decimal_places=2, max_digits=10)
     elo = models.DecimalField(default=1500, decimal_places=2, max_digits=10)
+
+    class Meta:
+        unique_together = ("agent", "game", "season")
+        indexes = [
+            models.Index(fields=["agent"]),
+            models.Index(fields=["season"]),
+            models.Index(fields=["game"]),
+        ]
 
 
 class Season(BaseModel):
