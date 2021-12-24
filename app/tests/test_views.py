@@ -5,6 +5,7 @@ from uuid import UUID
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
+from django_redis import get_redis_connection
 from freezegun import freeze_time
 from rest_framework.test import APIClient, force_authenticate
 
@@ -87,6 +88,31 @@ class NextMatchAPIViewTestCase(TestCase):
         self.api_client.post("/api/next_match/")
         tournament.refresh_from_db()
         self.assertTrue(tournament.done)
+
+    def test_killswitch(self):
+        self.api_client.force_authenticate(user=self.admin_user)
+
+        redis = get_redis_connection("default")
+        redis.set("disable_next_match_api", 1)
+
+        tournament = factories.TournamentFactory(
+            mode="TIMED",
+            start_date=timezone.now() - timedelta(hours=1),
+            end_date=timezone.now() + timedelta(hours=1),
+        )
+        tournament.participants.set([self.agent1.id, self.agent2.id, self.agent3.id])
+        response = self.api_client.post("/api/next_match/")
+        response = self.api_client.get("/api/next_match/")
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(response.json().get("id"))
+
+        redis.set("disable_next_match_api", 0)
+
+        response = self.api_client.get("/api/next_match/")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            UUID(response.json()["id"]), tournament.matches.values_list("id", flat=True)
+        )
 
 
 class TournamentViewSetTestCase(TestCase):
