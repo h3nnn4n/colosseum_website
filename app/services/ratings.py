@@ -20,12 +20,10 @@ def update_record_ratings(player1_id, player2_id, result):
     with transaction.atomic():
         player1 = get_object_or_404(models.Agent, pk=player1_id)
         player2 = get_object_or_404(models.Agent, pk=player2_id)
-        update_ratings(player1, player2, result)
-        player1.save()
-        player2.save()
+        update_ratings(player1, player2, result, save=True)
 
 
-def update_ratings(player1, player2, result):
+def update_ratings(player1, player2, result, save=False):
     """
     Takes two player and a match result and update the player ratings
     accordingly.
@@ -42,19 +40,25 @@ def update_ratings(player1, player2, result):
     match_result = {(player1_id, player2_id): float(result)}
 
     updated_elos = compute_updated_ratings(elos, match_result)
+    p1_ratings = player1.current_ratings
+    p2_ratings = player2.current_ratings
 
     if result == 1:
-        player1.wins += 1
-        player1.score += 1
-        player2.loses += 1
+        p1_ratings.wins += 1
+        p1_ratings.score += 1
+        p2_ratings.loses += 1
     elif result == 0.5:
-        player1.draws += 1
-        player1.score += Decimal("0.5")
-        player2.draws += 1
-        player2.score += Decimal("0.5")
+        p1_ratings.draws += 1
+        p1_ratings.score += Decimal("0.5")
+        p2_ratings.draws += 1
+        p2_ratings.score += Decimal("0.5")
 
-    player1.elo = updated_elos[player1_id]
-    player2.elo = updated_elos[player2_id]
+    p1_ratings.elo = updated_elos[player1_id]
+    p2_ratings.elo = updated_elos[player2_id]
+
+    if save:
+        p1_ratings.save()
+        p2_ratings.save()
 
 
 def update_elo_change_before(match):

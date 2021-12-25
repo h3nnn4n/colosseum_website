@@ -8,6 +8,11 @@ class AgentAdmin(admin.ModelAdmin):
     list_display = ("name", "id", "owner", "wins", "loses", "draws", "score", "elo")
 
 
+@admin.register(models.Season)
+class SeasonAdmin(admin.ModelAdmin):
+    list_display = ("name", "id", "active", "start_date", "end_date")
+
+
 @admin.register(models.Game)
 class GameAdmin(admin.ModelAdmin):
     list_display = ("name", "id")

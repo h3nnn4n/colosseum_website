@@ -12,6 +12,21 @@ from rest_framework.test import APIClient, force_authenticate
 from .. import factories, models
 
 
+class AgentListViewTestCase(TestCase):
+    def setUp(self):
+        self.game = factories.GameFactory()
+        self.agent1 = factories.AgentFactory()
+        self.agent2 = factories.AgentFactory()
+        self.season = factories.SeasonFactory()
+
+        self.admin_user = factories.UserFactory(is_staff=True)
+        self.client = Client()
+
+    def test_get(self):
+        response = self.client.get("/agents/")
+        self.assertEqual(response.status_code, 200)
+
+
 class NextMatchAPIViewTestCase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
@@ -119,6 +134,7 @@ class TournamentViewSetTestCase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
         self.game2 = factories.GameFactory()
+        self.season = factories.SeasonFactory()
 
         self.agent1 = factories.AgentFactory(game=self.game)
         self.agent2 = factories.AgentFactory(game=self.game)
@@ -203,3 +219,44 @@ class TournamentViewSetTestCase(TestCase):
 
         data = response.json()
         self.assertFalse(data["done"])
+
+
+class MatchViewSetTestCase(TestCase):
+    def setUp(self):
+        self.game = factories.GameFactory()
+        self.agent1 = factories.AgentFactory()
+        self.agent2 = factories.AgentFactory()
+        self.season = factories.SeasonFactory()
+        self.tournament = factories.TournamentFactory(
+            game=self.game, season=self.season
+        )
+
+        self.admin_user = factories.UserFactory(is_staff=True)
+        self.api_client = APIClient()
+
+    def test_match_update(self):
+        match = models.Match.objects.create(
+            game=self.game,
+            tournament=self.tournament,
+            player1=self.agent1,
+            player2=self.agent2,
+            season=self.season,
+        )
+
+        self.api_client.force_authenticate(user=self.admin_user)
+        response = self.api_client.patch(
+            f"/api/matches/{match.id}/",
+            {"ran": True, "ran_at": timezone.now(), "result": 1},
+        )
+        self.assertEqual(response.status_code, 200)
+
+        match.refresh_from_db()
+
+        self.assertEqual(match.data["elo_before"][str(self.agent1.id)], 1500)
+        self.assertEqual(match.data["elo_before"][str(self.agent2.id)], 1500)
+
+        self.assertEqual(match.data["elo_after"][str(self.agent1.id)], 1512)
+        self.assertEqual(match.data["elo_after"][str(self.agent2.id)], 1488)
+
+        self.assertEqual(match.data["elo_change"][str(self.agent1.id)], 12)
+        self.assertEqual(match.data["elo_change"][str(self.agent2.id)], -12)

@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.db import transaction
+from django.db.models import F, OuterRef, Subquery, Value
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import include, path
@@ -54,7 +55,8 @@ class AgentListView(generic.ListView):
     context_object_name = "agents"
 
     def get_queryset(self):
-        return models.Agent.objects.order_by("-elo")
+        # FIXME: We should order by elo
+        return models.Agent.objects.all().order_by("name")
 
 
 class AgentDetailView(generic.DetailView):

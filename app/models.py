@@ -35,20 +35,25 @@ class Agent(BaseModel):
 
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
 
-    wins = models.IntegerField(default=0)
-    loses = models.IntegerField(default=0)
-    draws = models.IntegerField(default=0)
-    score = models.DecimalField(default=0, decimal_places=2, max_digits=10)
-    elo = models.DecimalField(default=1500, decimal_places=2, max_digits=10)
-
     class Meta:
         indexes = [
-            models.Index(fields=["elo"]),
             models.Index(fields=["file_hash"]),
             models.Index(fields=["game"]),
             models.Index(fields=["name"]),
             models.Index(fields=["owner"]),
         ]
+
+    @property
+    def current_ratings(self):
+        # TODO: Cache this so we are not querrying the database all the time.
+        # We might also use a try except instead, since the excep path is much
+        # more unlikely to get executed anyways. It might mess up transactions
+        # thought, so idk if it is worth it.
+        if not self.ratings.filter(season__active=True, season__main=True).exists():
+            season = Season.objects.get(active=True, main=True)
+            AgentRatings.objects.create(season=season, agent=self, game=self.game)
+
+        return self.ratings.get(season__active=True, season__main=True)
 
     @property
     def win_ratio(self):
@@ -79,6 +84,57 @@ class Agent(BaseModel):
             return self.file.url
         return None
 
+    @property
+    def wins(self):
+        return self.current_ratings.wins
+
+    @property
+    def loses(self):
+        return self.current_ratings.loses
+
+    @property
+    def draws(self):
+        return self.current_ratings.draws
+
+    @property
+    def score(self):
+        return self.current_ratings.score
+
+    @property
+    def elo(self):
+        return self.current_ratings.elo
+
+
+class AgentRatings(BaseModel):
+    agent = models.ForeignKey("Agent", on_delete=models.CASCADE, related_name="ratings")
+    game = models.ForeignKey("Game", on_delete=models.CASCADE)
+    season = models.ForeignKey("Season", on_delete=models.CASCADE)
+
+    wins = models.IntegerField(default=0)
+    loses = models.IntegerField(default=0)
+    draws = models.IntegerField(default=0)
+    score = models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    elo = models.DecimalField(default=1500, decimal_places=2, max_digits=10)
+
+    class Meta:
+        unique_together = ("agent", "game", "season")
+        indexes = [
+            models.Index(fields=["agent"]),
+            models.Index(fields=["season"]),
+            models.Index(fields=["game"]),
+        ]
+
+
+class Season(BaseModel):
+    name = models.CharField(max_length=64, unique=True)
+    active = models.BooleanField(default=True)
+    main = models.BooleanField(default=True)
+    start_date = models.DateTimeField(null=True)
+    end_date = models.DateTimeField(null=True)
+
+    class Meta:
+        indexes = [models.Index(fields=["name"])]
+
 
 class Game(BaseModel):
     name = models.CharField(max_length=64, unique=True)
@@ -107,15 +163,17 @@ class Match(BaseModel):
     replay = models.FileField(null=True, upload_to=utils.replay_filepath)
 
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
+    season = models.ForeignKey("Season", on_delete=models.CASCADE)
 
     class Meta:
         indexes = [
+            models.Index(fields=["game"]),
             models.Index(fields=["player1"]),
             models.Index(fields=["player2"]),
             models.Index(fields=["ran"]),
             models.Index(fields=["ran_at"]),
+            models.Index(fields=["season"]),
             models.Index(fields=["tournament"]),
-            models.Index(fields=["game"]),
         ]
 
     @property
@@ -160,6 +218,7 @@ class Tournament(BaseModel):
 
     name = models.CharField(max_length=64, unique=True)
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
+    season = models.ForeignKey("Season", on_delete=models.CASCADE)
     participants = models.ManyToManyField(Agent, related_name="tournaments")
 
     mode = models.CharField(max_length=64, choices=MODES)
@@ -180,6 +239,7 @@ class Tournament(BaseModel):
             models.Index(fields=["is_automated"]),
             models.Index(fields=["mode"]),
             models.Index(fields=["name"]),
+            models.Index(fields=["season"]),
         ]
 
     @property
@@ -239,6 +299,7 @@ class Tournament(BaseModel):
                     ran_at=None,
                     tournament=self,
                     game=self.game,
+                    season=self.season,
                 )
                 match.participants.add(*bracket)
                 match.save()
