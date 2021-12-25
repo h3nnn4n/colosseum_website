@@ -12,6 +12,21 @@ from rest_framework.test import APIClient, force_authenticate
 from .. import factories, models
 
 
+class AgentListViewTestCase(TestCase):
+    def setUp(self):
+        self.game = factories.GameFactory()
+        self.agent1 = factories.AgentFactory()
+        self.agent2 = factories.AgentFactory()
+        self.season = factories.SeasonFactory()
+
+        self.admin_user = factories.UserFactory(is_staff=True)
+        self.client = Client()
+
+    def test_get(self):
+        response = self.client.get("/agents/")
+        self.assertEqual(response.status_code, 200)
+
+
 class NextMatchAPIViewTestCase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
