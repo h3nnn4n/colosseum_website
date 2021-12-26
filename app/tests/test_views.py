@@ -1,13 +1,10 @@
-import datetime
 from datetime import timedelta
 from uuid import UUID
 
 from django.test import Client, TestCase
-from django.urls import reverse
 from django.utils import timezone
 from django_redis import get_redis_connection
-from freezegun import freeze_time
-from rest_framework.test import APIClient, force_authenticate
+from rest_framework.test import APIClient
 
 from .. import factories, models
 

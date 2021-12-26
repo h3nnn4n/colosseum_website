@@ -1,7 +1,6 @@
 from django.test import TestCase
-from django.utils import timezone
 
-from app import factories, models, serializers
+from app import factories, serializers
 
 
 class TournamentSerializerTestCase(TestCase):

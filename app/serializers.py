@@ -4,17 +4,12 @@ from uuid import UUID
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.urls import include, path
 from django.utils import timezone
-from rest_framework import exceptions, routers, serializers, viewsets
+from rest_framework import exceptions, serializers
 
 from app import metrics, models
 
-from .services.ratings import (
-    update_elo_change_after,
-    update_elo_change_before,
-    update_ratings_from_match,
-)
+from .services.ratings import update_ratings_from_match
 
 
 logging.config.dictConfig(settings.LOGGING)

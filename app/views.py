@@ -1,27 +1,20 @@
-import json
 import logging
 import lzma
 from datetime import timedelta
-from random import choice
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
-from django.db import transaction
-from django.db.models import F, OuterRef, Subquery, Value
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import include, path
+from django.db.models import F
+from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import generic
 from django.views.decorators.cache import cache_page
-from django.views.generic.edit import FormView
 from django_redis import get_redis_connection
-from rest_framework import routers, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView

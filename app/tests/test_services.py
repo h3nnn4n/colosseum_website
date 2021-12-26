@@ -1,7 +1,6 @@
 from decimal import Decimal
 
 from django.test import TestCase
-from django.utils import timezone
 from freezegun import freeze_time
 
 from app import factories, models, services
