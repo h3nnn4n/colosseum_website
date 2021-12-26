@@ -11,7 +11,7 @@ from django.utils import timezone
 from django_redis import get_redis_connection
 from memoize import memoize
 
-from . import utils
+from . import constants, utils
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -81,7 +81,7 @@ class Agent(BaseModel):
         return f"{self.win_ratio * 100.0:.2f}"
 
     @property
-    @memoize(timeout=60 * 30)
+    @memoize(timeout=constants.THIRTY_MINUTES)
     def games_played_count(self):
         return self.games_played.count()
 
