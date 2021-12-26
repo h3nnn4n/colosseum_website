@@ -292,8 +292,8 @@ class Tournament(BaseModel):
             if match.result == 0.5:
                 score[match.player1.name] += 0.5
                 score[match.player2.name] += 0.5
-                draws[match.player1.name] += 0.5
-                draws[match.player2.name] += 0.5
+                draws[match.player1.name] += 1
+                draws[match.player2.name] += 1
             if match.result == 1:
                 score[match.player1.name] += 1
                 wins[match.player1.name] += 1
