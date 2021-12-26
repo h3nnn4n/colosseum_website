@@ -55,8 +55,12 @@ class AgentListView(generic.ListView):
     context_object_name = "agents"
 
     def get_queryset(self):
-        # FIXME: We should order by elo
-        return models.Agent.objects.all().order_by("name")
+        return (
+            models.Agent.objects.all()
+            .annotate(elo_rating=F("ratings__elo"))
+            .filter(ratings__season__active=True, ratings__season__main=True)
+            .order_by("-elo_rating")
+        )
 
 
 class AgentDetailView(generic.DetailView):
