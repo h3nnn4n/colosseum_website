@@ -123,7 +123,9 @@ class Agent(BaseModel):
 class AgentRatings(BaseModel):
     agent = models.ForeignKey("Agent", on_delete=models.CASCADE, related_name="ratings")
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
-    season = models.ForeignKey("Season", on_delete=models.CASCADE)
+    season = models.ForeignKey(
+        "Season", on_delete=models.CASCADE, related_name="ratings"
+    )
 
     wins = models.IntegerField(default=0)
     loses = models.IntegerField(default=0)
@@ -138,6 +140,16 @@ class AgentRatings(BaseModel):
             models.Index(fields=["season"]),
             models.Index(fields=["game"]),
         ]
+
+    def reset(self, save=True):
+        self.wins = 0
+        self.loses = 0
+        self.draws = 0
+        self.score = 0
+        self.elo = 1500
+
+        if save:
+            self.save(update_fields=["wins", "loses", "draws", "score", "elo"])
 
 
 class SeasonQuerySet(QuerySet):
@@ -191,8 +203,10 @@ class Match(BaseModel):
     errors = models.JSONField(default=dict)
     replay = models.FileField(null=True, upload_to=utils.replay_filepath)
 
-    game = models.ForeignKey("Game", on_delete=models.CASCADE)
-    season = models.ForeignKey("Season", on_delete=models.CASCADE)
+    game = models.ForeignKey("Game", on_delete=models.CASCADE, related_name="matches")
+    season = models.ForeignKey(
+        "Season", on_delete=models.CASCADE, related_name="matches"
+    )
 
     class Meta:
         indexes = [

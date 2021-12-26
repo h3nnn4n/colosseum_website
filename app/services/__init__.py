@@ -5,6 +5,7 @@ from django.utils import timezone
 from django_redis import get_redis_connection
 
 from .. import models, serializers
+from ..services.ratings import update_ratings_from_match
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -100,3 +101,35 @@ def create_automated_seasons():
         serializer.save()
     else:
         logger.warning(f'failed to create season "{name}"')
+
+
+def recalculate_ratings_for_season(season):
+    updated_count = 0
+    matches_to_update = season.matches.filter(ran=True).count()
+    ratings_to_update = season.ratings.count()
+
+    logger = logging.getLogger("RECALCULATE_RATINGS")
+    logger.info(f"Recalculating ratings for '{season.name}' '{season.id}'")
+    logger.info(f"{ratings_to_update=} {matches_to_update=}")
+
+    for rating in models.AgentRatings.objects.filter(season=season):
+        rating.reset()
+        rating.save()
+
+    logger.info("Finished resetting ratings")
+
+    for match in season.matches.filter(ran=True).order_by("ran_at"):
+        update_ratings_from_match(match)
+        match.save()
+        updated_count += 1
+
+        if (
+            updated_count == 1
+            or updated_count % 100 == 0
+            or updated_count == matches_to_update
+        ):
+            logger.info(
+                f"updated {updated_count:6d} out of {matches_to_update}  ::  {updated_count / matches_to_update * 100.0:5.2f}%"
+            )
+
+    logger.info(f"Finished recalculating rankings for season '{season.name}'")
