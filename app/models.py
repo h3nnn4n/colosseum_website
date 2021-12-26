@@ -87,7 +87,7 @@ class Agent(BaseModel):
 
     @property
     def games_played(self):
-        return self.matches.filter(ran=True)
+        return self.matches.filter(ran=True, season__active=True, season__main=True)
 
     @property
     def most_recent_match(self):
@@ -140,6 +140,11 @@ class AgentRatings(BaseModel):
         ]
 
 
+class SeasonQuerySet(QuerySet):
+    def current_season(self):
+        return self.get(active=True, main=True)
+
+
 class Season(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     active = models.BooleanField(default=True)
@@ -149,6 +154,8 @@ class Season(BaseModel):
 
     is_automated = models.BooleanField(null=True, default=False)
     automated_number = models.IntegerField(null=True)
+
+    objects = SeasonQuerySet.as_manager()
 
     class Meta:
         indexes = [models.Index(fields=["name"])]

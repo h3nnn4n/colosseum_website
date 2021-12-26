@@ -15,6 +15,10 @@ class AgentTestCase(TestCase):
         agent = factories.AgentFactory()
         self.assertEqual(agent.wins + agent.draws, agent.score)
 
+    def test_games_played_count(self):
+        agent = factories.AgentFactory()
+        self.assertEqual(agent.games_played_count, 0)
+
 
 class MatchTestCase(TestCase):
     def setUp(self):
