@@ -105,7 +105,15 @@ class MatchListView(generic.ListView):
     context_object_name = "matches"
 
     def get_queryset(self):
-        return models.Match.objects.filter(ran=True).order_by("-ran_at")[0:25]
+        return (
+            models.Match.objects.filter(ran=True)
+            .prefetch_related("game")
+            .prefetch_related("player1")
+            .prefetch_related("player2")
+            .prefetch_related("season")
+            .prefetch_related("tournament")
+            .order_by("-ran_at")[0:25]
+        )
 
 
 class TournamentListView(generic.ListView):
