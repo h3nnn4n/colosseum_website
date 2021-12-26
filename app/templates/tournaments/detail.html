@@ -21,13 +21,21 @@
   <table class="table table-hover table-striped table-sm">
     <thead>
       <th scope="col"> Name </th>
+      <th scope="col"> Win Ratio </th>
       <th scope="col"> Score </th>
+      <th scope="col"> Wins </th>
+      <th scope="col"> Loses </th>
+      <th scope="col"> Draws </th>
     </thead>
     <tbody>
       {% for entry in object.ratings %}
       <tr>
         <td>{{ entry.name }}</td>
+        <td>{{ entry.pretty_win_ratio }}%</td>
         <td>{{ entry.score|floatformat:1 }}</td>
+        <td>{{ entry.wins|floatformat:1 }}</td>
+        <td>{{ entry.loses|floatformat:1 }}</td>
+        <td>{{ entry.draws|floatformat:1 }}</td>
       </tr>
       {% endfor %}
     </tbody>

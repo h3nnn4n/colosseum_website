@@ -280,19 +280,39 @@ class Tournament(BaseModel):
     @property
     def ratings(self):
         score = defaultdict(int)
+        wins = defaultdict(int)
+        loses = defaultdict(int)
+        draws = defaultdict(int)
 
         for match in self.matches.all():
             if match.result == 0:
                 score[match.player2.name] += 1
+                wins[match.player2.name] += 1
+                loses[match.player1.name] += 1
             if match.result == 0.5:
                 score[match.player1.name] += 0.5
                 score[match.player2.name] += 0.5
+                draws[match.player1.name] += 0.5
+                draws[match.player2.name] += 0.5
             if match.result == 1:
                 score[match.player1.name] += 1
+                wins[match.player1.name] += 1
+                loses[match.player2.name] += 1
 
         sorted_score = sorted(score.items(), key=lambda x: x[1], reverse=True)
 
-        return [TournamentResult(name, score) for name, score in sorted_score]
+        results = []
+        for name, _ in sorted_score:
+            results.append(
+                TournamentResult(
+                    name=name,
+                    score=score[name],
+                    wins=wins[name],
+                    loses=loses[name],
+                    draws=draws[name],
+                )
+            )
+        return results
 
     def create_matches(self):
         logger.info(
@@ -329,9 +349,24 @@ class Tournament(BaseModel):
         )
 
 
-# Non ORM models.  Just stuff to make passing data around easier, but
-# that is ephemeral and not persisted on the database.
+# Non ORM models.  Just stuff to make passing data around easier. Not that this
+# is ephemeral and not persisted on the database.
 class TournamentResult:
-    def __init__(self, name, score):
+    def __init__(self, *, name, score, wins, loses, draws):
         self.name = name
         self.score = score
+        self.wins = wins
+        self.loses = loses
+        self.draws = draws
+
+    @property
+    def win_ratio(self):
+        return self.wins / self.games_played_count
+
+    @property
+    def pretty_win_ratio(self):
+        return f"{self.win_ratio * 100.0:.2f}"
+
+    @property
+    def games_played_count(self):
+        return self.loses + self.draws + self.wins
