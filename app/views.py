@@ -308,6 +308,16 @@ class TournamentViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class AutomatedSeasonsAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+    queryset = models.Season.objects.none()
+
+    def post(self, request):
+        services.update_seasons_state()
+        services.create_automated_seasons()
+        return Response()
+
+
 # Plots
 
 

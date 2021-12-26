@@ -37,6 +37,11 @@ urlpatterns = [
     # API
     path("api/", include(router.urls)),
     path("api/next_match/", views.NextMatchAPIView.as_view(), name="next_match"),
+    path(
+        "api/automated_seasons/",
+        views.AutomatedSeasonsAPIView.as_view(),
+        name="automated_seasons",
+    ),
     # Register page
     path("accounts/register/", views.register_request, name="register"),
     # Plots

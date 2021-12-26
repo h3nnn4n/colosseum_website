@@ -33,6 +33,21 @@ class GameSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "created_at", "updated_at"]
 
 
+class SeasonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Season
+        fields = [
+            "id",
+            "name",
+            "is_automated",
+            "automated_number",
+            "start_date",
+            "end_date",
+            "created_at",
+            "updated_at",
+        ]
+
+
 class AgentSerializer(serializers.ModelSerializer):
     game = GameSerializer(read_only=True)
 

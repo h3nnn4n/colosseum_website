@@ -147,6 +147,9 @@ class Season(BaseModel):
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
 
+    is_automated = models.BooleanField(null=True, default=False)
+    automated_number = models.IntegerField(null=True)
+
     class Meta:
         indexes = [models.Index(fields=["name"])]
 

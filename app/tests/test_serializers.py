@@ -30,3 +30,14 @@ class TournamentSerializerTestCase(TestCase):
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         self.assertIsNotNone(instance)
+
+
+class SeasonSerializerTestCase(TestCase):
+    def setUp(self):
+        self.serializer = serializers.SeasonSerializer
+
+    def test_create(self):
+        serializer = self.serializer(data={"name": "foo"})
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        self.assertIsNotNone(instance)

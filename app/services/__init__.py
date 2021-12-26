@@ -1,13 +1,14 @@
 import logging
 
 from django.conf import settings
+from django.utils import timezone
 from django_redis import get_redis_connection
 
-from .. import models
+from .. import models, serializers
 
 
 logging.config.dictConfig(settings.LOGGING)
-logger = logging.getLogger("APP")
+logger = logging.getLogger("SERVICES")
 
 
 def purge_all_played_games():
@@ -43,6 +44,7 @@ def update_tournament_state(tournament):
             f"{tournament.mode} Tournament {tournament.id} was set to done=true"
         )
 
+    # Ensure that pending tournament matches are enqueued to be played
     pending_match_ids = tournament.matches.filter(ran=False).values_list(
         "id", flat=True
     )
@@ -50,3 +52,51 @@ def update_tournament_state(tournament):
     redis = get_redis_connection("default")
     for id in pending_match_ids:
         redis.sadd(settings.MATCH_QUEUE_KEY, id)
+
+
+def update_seasons_state():
+    for season in models.Season.objects.all():
+        update_season_state(season)
+
+
+def update_season_state(season):
+    now = timezone.now()
+
+    if season.end_date < now:
+        season.active = False
+        season.save(update_fields=["active"])
+
+
+def create_automated_seasons():
+    now = timezone.now()
+    start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_date = now.replace(hour=23, minute=59, second=59, microsecond=999)
+    last_automated_season = (
+        models.Season.objects.filter(is_automated=True)
+        .order_by("-automated_number")
+        .first()
+    )
+
+    if last_automated_season:
+        next_number = last_automated_season.automated_number + 1
+    else:
+        next_number = 1
+
+    if last_automated_season and last_automated_season.active:
+        return {"status": "active season already exists"}
+
+    name = f"Automated Season {next_number}"
+
+    data = {
+        "name": name,
+        "is_automated": True,
+        "automated_number": next_number,
+        "start_date": start_date,
+        "end_date": end_date,
+    }
+    serializer = serializers.SeasonSerializer(data=data)
+    if serializer.is_valid():
+        logger.info(f'creating automated season "{name}"')
+        serializer.save()
+    else:
+        logger.warning(f'failed to create season "{name}"')
