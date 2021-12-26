@@ -1,9 +1,7 @@
-import base64
 import io
 from datetime import timedelta
 
 import matplotlib
-import numpy as np
 from django.db.models import Count, F, FloatField, Sum
 from django.db.models.functions import Cast, TruncHour, TruncMinute
 from django.http import HttpResponse

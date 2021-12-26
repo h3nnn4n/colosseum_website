@@ -5,8 +5,6 @@ from django.conf import settings
 from django.utils import timezone
 from influxdb import InfluxDBClient
 
-from app import models
-
 
 logger = logging.getLogger("METRICS")
 INFLUXDB_DISABLED = settings.INFLUXDB_DISABLED

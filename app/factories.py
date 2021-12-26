@@ -1,5 +1,4 @@
 import factory
-from factory.fuzzy import FuzzyInteger
 
 from . import models
 
