@@ -19,8 +19,8 @@ def update_ratings_from_match(match):
     match_result = {(player1_id, player2_id): float(match.result)}
 
     updated_elos = compute_updated_ratings(elos, match_result)
-    p1_ratings = match.player1.ratings.get(season=match.season)
-    p2_ratings = match.player2.ratings.get(season=match.season)
+    p1_ratings = match.player1.ratings.select_for_update().get(season=match.season)
+    p2_ratings = match.player2.ratings.select_for_update().get(season=match.season)
 
     if match.result == 1:
         p1_ratings.wins += 1
