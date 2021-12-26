@@ -9,6 +9,7 @@ router = DefaultRouter()
 router.register(r"users", views.UserViewSet)
 router.register(r"agents", views.AgentViewSet)
 router.register(r"games", views.GameViewSet)
+router.register(r"seasons", views.SeasonViewSet)
 router.register(r"matches", views.MatchViewSet)
 router.register(r"tournaments", views.TournamentViewSet)
 

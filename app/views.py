@@ -260,6 +260,12 @@ class GameViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.GameSerializer
 
 
+class SeasonViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAdminUserOrReadOnly]
+    queryset = models.Season.objects.all()
+    serializer_class = serializers.SeasonSerializer
+
+
 class MatchViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = models.Match.objects.all()
