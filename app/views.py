@@ -38,12 +38,6 @@ from app import (
 )
 
 from . import plots
-from .services.ratings import (
-    update_elo_change_after,
-    update_elo_change_before,
-    update_ratings,
-    update_record_ratings,
-)
 
 
 logging.config.dictConfig(settings.LOGGING)

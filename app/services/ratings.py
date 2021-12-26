@@ -7,83 +7,84 @@ from simple_elo import compute_updated_ratings
 from .. import models
 
 
-def update_record_ratings(player1_id, player2_id, result):
+def update_ratings_from_match(match):
     """
-    Takes two player ids and a match result and update the player ratings
-    accordingly.
+    Takes a match and atomically update the participants ratings
     """
+    update_elo_change_before(match)
 
-    # Flip around so the first player is always the winner
-    if result == 0:
-        return update_record_ratings(player2_id, player1_id, 1)
-
-    with transaction.atomic():
-        player1 = get_object_or_404(models.Agent, pk=player1_id)
-        player2 = get_object_or_404(models.Agent, pk=player2_id)
-        update_ratings(player1, player2, result, save=True)
-
-
-def update_ratings(player1, player2, result, save=False):
-    """
-    Takes two player and a match result and update the player ratings
-    accordingly.
-    """
-
-    # Flip around so the first player is always the winner
-    if result == 0:
-        return update_ratings(player2, player1, 1)
+    player1 = match.player1
+    player2 = match.player2
 
     player1_id = str(player1.name)
     player2_id = str(player2.name)
 
     elos = {player1_id: float(player1.elo), player2_id: float(player2.elo)}
-    match_result = {(player1_id, player2_id): float(result)}
+    match_result = {(player1_id, player2_id): float(match.result)}
 
     updated_elos = compute_updated_ratings(elos, match_result)
-    p1_ratings = player1.current_ratings
-    p2_ratings = player2.current_ratings
+    p1_ratings = match.player1.ratings.get(season=match.season)
+    p2_ratings = match.player2.ratings.get(season=match.season)
 
-    if result == 1:
+    if match.result == 1:
         p1_ratings.wins += 1
         p1_ratings.score += 1
+
         p2_ratings.loses += 1
-    elif result == 0.5:
+    elif match.result == 0.5:
         p1_ratings.draws += 1
         p1_ratings.score += Decimal("0.5")
+
         p2_ratings.draws += 1
         p2_ratings.score += Decimal("0.5")
+    if match.result == 0:
+        p1_ratings.loses += 1
+
+        p2_ratings.wins += 1
+        p2_ratings.score += 1
 
     p1_ratings.elo = updated_elos[player1_id]
     p2_ratings.elo = updated_elos[player2_id]
 
-    if save:
-        p1_ratings.save()
-        p2_ratings.save()
+    p1_ratings.save()
+    p2_ratings.save()
+
+    update_elo_change_after(match)
 
 
 def update_elo_change_before(match):
     match.player1.refresh_from_db()
     match.player2.refresh_from_db()
 
+    # HACK: This is here to make sure we always have a ratings object
+    match.player1.current_ratings
+    match.player2.current_ratings
+
+    p1_ratings = match.player1.ratings.get(season=match.season)
+    p2_ratings = match.player2.ratings.get(season=match.season)
+
     player1_id = str(match.player1.id)
     player2_id = str(match.player2.id)
 
     match.data = {}
     match.data["elo_before"] = {}
-    match.data["elo_before"][player1_id] = float(match.player1.elo)
-    match.data["elo_before"][player2_id] = float(match.player2.elo)
+    match.data["elo_before"][player1_id] = float(p1_ratings.elo)
+    match.data["elo_before"][player2_id] = float(p2_ratings.elo)
 
 
 def update_elo_change_after(match):
     match.player1.refresh_from_db()
     match.player2.refresh_from_db()
 
+    p1_ratings = match.player1.ratings.get(season=match.season)
+    p2_ratings = match.player2.ratings.get(season=match.season)
+
     player1_id = str(match.player1.id)
     player2_id = str(match.player2.id)
 
     match.data["elo_after"] = {}
-    match.data["elo_after"][player1_id] = float(match.player1.elo)
-    match.data["elo_after"][player2_id] = float(match.player2.elo)
+    match.data["elo_after"][player1_id] = float(p1_ratings.elo)
+    match.data["elo_after"][player2_id] = float(p2_ratings.elo)
 
     match.data["elo_change"] = {}
     match.data["elo_change"][player1_id] = (

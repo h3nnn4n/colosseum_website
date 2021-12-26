@@ -10,21 +10,42 @@ from app.services import ratings
 
 class RatingsServiceTestCase(TestCase):
     def setUp(self):
+        models.Season.objects.all().delete()
+
         self.game = factories.GameFactory()
         self.season = factories.SeasonFactory()
-        self.agent1 = factories.AgentFactory()
-        self.agent2 = factories.AgentFactory()
+        self.tournament = factories.TournamentFactory(
+            game=self.game, season=self.season
+        )
+        self.agent1 = factories.AgentFactory(game=self.game)
+        self.agent2 = factories.AgentFactory(game=self.game)
+        self.match1 = factories.MatchFactory(
+            player1=self.agent1,
+            player2=self.agent2,
+            season=self.season,
+            tournament=self.tournament,
+            game=self.game,
+            result=1,
+        )
+        self.match2 = factories.MatchFactory(
+            player1=self.agent1,
+            player2=self.agent2,
+            season=self.season,
+            tournament=self.tournament,
+            game=self.game,
+            result=0,
+        )
 
     def test_update(self):
         self.assertEqual(self.agent1.elo, 1500)
         self.assertEqual(self.agent2.elo, 1500)
 
-        ratings.update_record_ratings(self.agent1.id, self.agent2.id, 1)
+        ratings.update_ratings_from_match(self.match1)
 
         self.assertEqual(self.agent1.elo, Decimal("1512"))
         self.assertEqual(self.agent2.elo, Decimal("1488"))
 
-        ratings.update_record_ratings(self.agent1.id, self.agent2.id, 0)
+        ratings.update_ratings_from_match(self.match2)
 
         self.assertEqual(self.agent1.elo, Decimal("1499"))
         self.assertEqual(self.agent2.elo, Decimal("1501"))

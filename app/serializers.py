@@ -12,8 +12,7 @@ from app import metrics, models
 from .services.ratings import (
     update_elo_change_after,
     update_elo_change_before,
-    update_ratings,
-    update_record_ratings,
+    update_ratings_from_match,
 )
 
 
@@ -106,9 +105,7 @@ class MatchSerializer(serializers.ModelSerializer):
 
         instance = super(MatchSerializer, self).create(validated_data)
 
-        update_elo_change_before(instance)
-        update_record_ratings(instance.player1.id, instance.player2.id, instance.result)
-        update_elo_change_after(instance)
+        update_ratings_from_match(instance)
         instance.save()
 
         return instance
@@ -120,11 +117,7 @@ class MatchSerializer(serializers.ModelSerializer):
 
         # If it ran but data is empty, we need to update the player ratings
         if instance.ran and not instance.data:
-            update_elo_change_before(instance)
-            update_record_ratings(
-                instance.player1.id, instance.player2.id, instance.result
-            )
-            update_elo_change_after(instance)
+            update_ratings_from_match(instance)
             instance.save()
             metrics.register_match_played(instance.game.name)
 
