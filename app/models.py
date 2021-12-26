@@ -3,11 +3,13 @@ import logging
 import uuid
 from collections import defaultdict
 
+from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import F, QuerySet
+from django.db.models import F, Q, QuerySet
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django_redis import get_redis_connection
 from memoize import memoize
 
@@ -80,14 +82,15 @@ class Agent(BaseModel):
     def pretty_win_ratio(self):
         return f"{self.win_ratio * 100.0:.2f}"
 
-    @property
-    @memoize(timeout=constants.THIRTY_MINUTES)
+    @cached_property
     def games_played_count(self):
         return self.games_played.count()
 
     @property
     def games_played(self):
-        return self.matches.filter(ran=True, season__active=True, season__main=True)
+        Season = apps.get_model("app", "Season")
+        current_season = Season.objects.get(active=True, main=True)
+        return self.matches.filter(ran=True, season=current_season)
 
     @property
     def most_recent_match(self):
