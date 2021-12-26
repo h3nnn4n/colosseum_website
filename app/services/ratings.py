@@ -1,10 +1,6 @@
 from decimal import Decimal
 
-from django.db import transaction
-from django.shortcuts import get_object_or_404
 from simple_elo import compute_updated_ratings
-
-from .. import models
 
 
 def update_ratings_from_match(match):
