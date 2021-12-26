@@ -33,8 +33,8 @@ class AgentQuerySet(QuerySet):
 
     def by_elo(self):
         return (
-            self.annotate(elo_rating=F("ratings__elo"))
-            .filter(ratings__season__active=True, ratings__season__main=True)
+            self.filter(ratings__season__active=True, ratings__season__main=True)
+            .annotate(elo_rating=F("ratings__elo"))
             .order_by("-elo_rating")
         )
 
