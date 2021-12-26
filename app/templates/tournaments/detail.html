@@ -48,7 +48,7 @@
       <th scope="col"> Games </th>
     </thead>
     <tbody>
-      {% for agent in object.participants.all %}
+      {% for agent in object.participants.by_elo %}
       <tr>
         <td>
           <a href={% url 'agent_edit' agent.id %}>
