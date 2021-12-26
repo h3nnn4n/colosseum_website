@@ -9,6 +9,7 @@
   <table class="table table-hover table-striped table-sm">
     <thead>
       <th scope="col"> Name </th>
+      <th scope="col"> Season </th>
       <th scope="col"> Game </th>
       <th scope="col"> Active </th>
       <th scope="col"> Mode </th>
@@ -23,6 +24,7 @@
             {{ tournament.name }}
           </a>
         </td>
+        <td> {{ tournament.season.name }} </td>
         <td> {{ tournament.game.name }} </td>
         <td> {{ tournament.is_active | yesno:"Yes,No" }} </td>
         <td> {{ tournament.mode }} </td>
