@@ -3,48 +3,49 @@
 {% block title %}Agents{% endblock %}
 
 {% block content %}
-<h1> Agents </h1>
 
-<div>
-  <table class="table table-hover table-striped table-sm">
-    <thead>
-      <th scope="col"> Name </th>
-      <th scope="col"> Game </th>
-      <th scope="col"> Owner </th>
-      <th scope="col"> Elo Rating </th>
-      <th scope="col"> Win Ratio </th>
-      <th scope="col"> Wins </th>
-      <th scope="col"> Loses </th>
-      <th scope="col"> Draws </th>
-      <th scope="col"> Games </th>
-    </thead>
-    <tbody>
-      {% for agent in agents %}
-      <tr>
-        <td>
-          <a href={% url 'agent_detail' agent.id %}>
-            {{ agent.name }}
-          </a>
-        </td>
+{% for game in games %}
+  <h1> Agents for {{ game.pretty_name}} </h1>
 
-        <td>{{ agent.game.name }}</td>
-        <td>{{ agent.owner.username }}</td>
-        <td>{{ agent.elo }}</td>
-        <td>{{ agent.pretty_win_ratio }}%</td>
-        <td>{{ agent.wins }}</td>
-        <td>{{ agent.loses }}</td>
-        <td>{{ agent.draws }}</td>
-        <td>{{ agent.games_played_count }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div>
+    <table class="table table-hover table-striped table-sm">
+      <thead>
+        <th scope="col"> Name </th>
+        <th scope="col"> Owner </th>
+        <th scope="col"> Elo Rating </th>
+        <th scope="col"> Win Ratio </th>
+        <th scope="col"> Wins </th>
+        <th scope="col"> Loses </th>
+        <th scope="col"> Draws </th>
+        <th scope="col"> Games </th>
+      </thead>
+      <tbody>
+        {% for agent in game.agents.by_elo %}
+        <tr>
+          <td>
+            <a href={% url 'agent_detail' agent.id %}>
+              {{ agent.name }}
+            </a>
+          </td>
 
-  {% if user.is_authenticated %}
-    <p>
-      <a href='{% url 'agent_create' %}'> New Agent </a>
-    </p>
-  {% endif %}
-<div>
+          <td>{{ agent.owner.username }}</td>
+          <td>{{ agent.elo }}</td>
+          <td>{{ agent.pretty_win_ratio }}%</td>
+          <td>{{ agent.wins }}</td>
+          <td>{{ agent.loses }}</td>
+          <td>{{ agent.draws }}</td>
+          <td>{{ agent.games_played_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  <div>
+{% endfor %}
+
+{% if user.is_authenticated %}
+  <p>
+    <a href='{% url 'agent_create' %}'> New Agent </a>
+  </p>
+{% endif %}
 
 {% endblock %}

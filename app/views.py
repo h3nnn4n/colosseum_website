@@ -54,6 +54,11 @@ class AgentListView(generic.ListView):
     template_name = "agents/index.html"
     context_object_name = "agents"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["games"] = models.Game.objects.all().order_by("name")
+        return context
+
     def get_queryset(self):
         return (
             models.Agent.objects.all()

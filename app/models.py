@@ -6,6 +6,7 @@ from collections import defaultdict
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import F, QuerySet
 from django.utils import timezone
 from django_redis import get_redis_connection
 from memoize import memoize
@@ -26,6 +27,18 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class AgentQuerySet(QuerySet):
+    def active(self):
+        return self.filter(active=True)
+
+    def by_elo(self):
+        return (
+            self.annotate(elo_rating=F("ratings__elo"))
+            .filter(ratings__season__active=True, ratings__season__main=True)
+            .order_by("-elo_rating")
+        )
+
+
 class Agent(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -33,7 +46,9 @@ class Agent(BaseModel):
     file_hash = models.CharField(max_length=128, null=True)
     active = models.BooleanField(default=True)
 
-    game = models.ForeignKey("Game", on_delete=models.CASCADE)
+    game = models.ForeignKey("Game", on_delete=models.CASCADE, related_name="agents")
+
+    objects = AgentQuerySet.as_manager()
 
     class Meta:
         indexes = [
@@ -142,6 +157,10 @@ class Game(BaseModel):
 
     class Meta:
         indexes = [models.Index(fields=["name"])]
+
+    @property
+    def pretty_name(self):
+        return " ".join(self.name.split("_")).capitalize()
 
 
 class Match(BaseModel):
