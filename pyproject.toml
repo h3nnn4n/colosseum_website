@@ -32,6 +32,7 @@ django-memoize = "^2.3.1"
 celery = "^5.2.1"
 python-magic = "^0.4.24"
 influxdb = "^5.3.1"
+django-cprofile-middleware = "^1.0.5"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.29.0"

@@ -350,6 +350,14 @@ beautifulsoup4 = ">=4.8.0"
 Django = ">=2.2"
 
 [[package]]
+name = "django-cprofile-middleware"
+version = "1.0.5"
+description = "Easily add cProfile profiling to django views."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-crispy-forms"
 version = "1.13.0"
 description = "Best way to have Django DRY forms"
@@ -1536,7 +1544,7 @@ notebook = ">=4.4.1"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.0"
-content-hash = "22f359e4b4003164511640134f34c0f109004e500871805c08d7658300ee062e"
+content-hash = "9e3007c6578b0e84443387f499e7bb30d84e58ce6dc8b8cb45f55d9036214721"
 
 [metadata.files]
 amqp = [
@@ -1726,6 +1734,9 @@ django = [
 django-bootstrap4 = [
     {file = "django-bootstrap4-21.1.tar.gz", hash = "sha256:e6bfe54038ce77d8b7b8ebf00b5b054f197519caa3d8e3a9ea2d63842407fa59"},
     {file = "django_bootstrap4-21.1-py3-none-any.whl", hash = "sha256:662d5d552bd947dbd09df7f76a5caaa2daef4e0e82b14e8ce08c8b75786abc52"},
+]
+django-cprofile-middleware = [
+    {file = "django-cprofile-middleware-1.0.5.tar.gz", hash = "sha256:b942185a38f3b582935a55c768f126ce9a6f0cefceee3b5d19e6b307ad129889"},
 ]
 django-crispy-forms = [
     {file = "django-crispy-forms-1.13.0.tar.gz", hash = "sha256:4dc9e5263c91c5f51766806a050ca2ec5c349d34c5cd91fcca3a1a0363b5e29e"},
