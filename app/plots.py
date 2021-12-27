@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt  # noqa
 import seaborn as sns  # noqa
 
 
-def plot_matches_per_day():
+def plot_matches_per_day(trailing_average_n=15):
     end_date = timezone.now()
     start_date = end_date - timedelta(days=1)
 
@@ -32,6 +32,8 @@ def plot_matches_per_day():
     y_ = [d["count"] for d in data]
     x = []
     y = []
+    y_ta = []
+    trailing_average_queue = []
 
     for i in range(len(x_)):
         date = x_[i]
@@ -71,16 +73,27 @@ def plot_matches_per_day():
         x.append(last_date + timedelta(minutes=missing_minute))
         y.append(0)
 
-    return _matches_per_day_plot(x, y)
+    for point in y:
+        trailing_average_queue.append(point)
+
+        if len(trailing_average_queue) > trailing_average_n:
+            trailing_average_queue.pop(0)
+
+        y_ta.append((sum(trailing_average_queue) / len(trailing_average_queue)))
+
+    return _matches_per_day_plot(x, y, y_ta)
 
 
-def _matches_per_day_plot(x, y):
+def _matches_per_day_plot(x, y, y_ta):
+    palette = ["#4cc9f0", "#3f37c9"]
     sns.set_theme(style="whitegrid")
     sns.set_color_codes("pastel")
+    sns.axes_style("whitegrid")
+    sns.set_palette(palette)
 
-    with sns.axes_style("whitegrid"):
-        figure, ax = plt.subplots(figsize=(12, 8))
-        sns.lineplot(x=x, y=y, estimator=None)
+    figure, ax = plt.subplots(figsize=(12, 8))
+    sns.lineplot(x=x, y=y, estimator=None)
+    sns.lineplot(x=x, y=y_ta, estimator=None)
 
     sns.despine(top=True, right=True, left=True, bottom=True)
 
