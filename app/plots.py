@@ -80,7 +80,7 @@ def _matches_per_day_plot(x, y):
 
     with sns.axes_style("whitegrid"):
         figure, ax = plt.subplots(figsize=(12, 8))
-        sns.lineplot(x=x, y=y)
+        sns.lineplot(x=x, y=y, estimator=None)
 
     sns.despine(top=True, right=True, left=True, bottom=True)
 
@@ -92,16 +92,18 @@ def _matches_per_day_plot(x, y):
     return _make_response(figure)
 
 
-def agent_elo_plot(agent):
-    sns.set_theme(style="whitegrid")
-    sns.set_color_codes("pastel")
-
+def plot_agent_elo(agent):
     elo_key = f"data__elo_after__{agent.id}"
 
+    current_season = models.Season.objects.current_season()
+    trunc_func = TruncMinute
+    if agent.games_played_count > 1000:
+        trunc_func = TruncHour
+
     data = (
-        agent.matches.filter(ran=True)
+        agent.matches.filter(ran=True, season=current_season)
         .annotate(
-            date=TruncHour("ran_at"), elo=Cast(F(elo_key), output_field=FloatField())
+            date=trunc_func("ran_at"), elo=Cast(F(elo_key), output_field=FloatField())
         )
         .values("date", elo_key)
         .annotate(mean_elo=Sum("elo") / Count("date"))
@@ -112,9 +114,16 @@ def agent_elo_plot(agent):
     x = [d["date"] for d in data]
     y = [d["mean_elo"] for d in data]
 
+    return _agent_elo_plot(x, y)
+
+
+def _agent_elo_plot(x, y):
+    sns.set_theme(style="whitegrid")
+    sns.set_color_codes("pastel")
+
     with sns.axes_style("whitegrid"):
         figure, ax = plt.subplots(figsize=(8, 6))
-        sns.lineplot(x=x, y=y)
+        sns.lineplot(x=x, y=y, estimator=None)
 
     sns.despine(top=True, right=True, left=True, bottom=True)
 

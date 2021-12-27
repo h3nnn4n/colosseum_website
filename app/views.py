@@ -336,4 +336,4 @@ def plot_matches_per_day(request):
 @cache_page(constants.TEN_MINUTES)
 def plot_agent_elo(request, pk):
     agent = models.Agent.objects.get(id=pk)
-    return plots.agent_elo_plot(agent)
+    return plots.plot_agent_elo(agent)
