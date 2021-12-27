@@ -15,14 +15,12 @@ import matplotlib.pyplot as plt  # noqa
 import seaborn as sns  # noqa
 
 
-def matches_per_day():
-    sns.set_theme(style="whitegrid")
-    sns.set_color_codes("pastel")
+def plot_matches_per_day():
+    end_date = timezone.now()
+    start_date = end_date - timedelta(days=1)
 
     data = (
-        models.Match.objects.filter(
-            ran=True, ran_at__gte=timezone.now() - timedelta(days=1)
-        )
+        models.Match.objects.filter(ran=True, ran_at__gte=start_date)
         .annotate(date=TruncMinute("ran_at"))
         .values("date")
         .annotate(count=Count("date"))
@@ -39,21 +37,46 @@ def matches_per_day():
         date = x_[i]
         count = y_[i]
 
+        # Fill the beginning of the series
         if len(x) == 0:
+            gap = (date - start_date).total_seconds()
+            missing_minutes = int((gap / 60.0) - 1)
+
+            for missing_minute in range(missing_minutes):
+                x.append(start_date + timedelta(minutes=missing_minute))
+                y.append(0)
+
             x.append(date)
             y.append(count)
             continue
 
+        # Fill the mid of the series
         date_ = x_[i - 1]
         gap = (date - date_).total_seconds()
         missing_minutes = int((gap / 60.0) - 1)
 
         for missing_minute in range(missing_minutes):
             x.append(date_ + timedelta(minutes=missing_minute))
-            y.append(count)
+            y.append(0)
 
         x.append(date)
         y.append(count)
+
+    # Fill end of the series
+    last_date = x[-1]
+    gap = (end_date - last_date).total_seconds()
+    missing_minutes = int((gap / 60.0) - 1)
+
+    for missing_minute in range(missing_minutes):
+        x.append(last_date + timedelta(minutes=missing_minute))
+        y.append(0)
+
+    return _matches_per_day_plot(x, y)
+
+
+def _matches_per_day_plot(x, y):
+    sns.set_theme(style="whitegrid")
+    sns.set_color_codes("pastel")
 
     with sns.axes_style("whitegrid"):
         figure, ax = plt.subplots(figsize=(12, 8))

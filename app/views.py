@@ -330,7 +330,7 @@ class AutomatedSeasonsAPIView(APIView):
 # on the minute.
 @cache_page(constants.ONE_MINUTE - 1)
 def plot_matches_per_day(request):
-    return plots.matches_per_day()
+    return plots.plot_matches_per_day()
 
 
 @cache_page(constants.TEN_MINUTES)
