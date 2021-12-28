@@ -12,6 +12,12 @@ logger = logging.getLogger("AUTOMATED_TOURNAMENTS")
 
 def create_automated_tournaments():
     for game in models.Game.objects.filter(active=True):
+        if game.agents.count() < 2:
+            logger.info(
+                f"'{game.name}' '{game.id}' doesn't have enough agents for a tournament"
+            )
+            continue
+
         _create_automated_tournament("Automated {} Daily Tournament #{}", "TIMED", game)
         _create_automated_tournament(
             "Automated {} Round Robin Tournament #{}", "ROUND_ROBIN", game
