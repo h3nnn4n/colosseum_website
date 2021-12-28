@@ -53,7 +53,7 @@ def _create_automated_tournament(name, mode, game):
     if last_automated_tournament and last_automated_tournament.is_active:
         return {"status": "active tournament already exists"}
 
-    name = name.format(game.name, next_number)
+    name = name.format(game.pretty_name, next_number)
 
     data = {
         "mode": mode,
