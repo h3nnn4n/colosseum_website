@@ -283,7 +283,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         elif mime == "application/x-xz":
             replay_file = file
         else:
-            logger.warn(
+            logger.warning(
                 f"file of type {mime} is invalid. Must be json or xz. Not processing"
             )
             return Response(
