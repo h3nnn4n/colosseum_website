@@ -2,8 +2,8 @@ import io
 from datetime import timedelta
 
 import matplotlib
-from django.db.models import Count, F, FloatField, Sum
-from django.db.models.functions import Cast, TruncHour, TruncMinute
+from django.db.models import Count
+from django.db.models.functions import TruncMinute
 from django.http import HttpResponse
 from django.utils import timezone
 
@@ -109,23 +109,15 @@ def plot_agent_elo(agent):
     elo_key = f"data__elo_after__{agent.id}"
 
     current_season = models.Season.objects.current_season()
-    trunc_func = TruncMinute
-    if agent.games_played_count > 1000:
-        trunc_func = TruncHour
 
     data = (
         agent.matches.filter(ran=True, season=current_season)
-        .annotate(
-            date=trunc_func("ran_at"), elo=Cast(F(elo_key), output_field=FloatField())
-        )
-        .values("date", elo_key)
-        .annotate(mean_elo=Sum("elo") / Count("date"))
-        .values("date", "mean_elo")
-        .order_by("date")
+        .values("ran_at", elo_key)
+        .order_by("ran_at")
     )
 
-    x = [d["date"] for d in data]
-    y = [d["mean_elo"] for d in data]
+    x = [d["ran_at"] for d in data]
+    y = [d[elo_key] for d in data]
 
     return _agent_elo_plot(x, y)
 
