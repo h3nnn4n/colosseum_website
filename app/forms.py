@@ -55,5 +55,13 @@ class AgentForm(forms.ModelForm):
 
         if commit:
             agent.save()
+            if not agent.ratings.filter(
+                season__active=True, season__main=True
+            ).exists():
+                season = models.Season.objects.filter(active=True, main=True).first()
+                if season:
+                    models.AgentRatings.objects.create(
+                        season=season, agent=agent, game=agent.game
+                    )
 
         return agent

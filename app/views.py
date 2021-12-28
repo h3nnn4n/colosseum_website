@@ -112,7 +112,7 @@ class TournamentListView(generic.ListView):
             models.Tournament.objects.filter(done=False)
             .prefetch_related("game")
             .prefetch_related("season")
-            .order_by("-created_at")[0:25]
+            .order_by("-season__created_at", "game__name", "-created_at")[0:25]
         )
 
 
