@@ -105,7 +105,7 @@ def _matches_per_day_plot(x, y, y_ta):
     return _make_response(figure)
 
 
-def plot_agent_elo(agent):
+def plot_agent_elo(agent, trailing_average_n=15):
     elo_key = f"data__elo_after__{agent.id}"
 
     current_season = models.Season.objects.current_season()
@@ -118,8 +118,18 @@ def plot_agent_elo(agent):
 
     x = [d["ran_at"] for d in data]
     y = [d[elo_key] for d in data]
+    y_ta = []
+    trailing_average_queue = []
 
-    return _agent_elo_plot(x, y)
+    for point in y:
+        trailing_average_queue.append(point)
+
+        if len(trailing_average_queue) > trailing_average_n:
+            trailing_average_queue.pop(0)
+
+        y_ta.append((sum(trailing_average_queue) / len(trailing_average_queue)))
+
+    return _agent_elo_plot(x, y_ta)
 
 
 def _agent_elo_plot(x, y):
