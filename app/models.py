@@ -174,6 +174,9 @@ class Season(BaseModel):
     class Meta:
         indexes = [models.Index(fields=["name"])]
 
+    def __str__(self):
+        return f"{self.name} ({self.id})"
+
 
 class Game(BaseModel):
     name = models.CharField(max_length=64, unique=True)
