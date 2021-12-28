@@ -18,15 +18,13 @@ def create_automated_tournaments():
             )
             continue
 
-        _create_automated_tournament("Automated {} Daily Tournament #{}", "TIMED", game)
+        _create_automated_tournament("Daily {} Tournament #{}", "TIMED", game)
+        _create_automated_tournament("{} Tournament #{}", "ROUND_ROBIN", game)
         _create_automated_tournament(
-            "Automated {} Round Robin Tournament #{}", "ROUND_ROBIN", game
+            "{} Double RR Tournament #{}", "DOUBLE_ROUND_ROBIN", game
         )
         _create_automated_tournament(
-            "Automated {} Double Round Robin Tournament #{}", "DOUBLE_ROUND_ROBIN", game
-        )
-        _create_automated_tournament(
-            "Automated {} Triple Round Robin Tournament #{}", "TRIPLE_ROUND_ROBIN", game
+            "{} Triple RR Tournament #{}", "TRIPLE_ROUND_ROBIN", game
         )
 
 
@@ -53,7 +51,7 @@ def _create_automated_tournament(name, mode, game):
     if last_automated_tournament and last_automated_tournament.is_active:
         return {"status": "active tournament already exists"}
 
-    name = name.format(game.name, next_number)
+    name = name.format(game.pretty_name, next_number)
 
     data = {
         "mode": mode,
