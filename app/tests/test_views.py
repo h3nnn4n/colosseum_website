@@ -231,6 +231,17 @@ class MatchViewSetTestCase(TestCase):
         self.admin_user = factories.UserFactory(is_staff=True)
         self.api_client = APIClient()
 
+    def test_match_count(self):
+        response = self.api_client.get("/api/matches/count/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, 0)
+
+        factories.MatchFactory()
+        factories.MatchFactory()
+
+        response = self.api_client.get("/api/matches/count/")
+        self.assertEqual(response.data, 2)
+
     def test_match_update(self):
         match = models.Match.objects.create(
             game=self.game,

@@ -298,6 +298,11 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(detail=False, methods=["get"])
+    def count(self, request):
+        count = models.Match.objects.count()
+        return Response(count)
+
 
 class TournamentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUserOrReadOnly]
