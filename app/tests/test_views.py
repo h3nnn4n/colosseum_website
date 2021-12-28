@@ -224,6 +224,7 @@ class MatchViewSetTestCase(TestCase):
         self.agent1 = factories.AgentFactory(game=self.game)
         self.agent2 = factories.AgentFactory(game=self.game)
         self.season = factories.SeasonFactory()
+        self.season_old = factories.SeasonFactory(active=False)
         self.tournament = factories.TournamentFactory(
             game=self.game, season=self.season
         )
@@ -236,11 +237,39 @@ class MatchViewSetTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, 0)
 
-        factories.MatchFactory()
-        factories.MatchFactory()
+        factories.MatchFactory(ran=False)
+        factories.MatchFactory(ran=True)
+        factories.MatchFactory(ran=True)
+        factories.MatchFactory(ran=True)
 
         response = self.api_client.get("/api/matches/count/")
+        self.assertEqual(response.data, 3)
+
+    def test_match_count_current_season(self):
+        factories.MatchFactory(
+            ran=True, season=self.season_old, tournament=self.tournament
+        )
+        factories.MatchFactory(ran=True, season=self.season, tournament=self.tournament)
+        factories.MatchFactory(ran=True, season=self.season, tournament=self.tournament)
+
+        response = self.api_client.get("/api/matches/count/?current_season=true")
         self.assertEqual(response.data, 2)
+
+    def test_match_count_hours_ago(self):
+        factories.MatchFactory(ran=True, ran_at=timezone.now())
+        factories.MatchFactory(ran=True, ran_at=timezone.now() - timedelta(hours=1))
+        factories.MatchFactory(ran=True, ran_at=timezone.now() - timedelta(hours=6))
+        factories.MatchFactory(ran=True, ran_at=timezone.now() - timedelta(hours=12))
+        factories.MatchFactory(ran=True, ran_at=timezone.now() - timedelta(hours=32))
+
+        response = self.api_client.get("/api/matches/count/?hours_ago=1")
+        self.assertEqual(response.data, 1)
+
+        response = self.api_client.get("/api/matches/count/?hours_ago=16")
+        self.assertEqual(response.data, 4)
+
+        response = self.api_client.get("/api/matches/count/?hours_ago=48")
+        self.assertEqual(response.data, 5)
 
     def test_match_update(self):
         match = models.Match.objects.create(

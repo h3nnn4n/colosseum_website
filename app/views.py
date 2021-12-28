@@ -300,7 +300,19 @@ class MatchViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def count(self, request):
-        count = models.Match.objects.count()
+        params = request.GET
+
+        filter = {"ran": True}
+
+        if params.get("current_season"):
+            current_season = models.Season.objects.current_season()
+            filter["season"] = current_season
+
+        if hours_ago := params.get("hours_ago"):
+            filter["ran_at__gte"] = timezone.now() - timedelta(hours=int(hours_ago))
+
+        count = models.Match.objects.filter(**filter).count()
+
         return Response(count)
 
 
