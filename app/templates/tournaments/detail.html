@@ -59,7 +59,7 @@
       {% for agent in object.participants.by_elo %}
       <tr>
         <td>
-          <a href={% url 'agent_edit' agent.id %}>
+          <a href={% url 'agent_detail' agent.id %}>
             {{ agent.name }}
           </a>
         </td>
