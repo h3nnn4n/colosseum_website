@@ -315,6 +315,7 @@ class Tournament(BaseModel):
 
         for match in self.matches.all():
             if match.result == 0:
+                score[match.player1.name] += 0
                 score[match.player2.name] += 1
                 wins[match.player2.name] += 1
                 loses[match.player1.name] += 1
@@ -325,6 +326,7 @@ class Tournament(BaseModel):
                 draws[match.player2.name] += 1
             if match.result == 1:
                 score[match.player1.name] += 1
+                score[match.player2.name] += 0
                 wins[match.player1.name] += 1
                 loses[match.player2.name] += 1
 
