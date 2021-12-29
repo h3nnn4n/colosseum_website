@@ -5,24 +5,96 @@
 {% block content %}
 
 <div class="container py-5">
-  <h1>Colosseum</h1>
-  <p>
-    Hi, welcome to the Colosseum!
-  </p>
-  {% if not user.is_authenticated %}
-    <p>
-      To participate please
-      <a href="{% url 'register' %}">Register</a>
-      or
-      <a href="{% url 'login' %}">Login</a>.
-    </p>
-  {% endif %}
+  <div class="container">
+    <div class="row justify-content-md-left">
+      <div class="col-md-auto">
 
-  <p>
-    To get started please take a look at
-    <a href='https://github.com/h3nnn4n/colosseum_agents'>colosseum_agents</a>
-    for a collection of sample agents.
-  </p>
+        <h1>Colosseum</h1>
+        <p>
+          Hi, welcome to the Colosseum!
+
+          {% if not user.is_authenticated %}
+            To participate please
+            <a href="{% url 'register' %}">Register</a>
+            or
+            <a href="{% url 'login' %}">Login</a>.
+          {% endif %}
+        </p>
+        <p class="text-justify">
+          Colosseum is a fully automated platform where agents compete agaisnt
+          each other on multiple games. Games run 24/7, non stop. Matches are
+          organized in tournaments, having different formats, and tournaments
+          are grouped in seasons.
+        </p>
+        <p class="text-justify">
+          Agents can be implemented using whatever technology and programming
+          language that the author wants. It can be a simple script applying an
+          static strategy, it could be using a deep learning model,
+          reinforcement learning, etc. It is even possible to have the logic
+          hosted on a webservice and run it remotly, to get around resource
+          limitations.  The only constraints are the rules of the game, which
+          usually have a limit on how fast the agent has to respond.
+        </p>
+      </div>
+    </div>
+
+    <div class="row justify-content-md-left">
+      <div class="col">
+
+        <div class="row">
+          <div class="col"><hr></div>
+          <div class="col-auto">
+            Sample Agents
+          </div>
+          <div class="col"><hr></div>
+        </div>
+
+        <p class="text-justify">
+          We have a collection of sample agents for all the games available on:
+          <a href="https://github.com/h3nnn4n/colosseum_agents">colosseum_agents</a>.
+          They are <a href="https://opensource.org/licenses/MIT">MIT licensed</a>.
+          Feel free to modify them and use it as an starting point.
+        </p>
+      </div>
+
+      <div class="col">
+
+        <div class="row">
+          <div class="col"><hr></div>
+          <div class="col-auto">
+            Random Text
+          </div>
+          <div class="col"><hr></div>
+        </div>
+
+        <p class="text-justify">
+          Top Cat! The most effectual Top Cat! Who’s intellectual close friends
+          get to call him T.C., providing it’s with dignity. Top Cat! The
+          indisputable leader of the gang. He’s the boss, he’s a pip, he’s the
+          championship. He’s the most tip top, Top Cat.
+        </p>
+      </div>
+
+      <div class="col-sm">
+        <div class="row">
+          <div class="col"><hr></div>
+          <div class="col-auto">
+            Stats
+          </div>
+          <div class="col"><hr></div>
+        </div>
+
+        <p class="lh-sm">
+          Active Agents (24h): {{ active_agent_count }} <br>
+          Matches (1h): {{ matches_1h }} <br>
+          Matches (24h): {{ matches_24h }} <br>
+          Open Tournaments: {{ open_tournament_count }} <br>
+          Current Season: {{ current_season_name }}
+        </p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 {% endblock %}

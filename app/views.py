@@ -163,8 +163,29 @@ def register_request(request):
     )
 
 
-def index(request):
-    return render(request, "home.html")
+class HomeView(generic.TemplateView):
+    template_name = "home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["matches_1h"] = models.Match.objects.filter(
+            ran=True, ran_at__gte=timezone.now() - timedelta(hours=1)
+        ).count()
+        context["matches_24h"] = models.Match.objects.filter(
+            ran=True, ran_at__gte=timezone.now() - timedelta(days=1)
+        ).count()
+        context["active_agent_count"] = (
+            models.Match.objects.filter(
+                ran=True, ran_at__gte=timezone.now() - timedelta(days=1)
+            )
+            .distinct("player1")
+            .count()
+        )
+        context["open_tournament_count"] = models.Tournament.objects.filter(
+            done=False
+        ).count()
+        context["current_season_name"] = models.Season.objects.current_season().name
+        return context
 
 
 # API Views
