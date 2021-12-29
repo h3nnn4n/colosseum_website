@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %} Games {% endblock %}
+
+{% block content %}
+
+<h1> Games </h1>
+
+<div>
+  <table class="table table-hover table-striped table-sm">
+    <thead>
+      <th scope="col"> Name </th>
+      <th scope="col"> Description </th>
+      <th scope="col"> Agents </th>
+      <th scope="col"> Open Tournaments </th>
+      <th scope="col"> Active </th>
+    </thead>
+    <tbody>
+      {% for game in games %}
+      <tr>
+        <td>
+          <a href={% url 'game_detail' game.id %}>
+            {{ game.pretty_name }}
+          </a>
+        </td>
+
+        <td>{{ game.short_description }}</td>
+        <td>{{ game.agents.count }}</td>
+        <td>{{ game.open_tournaments.count }}</td>
+        <td>{{ game.active }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+<div>
+
+{% endblock %}

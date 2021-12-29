@@ -1543,8 +1543,8 @@ notebook = ">=4.4.1"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "3.10.0"
-content-hash = "9e3007c6578b0e84443387f499e7bb30d84e58ce6dc8b8cb45f55d9036214721"
+python-versions = "3.10.*"
+content-hash = "cb9319930cc95e64382230823b6cb5f470b3b3d5fc6df549e08bbf41225cc99b"
 
 [metadata.files]
 amqp = [

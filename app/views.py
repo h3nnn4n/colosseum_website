@@ -87,6 +87,24 @@ class AgentUpdateView(permissions.IsOwnerPermissionMixin, generic.UpdateView):
         return super().post(request, *args, **kwargs)
 
 
+class GameListView(generic.ListView):
+    template_name = "games/index.html"
+    context_object_name = "games"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["games"] = models.Game.objects.all().order_by("name")
+        return context
+
+    def get_queryset(self):
+        return models.Game.objects.all()
+
+
+class GameDetailView(generic.DetailView):
+    model = models.Game
+    template_name = "games/detail.html"
+
+
 class MatchListView(generic.ListView):
     template_name = "matches/index.html"
     context_object_name = "matches"
@@ -163,8 +181,29 @@ def register_request(request):
     )
 
 
-def index(request):
-    return render(request, "home.html")
+class HomeView(generic.TemplateView):
+    template_name = "home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["matches_1h"] = models.Match.objects.filter(
+            ran=True, ran_at__gte=timezone.now() - timedelta(hours=1)
+        ).count()
+        context["matches_24h"] = models.Match.objects.filter(
+            ran=True, ran_at__gte=timezone.now() - timedelta(days=1)
+        ).count()
+        context["active_agent_count"] = (
+            models.Match.objects.filter(
+                ran=True, ran_at__gte=timezone.now() - timedelta(days=1)
+            )
+            .distinct("player1")
+            .count()
+        )
+        context["open_tournament_count"] = models.Tournament.objects.filter(
+            done=False
+        ).count()
+        context["current_season_name"] = models.Season.objects.current_season().name
+        return context
 
 
 # API Views
@@ -283,7 +322,7 @@ class MatchViewSet(viewsets.ModelViewSet):
         elif mime == "application/x-xz":
             replay_file = file
         else:
-            logger.warn(
+            logger.warning(
                 f"file of type {mime} is invalid. Must be json or xz. Not processing"
             )
             return Response(
@@ -297,6 +336,23 @@ class MatchViewSet(viewsets.ModelViewSet):
         metrics.register_replay(match.game.name)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=["get"])
+    def count(self, request):
+        params = request.GET
+
+        filter = {"ran": True}
+
+        if params.get("current_season"):
+            current_season = models.Season.objects.current_season()
+            filter["season"] = current_season
+
+        if hours_ago := params.get("hours_ago"):
+            filter["ran_at__gte"] = timezone.now() - timedelta(hours=int(hours_ago))
+
+        count = models.Match.objects.filter(**filter).count()
+
+        return Response(count)
 
 
 class TournamentViewSet(viewsets.ModelViewSet):
