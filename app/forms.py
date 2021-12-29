@@ -5,13 +5,6 @@ from django.contrib.auth.models import User
 from . import models, utils
 
 
-# FIXME: This only updates when the server is restarted, which can be ok, since
-# we won't be adding games like crazy. This has some footgun potential though
-def _game_choices():
-    games = models.Game.objects.all()
-    return [(game.id, game.name) for game in games]
-
-
 class NewUserForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
@@ -31,11 +24,18 @@ class AgentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
         super(AgentForm, self).__init__(*args, **kwargs)
+        self.fields["game_id"] = forms.CharField(
+            label="Game",
+            widget=forms.Select(
+                choices=[
+                    (game.id, game.name)
+                    for game in models.Game.objects.filter(active=True)
+                ]
+            ),
+        )
 
     name = forms.CharField(max_length=50)
-    game_id = forms.CharField(
-        label="Game", widget=forms.Select(choices=_game_choices())
-    )
+    game_id = forms.CharField(label="Game", widget=forms.Select())
     active = forms.BooleanField()
     file = forms.FileField()
 
