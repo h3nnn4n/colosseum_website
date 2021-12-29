@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <h1>{{ object.name }}</h1>
+      <p>
+        {{ object.short_description }}
+      </p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

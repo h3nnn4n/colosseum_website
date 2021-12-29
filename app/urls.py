@@ -19,6 +19,9 @@ urlpatterns = [
     path("agents/create/", views.AgentCreateView.as_view(), name="agent_create"),
     path("agents/<str:pk>/", views.AgentDetailView.as_view(), name="agent_detail"),
     path("agents/<str:pk>/edit/", views.AgentUpdateView.as_view(), name="agent_edit"),
+    # Games pages
+    path("games/", views.GameListView.as_view(), name="games"),
+    path("games/<str:pk>/", views.GameDetailView.as_view(), name="game_detail"),
     # Match pages
     path("matches/", views.MatchListView.as_view(), name="matches"),
     # Tournaments

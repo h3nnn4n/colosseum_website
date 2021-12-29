@@ -87,6 +87,24 @@ class AgentUpdateView(permissions.IsOwnerPermissionMixin, generic.UpdateView):
         return super().post(request, *args, **kwargs)
 
 
+class GameListView(generic.ListView):
+    template_name = "games/index.html"
+    context_object_name = "games"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["games"] = models.Game.objects.all().order_by("name")
+        return context
+
+    def get_queryset(self):
+        return models.Game.objects.all()
+
+
+class GameDetailView(generic.DetailView):
+    model = models.Game
+    template_name = "games/detail.html"
+
+
 class MatchListView(generic.ListView):
     template_name = "matches/index.html"
     context_object_name = "matches"

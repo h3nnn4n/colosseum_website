@@ -200,6 +200,10 @@ class Game(BaseModel):
     def pretty_name(self):
         return " ".join(self.name.split("_")).capitalize()
 
+    @property
+    def open_tournaments(self):
+        return self.tournaments.filter(done=False)
+
 
 class Match(BaseModel):
     participants = models.ManyToManyField(Agent, related_name="matches")
