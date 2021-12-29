@@ -32,8 +32,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
+SITE_ID = 1
 
-INSTALLED_APPS = [
+_BASE_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -49,6 +50,22 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "app",
 ]
+
+_WIKI_APPS = [
+    "django.contrib.sites.apps.SitesConfig",
+    "django.contrib.humanize.apps.HumanizeConfig",
+    "django_nyt.apps.DjangoNytConfig",
+    "mptt",
+    "sekizai",
+    "sorl.thumbnail",
+    "wiki.apps.WikiConfig",
+    "wiki.plugins.attachments.apps.AttachmentsConfig",
+    "wiki.plugins.notifications.apps.NotificationsConfig",
+    "wiki.plugins.images.apps.ImagesConfig",
+    "wiki.plugins.macros.apps.MacrosConfig",
+]
+
+INSTALLED_APPS = _BASE_APPS + _WIKI_APPS
 
 MIDDLEWARE = [
     "django_cprofile_middleware.middleware.ProfilerMiddleware",
@@ -79,6 +96,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.contrib.messages.context_processors.messages",
+                "sekizai.context_processors.sekizai",
             ]
         },
     }
@@ -186,3 +205,5 @@ MATCH_QUEUE_KEY = "match_queue"
 DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 
 DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda r: False}
+
+WIKI_ACCOUNT_SIGNUP_ALLOWED = False

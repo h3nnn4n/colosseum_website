@@ -22,6 +22,13 @@
           <a href={% url 'game_detail' game.id %}>
             {{ game.pretty_name }}
           </a>
+          {% if game.wiki_url %}
+            [
+            <a href={{ game.wiki_url }}>
+                wiki
+              </a>
+            ]
+          {% endif %}
         </td>
 
         <td>{{ game.short_description }}</td>

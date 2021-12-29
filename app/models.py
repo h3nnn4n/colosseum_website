@@ -191,6 +191,8 @@ class Game(BaseModel):
     short_description = models.TextField(default="")
     description = models.TextField(default="")
 
+    wiki_url = models.TextField(null=True)
+
     objects = GameQuerySet.as_manager()
 
     class Meta:
