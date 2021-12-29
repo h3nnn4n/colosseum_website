@@ -203,6 +203,7 @@ class HomeView(generic.TemplateView):
             done=False
         ).count()
         context["current_season_name"] = models.Season.objects.current_season().name
+        context["pending_matches"] = models.Match.objects.filter(ran=False).count()
         return context
 
 
