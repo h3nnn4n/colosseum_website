@@ -179,9 +179,19 @@ class Season(BaseModel):
         return f"{self.name} ({self.id})"
 
 
+class GameQuerySet(QuerySet):
+    def active(self):
+        return self.filter(active=True)
+
+
 class Game(BaseModel):
     name = models.CharField(max_length=64, unique=True)
     active = models.BooleanField(default=True)
+
+    short_description = models.TextField(default="")
+    description = models.TextField(default="")
+
+    objects = GameQuerySet.as_manager()
 
     class Meta:
         indexes = [models.Index(fields=["name"])]
@@ -266,8 +276,12 @@ class Tournament(BaseModel):
     ]
 
     name = models.CharField(max_length=64, unique=True)
-    game = models.ForeignKey("Game", on_delete=models.CASCADE)
-    season = models.ForeignKey("Season", on_delete=models.CASCADE)
+    game = models.ForeignKey(
+        "Game", on_delete=models.CASCADE, related_name="tournaments"
+    )
+    season = models.ForeignKey(
+        "Season", on_delete=models.CASCADE, related_name="tournaments"
+    )
     participants = models.ManyToManyField(Agent, related_name="tournaments")
 
     mode = models.CharField(max_length=64, choices=MODES)

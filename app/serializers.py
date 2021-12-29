@@ -25,7 +25,14 @@ class UserSerializer(serializers.ModelSerializer):
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Game
-        fields = ["id", "name", "created_at", "updated_at"]
+        fields = [
+            "id",
+            "name",
+            "short_description",
+            "description",
+            "created_at",
+            "updated_at",
+        ]
 
 
 class SeasonSerializer(serializers.ModelSerializer):
