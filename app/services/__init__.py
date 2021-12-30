@@ -31,10 +31,10 @@ def update_tournament_state(tournament):
     if (
         tournament.mode == "TIMED"
         and tournament.is_active
-        and tournament.pending_matches <= 10
+        and tournament.pending_matches_count <= 10
     ):
         logger.info(
-            f"TIMED Tournament {tournament.id} has a low number of matches left: {tournament.pending_matches}"
+            f"TIMED Tournament {tournament.id} has a low number of matches left: {tournament.pending_matches_count}"
         )
         tournament.create_matches()
     elif tournament.matches.count() == 0:

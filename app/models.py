@@ -333,8 +333,12 @@ class Tournament(BaseModel):
         return self.matches.filter(ran=False).exists()
 
     @property
-    def pending_matches(self):
+    def pending_matches_count(self):
         return self.matches.filter(ran=False).count()
+
+    @property
+    def played_matches_count(self):
+        return self.matches.filter(ran=True).count()
 
     @property
     def ratings(self):
@@ -377,7 +381,7 @@ class Tournament(BaseModel):
 
     def create_matches(self):
         logger.info(
-            f"Creating matches for tournament {self.id} {self.name} {self.mode} with {self.pending_matches} matches"
+            f"Creating matches for tournament {self.id} {self.name} {self.mode} with {self.pending_matches_count} matches"
         )
         n_rounds = 1
 
@@ -406,7 +410,7 @@ class Tournament(BaseModel):
                 redis.sadd(settings.MATCH_QUEUE_KEY, str(match.id))
 
         logger.info(
-            f"Tournament {self.id} {self.name} {self.mode} has {self.pending_matches} matches now"
+            f"Tournament {self.id} {self.name} {self.mode} has {self.pending_matches_count} matches now"
         )
 
 
