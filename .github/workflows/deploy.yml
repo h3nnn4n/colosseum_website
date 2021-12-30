@@ -26,9 +26,16 @@ jobs:
           cd ansible
           ansible-galaxy install -r requirements.yml
 
-      - name: Deploy
+      - name: Deploy to webservers
         run: |
           cd ansible
           ansible-playbook -i production.yml web_servers.yml --tags web_server
+        env:
+          VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
+
+      - name: Deploy to celery workers
+        run: |
+          cd ansible
+          ansible-playbook -i production.yml celery_workers.yml --tags celery_worker
         env:
           VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
