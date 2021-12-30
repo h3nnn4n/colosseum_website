@@ -76,4 +76,57 @@
   </table>
 <div>
 
+<h3> Matches </h3>
+
+<div>
+  <table class="table table-hover table-striped table-sm">
+    <thead>
+      <th scope="col">  </th>
+      <th scope="col"> Agent 1 </th>
+      <th scope="col"> Agent 2 </th>
+      <th scope="col"> Result </th>
+      <th scope="col"> Duration </th>
+      <th scope="col"> When </th>
+      <th scope="col"> Replay </th>
+    </thead>
+    <tbody>
+      {% for match in tournament.matches.all %}
+      <tr>
+        <td> <a href={% url 'match_detail' match.id %}> View </a> </td>
+        <td> {{ match.player1_elo_change | default_if_none:"-" }}
+          <a href={% url 'agent_detail' match.player1.id %}>
+            {{ match.player1.name }}
+          </a>
+        </td>
+        <td> {{ match.player2_elo_change | default_if_none:"-" }}
+          <a href={% url 'agent_detail' match.player2.id %}>
+            {{ match.player2.name }}
+          </a>
+        </td>
+
+        <td> {{ match.pretty_result }} </td>
+
+        {% if match.duration %}
+          <td> {{ match.duration | floatformat:-2 }}s </td>
+        {% else %}
+          <td> - </td>
+        {% endif %}
+
+        {% if match.ran %}
+          <td> {{ match.ran_at | date:"Y-m-d H:i:s" }} </td>
+        {% else %}
+          <td> - </td>
+        {% endif %}
+
+        {% if match.replay %}
+          <td> <a href={{ match.replay.url }}> Download </a> </td>
+        {% else %}
+          <td> - </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+<div>
+
 {% endblock %}
