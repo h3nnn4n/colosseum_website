@@ -127,6 +127,7 @@ class MatchSerializer(serializers.ModelSerializer):
 
             metrics.register_match_played(instance.game.name)
             metrics.register_match_duration(instance)
+            metrics.register_match_queue_time(instance)
 
         return instance
 
