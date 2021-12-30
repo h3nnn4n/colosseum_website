@@ -9,8 +9,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F, QuerySet
 from django.utils import timezone
-from django.utils.functional import cached_property
 from django_redis import get_redis_connection
+from memoize import memoize
 
 from . import utils
 
@@ -82,7 +82,7 @@ class Agent(BaseModel):
     def pretty_win_ratio(self):
         return f"{self.win_ratio * 100.0:.2f}"
 
-    @cached_property
+    @memoize(timeout=30)  # 30 seconds
     def games_played_count(self):
         return self.games_played.count()
 
