@@ -12,6 +12,7 @@
       <th scope="col"> Season </th>
       <th scope="col"> Game </th>
       <th scope="col"> Mode </th>
+      <th scope="col"> Matches played </th>
       <th scope="col"> Matches left </th>
       <th scope="col"> Created At </th>
     </thead>
@@ -26,7 +27,8 @@
         <td> {{ tournament.season.name }} </td>
         <td> {{ tournament.game.name }} </td>
         <td> {{ tournament.mode }} </td>
-        <td> {{ tournament.pending_matches }} </td>
+        <td> {{ tournament.played_matches_count }} </td>
+        <td> {{ tournament.pending_matches_count }} </td>
         <td> {{ tournament.created_at|date:"Y-m-d H:i:s" }} </td>
       </tr>
       {% endfor %}

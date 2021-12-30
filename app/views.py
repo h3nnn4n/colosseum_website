@@ -121,6 +121,11 @@ class MatchListView(generic.ListView):
         )
 
 
+class MatchDetailView(generic.DetailView):
+    model = models.Match
+    template_name = "matches/detail.html"
+
+
 class TournamentListView(generic.ListView):
     template_name = "tournaments/index.html"
     context_object_name = "tournaments"
