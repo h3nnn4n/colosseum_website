@@ -21,6 +21,10 @@ app.conf.beat_schedule = {
         "task": "app.tasks.refresh_agent_count_cache",
         "schedule": 5.0,
     },
+    "automated_manager": {
+        "task": "app.tasks.automated_manager",
+        "schedule": 10.0,
+    },
 }
 
 app.autodiscover_tasks()

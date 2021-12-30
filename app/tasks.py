@@ -1,6 +1,6 @@
 from celery import shared_task
 
-from app import models
+from app import models, services
 
 
 @shared_task
@@ -11,3 +11,14 @@ def refresh_agent_count_cache():
     """
     for agent in models.Agent.objects.all():
         agent.games_played_count
+
+
+@shared_task
+def automated_manager():
+    """
+    Creates things automatically
+    """
+    services.update_seasons_state()
+    services.create_automated_seasons()
+    services.update_tournaments_state()
+    services.automated_tournaments.create_automated_tournaments()

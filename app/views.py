@@ -265,10 +265,7 @@ class NextMatchAPIView(APIView):
         return Response({})
 
     def post(self, request):
-        tournaments = models.Tournament.objects.filter(done=False)
-
-        for tournament in tournaments:
-            services.update_tournament_state(tournament)
+        services.update_tournaments_state()
 
         return Response()
 
