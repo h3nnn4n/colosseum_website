@@ -314,6 +314,13 @@ class MatchViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def upload_replay(self, request, pk=None):
         match = self.get_object()
+        if not match.ran:
+            logger.warning("tryied to upload a match to an unplayed match. Refusing")
+            return Response(
+                "tryied to upload a match to an unplayed match. Refusing",
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+
         file = request.data["file"]
         mime = utils.guess_mime(file)
         replay_file = None
