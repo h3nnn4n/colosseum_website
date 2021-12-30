@@ -14,5 +14,11 @@ def refresh_agent_count_cache():
 
 
 @shared_task
-def update_tournaments_state():
+def automated_manager():
+    """
+    Creates things automatically
+    """
+    services.update_seasons_state()
+    services.create_automated_seasons()
     services.update_tournaments_state()
+    services.automated_tournaments.create_automated_tournaments()
