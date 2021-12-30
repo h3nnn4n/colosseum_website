@@ -57,9 +57,12 @@ def metrics_logger():
     oldest_unplayed_match = (
         models.Match.objects.filter(ran=False).order_by("created_at").first()
     )
-    oldest_unplayed_match_age = (
-        timezone.now() - oldest_unplayed_match.created_at
-    ).total_seconds()
+    oldest_unplayed_match_age = 0
+    if oldest_unplayed_match:
+        oldest_unplayed_match_age = (
+            timezone.now() - oldest_unplayed_match.created_at
+        ).total_seconds()
+
     metrics._push_metric(
         {
             "fields": {"value": oldest_unplayed_match_age},
