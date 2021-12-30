@@ -21,6 +21,10 @@ app.conf.beat_schedule = {
         "task": "app.tasks.refresh_agent_count_cache",
         "schedule": 5.0,
     },
+    "update_tournaments_state": {
+        "task": "app.tasks.update_tournaments_state",
+        "schedule": 5.0,
+    },
 }
 
 app.autodiscover_tasks()

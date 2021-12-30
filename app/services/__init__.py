@@ -22,6 +22,11 @@ def purge_all_tournaments():
     models.Match.objects.all().delete()
 
 
+def update_tournaments_state():
+    for tournament in models.Tournament.objects.all():
+        update_tournament_state(tournament)
+
+
 def update_tournament_state(tournament):
     if (
         tournament.mode == "TIMED"
