@@ -55,7 +55,11 @@
           </tr>
           <tr>
             <td> Duration </td>
-            <td> {{ object.duration | floatformat:-2 }}s </td>
+            {% if object.duration %}
+              <td> {{ object.duration | floatformat:-2 }}s </td>
+            {% else %}
+              <td> - </td>
+            {% endif %}
           </tr>
           <tr>
             <td> Replay </td>
