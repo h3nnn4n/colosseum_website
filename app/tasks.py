@@ -20,5 +20,7 @@ def automated_manager():
     """
     services.update_seasons_state()
     services.create_automated_seasons()
-    services.update_tournaments_state()
     services.automated_tournaments.create_automated_tournaments()
+
+    for tournament in models.Tournament.objects.filter(done=False):
+        services.update_tournament_state(tournament)
