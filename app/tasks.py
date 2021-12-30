@@ -54,6 +54,20 @@ def metrics_logger():
         }
     )
 
+    oldest_unplayed_match = (
+        models.Match.objects.filter(ran=False).order_by("created_at").first()
+    )
+    oldest_unplayed_match_age = (
+        timezone.now() - oldest_unplayed_match.created_at
+    ).total_seconds()
+    metrics._push_metric(
+        {
+            "fields": {"value": oldest_unplayed_match_age},
+            "measurement": "oldest_unplayed_match_age",
+            "time": timezone.now().isoformat(),
+        }
+    )
+
 
 @shared_task
 def enqueue_all_pending_matches():
