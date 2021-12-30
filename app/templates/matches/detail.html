@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Match</h1>
+
+      <table class="table table-hover table-striped table-sm">
+        <tbody>
+          <tr>
+            <td> Game </td>
+            <td>
+              <a href={% url 'game_detail' object.game.id %}>
+                {{ object.game.name }}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td> Season </td>
+            <td> {{ object.season.name }} </td>
+          </tr>
+          <tr>
+            <td> Tournament </td>
+            <td>
+              <a href={% url 'tournament_detail' object.tournament.id %}>
+                {{ object.tournament.name }}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td> Player 1 </td>
+            <td> {{ object.player1_elo_change }}
+              <a href={% url 'agent_detail' object.player1.id %}>
+                {{ object.player1.name }}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td> Player 2 </td>
+            <td> {{ object.player2_elo_change }}
+              <a href={% url 'agent_detail' object.player2.id %}>
+                {{ object.player2.name }}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td> Result </td>
+            <td> {{ object.pretty_result }} </td>
+          </tr>
+          <tr>
+            <td> Ran At </td>
+            <td> {{ object.ran_at | date:"Y-m-d H:i:s" }} </td>
+          </tr>
+          <tr>
+            <td> Duration </td>
+            <td> {{ object.duration | floatformat:-2 }}s </td>
+          </tr>
+          <tr>
+            <td> Replay </td>
+            {% if object.replay %}
+              <td> <a href={{ object.replay.url }}> Download </a> </td>
+            {% else %}
+              <td> - </td>
+            {% endif %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
