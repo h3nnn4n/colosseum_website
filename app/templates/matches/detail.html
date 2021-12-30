@@ -67,7 +67,7 @@
           </tr>
           <tr>
             <td> Replay </td>
-            {% if object.replay %}
+            {% if object.ran and object.replay %}
               <td> <a href={{ object.replay.url }}> Download </a> </td>
             {% else %}
               <td> - </td>

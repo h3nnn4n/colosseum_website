@@ -47,7 +47,7 @@
         <td> {{ match.game.name }} </td>
         <td> {{ match.ran_at | date:"Y-m-d H:i:s" }} </td>
 
-        {% if match.replay %}
+        {% if match.ran and match.replay %}
           <td> <a href={{ match.replay.url }}> Download </a> </td>
         {% else %}
           <td> - </td>

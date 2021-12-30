@@ -118,7 +118,7 @@
           <td> - </td>
         {% endif %}
 
-        {% if match.replay %}
+        {% if match.played and match.replay %}
           <td> <a href={{ match.replay.url }}> Download </a> </td>
         {% else %}
           <td> - </td>
