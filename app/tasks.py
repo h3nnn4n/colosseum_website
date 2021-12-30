@@ -1,6 +1,7 @@
 from celery import shared_task
 
 from app import models, services
+from app.services import automated_tournaments
 
 
 @shared_task
@@ -20,7 +21,7 @@ def automated_manager():
     """
     services.update_seasons_state()
     services.create_automated_seasons()
-    services.automated_tournaments.create_automated_tournaments()
+    automated_tournaments.create_automated_tournaments()
 
     for tournament in models.Tournament.objects.filter(done=False):
         services.update_tournament_state(tournament)
