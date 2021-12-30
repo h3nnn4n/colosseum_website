@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 
@@ -28,6 +29,10 @@ app.conf.beat_schedule = {
     "metrics_logger": {
         "task": "app.tasks.metrics_logger",
         "schedule": 5.0,
+    },
+    "enqueue_all_pending_matches": {
+        "task": "app.tasks.enqueue_all_pending_matches",
+        "schedule": crontab(minute=0),  # Every hour, on the minute
     },
 }
 

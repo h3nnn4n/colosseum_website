@@ -4,8 +4,8 @@ from django.conf import settings
 from django.utils import timezone
 from django_redis import get_redis_connection
 
-from .. import models, serializers
-from ..services.ratings import update_ratings_from_match
+from app import models, serializers
+from app.services.ratings import update_ratings_from_match
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -138,3 +138,23 @@ def recalculate_ratings_for_season(season):
             )
 
     logger.info(f"Finished recalculating rankings for season '{season.name}'")
+
+
+def enqueue_all_pending_matches():
+    redis = get_redis_connection("default")
+
+    for tournament in models.Tournament.objects.all():
+        pending_match_ids = tournament.matches.filter(ran=False).values_list(
+            "id", flat=True
+        )
+        pending_match_ids = list(map(str, pending_match_ids))
+
+        if len(pending_match_ids) == 0:
+            continue
+
+        logger.info(
+            f"'{tournament.name}' had {len(pending_match_ids)} unplayed matches"
+        )
+
+        for id in pending_match_ids:
+            redis.sadd(settings.MATCH_QUEUE_KEY, id)

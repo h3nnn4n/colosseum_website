@@ -53,3 +53,8 @@ def metrics_logger():
             "time": timezone.now().isoformat(),
         }
     )
+
+
+@shared_task
+def enqueue_all_pending_matches():
+    services.enqueue_all_pending_matches()
