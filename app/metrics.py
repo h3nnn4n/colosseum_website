@@ -92,3 +92,22 @@ def register_match_duration(match):
             "time": timezone.now().isoformat(),
         }
     )
+
+
+def register_match_queue_time(match):
+    queue_time = (match.ran_at - match.created_at).total_seconds()
+
+    _push_metric(
+        {
+            "fields": {"value": queue_time},
+            "measurement": "match_queue_time",
+            "tags": {
+                "game": match.game.name,
+                "player1": match.player1.id,
+                "player2": match.player2.id,
+                "season": match.season.name,
+                "tournament": match.tournament.name,
+            },
+            "time": timezone.now().isoformat(),
+        }
+    )
