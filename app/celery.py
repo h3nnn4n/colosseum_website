@@ -25,6 +25,10 @@ app.conf.beat_schedule = {
         "task": "app.tasks.automated_manager",
         "schedule": 10.0,
     },
+    "metrics_logger": {
+        "task": "app.tasks.metrics_logger",
+        "schedule": 5.0,
+    },
 }
 
 app.autodiscover_tasks()
