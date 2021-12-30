@@ -75,3 +75,20 @@ def register_get_next_match():
             "time": timezone.now().isoformat(),
         }
     )
+
+
+def register_match_duration(match):
+    _push_metric(
+        {
+            "fields": {"value": match.duration},
+            "measurement": "match_duration",
+            "tags": {
+                "game": match.game.name,
+                "player1": match.player1.id,
+                "player2": match.player2.id,
+                "season": match.season.name,
+                "tournament": match.tournament.name,
+            },
+            "time": timezone.now().isoformat(),
+        }
+    )
