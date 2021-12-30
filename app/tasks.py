@@ -1,6 +1,6 @@
 from celery import shared_task
-from djang.utils import timezone
 from django.conf import settings
+from django.utils import timezone
 from django_redis import get_redis_connection
 
 from app import metrics, models, services

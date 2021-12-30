@@ -73,3 +73,21 @@ class AutomatedManagerTestcase(TestCase):
         self.assertEqual(models.Match.objects.filter(ran=False).count(), 0)
         tasks.automated_manager()
         self.assertEqual(models.Match.objects.filter(ran=False).count(), 8)
+
+
+class MetricsLoggerTestCase(TestCase):
+    def setUp(self):
+        self.game = factories.GameFactory()
+        self.season = factories.SeasonFactory(
+            end_date=timezone.now() - timedelta(hours=1)
+        )
+        self.tournament = factories.TournamentFactory(
+            game=self.game, season=self.season
+        )
+        self.agent1 = factories.AgentFactory(game=self.game)
+        self.agent2 = factories.AgentFactory(game=self.game)
+
+    def test_smoke(self):
+        tasks.metrics_logger()
+        tasks.automated_manager()  # This creates some data
+        tasks.metrics_logger()
