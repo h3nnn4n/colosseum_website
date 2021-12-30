@@ -82,6 +82,7 @@ class Agent(BaseModel):
     def pretty_win_ratio(self):
         return f"{self.win_ratio * 100.0:.2f}"
 
+    @property
     @memoize(timeout=30)  # 30 seconds
     def games_played_count(self):
         return self.games_played.count()
