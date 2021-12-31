@@ -69,5 +69,5 @@ def metrics_logger():
 
 
 @shared_task
-def enqueue_all_pending_matches():
-    services.enqueue_all_pending_matches()
+def regenerate_queue():
+    match_queue.regenerate_queue()

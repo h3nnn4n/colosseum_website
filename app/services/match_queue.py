@@ -46,3 +46,22 @@ def add(value):
 def add_many(*values):
     redis = get_redis_connection("default")
     redis.rpush(settings.MATCH_QUEUE_KEY, *list(map(str, values)))
+
+
+def regenerate_queue():
+    """
+    Gets all unplayed matches from the database, sort them by age and overrides
+    the current queue with it. Since the queue is supposed to only have
+    unplayed matches, this shouldn't result in any lost records.
+    """
+    redis = get_redis_connection("default")
+    new_queue = f"{settings.MATCH_QUEUE_KEY}_new"
+    old_queue = settings.MATCH_QUEUE_KEY
+
+    pending_records_ids = (
+        models.Match.objects.filter(ran=False)
+        .order_by("created_at")
+        .values("id", flat=True)
+    )
+    redis.rpush(new_queue, *list(map(str, pending_records_ids)))
+    redis.rename(new_queue, old_queue)

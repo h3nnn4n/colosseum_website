@@ -136,20 +136,3 @@ def recalculate_ratings_for_season(season):
             )
 
     logger.info(f"Finished recalculating rankings for season '{season.name}'")
-
-
-def enqueue_all_pending_matches():
-    for tournament in models.Tournament.objects.all():
-        pending_match_ids = tournament.matches.filter(ran=False).values_list(
-            "id", flat=True
-        )
-        pending_match_ids = list(map(str, pending_match_ids))
-
-        if len(pending_match_ids) == 0:
-            continue
-
-        logger.info(
-            f"'{tournament.name}' had {len(pending_match_ids)} unplayed matches"
-        )
-
-        match_queue(*pending_match_ids)
