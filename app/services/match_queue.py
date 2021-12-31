@@ -44,8 +44,9 @@ def add(value):
 
 
 def add_many(*values):
-    redis = get_redis_connection("default")
-    redis.rpush(settings.MATCH_QUEUE_KEY, *list(map(str, values)))
+    if values:
+        redis = get_redis_connection("default")
+        redis.rpush(settings.MATCH_QUEUE_KEY, *list(map(str, values)))
 
 
 def regenerate_queue():
@@ -61,7 +62,10 @@ def regenerate_queue():
     pending_records_ids = (
         models.Match.objects.filter(ran=False)
         .order_by("created_at")
-        .values("id", flat=True)
+        .values_list("id", flat=True)
     )
-    redis.rpush(new_queue, *list(map(str, pending_records_ids)))
-    redis.rename(new_queue, old_queue)
+
+    values = list(map(str, pending_records_ids))
+    if values:
+        redis.rpush(new_queue, *values)
+        redis.rename(new_queue, old_queue)

@@ -4,7 +4,7 @@ from django.test import TestCase
 from freezegun import freeze_time
 
 from app import factories, models, services
-from app.services import ratings
+from app.services import automated_tournaments, match_queue, ratings
 
 
 class RatingsServiceTestCase(TestCase):
@@ -97,3 +97,11 @@ class CreateAutomatedSeasonsTestCase(TestCase):
 
             services.create_automated_seasons()
             self.assertEqual(models.Season.objects.count(), 2)
+
+
+class MatchQueueTestCase(TestCase):
+    def test_for_smoke(self):
+        services.create_automated_seasons()
+        automated_tournaments.create_automated_tournaments()
+        services.update_tournaments_state()
+        match_queue.regenerate_queue()
