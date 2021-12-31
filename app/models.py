@@ -12,8 +12,6 @@ from django.db.models import F, QuerySet
 from django.utils import timezone
 from django.utils.functional import cached_property
 
-from app import tasks
-
 from . import utils
 
 
@@ -381,6 +379,8 @@ class Tournament(BaseModel):
         return results
 
     def create_matches(self):
+        from app.services import match_queue
+
         logger.info(
             f"Creating matches for tournament {self.id} {self.name} {self.mode} with {self.pending_matches_count} matches"
         )
@@ -393,6 +393,7 @@ class Tournament(BaseModel):
             n_rounds = 3
 
         participants = list(self.participants.all())
+        new_match_ids = []
         for _ in range(n_rounds):
             for bracket in itertools.combinations(participants, 2):
                 bracket = list(bracket)
@@ -407,8 +408,9 @@ class Tournament(BaseModel):
                 )
                 match.participants.add(*bracket)
                 match.save()
+                new_match_ids.append(match.id)
 
-        tasks.regenerate_queue.delay()
+        match_queue.add_many(new_match_ids)
 
         logger.info(
             f"Tournament {self.id} {self.name} {self.mode} has {self.pending_matches_count} matches now"
