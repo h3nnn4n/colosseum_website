@@ -224,7 +224,7 @@ class Match(BaseModel):
     )
     ran_at = models.DateTimeField(null=True)
     ran = models.BooleanField(default=False)
-    duration = models.DecimalField(decimal_places=15, max_digits=20, null=True)
+    duration = models.DecimalField(decimal_places=20, max_digits=25, null=True)
     tournament = models.ForeignKey(
         "Tournament", on_delete=models.CASCADE, related_name="matches"
     )
