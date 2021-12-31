@@ -226,8 +226,19 @@ class HomeView(generic.TemplateView):
 
         context["oldest_pending_match_age"] = "-"
         if oldest_pending_match:
-            context["oldest_pending_match_age"] = humanize.naturaldelta(
-                timezone.now() - oldest_pending_match.created_at
+            age = (timezone.now() - oldest_pending_match.created_at).total_seconds()
+
+            if age < constants.ONE_HOUR:
+                minimum_unit = "seconds"
+            elif age < constants.ONE_DAY:
+                minimum_unit = "minutes"
+            else:
+                minimum_unit = "hours"
+
+            context["oldest_pending_match_age"] = humanize.precisedelta(
+                age,
+                minimum_unit=minimum_unit,
+                format="%0.0f",
             )
 
         return context
