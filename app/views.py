@@ -2,6 +2,7 @@ import logging
 import lzma
 from datetime import timedelta
 
+import humanize
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
@@ -210,6 +211,17 @@ class HomeView(generic.TemplateView):
         ).count()
         context["current_season_name"] = models.Season.objects.current_season().name
         context["pending_matches"] = models.Match.objects.filter(ran=False).count()
+
+        oldest_pending_match = (
+            models.Match.objects.filter(ran=False).order_by("created_at").first()
+        )
+
+        context["oldest_pending_match_age"] = "-"
+        if oldest_pending_match:
+            context["oldest_pending_match_age"] = humanize.naturaldelta(
+                timezone.now() - oldest_pending_match.created_at
+            )
+
         return context
 
 

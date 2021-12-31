@@ -34,6 +34,7 @@ python-magic = "^0.4.24"
 influxdb = "^5.3.1"
 django-cprofile-middleware = "^1.0.5"
 wiki = "^0.7.10"
+humanize = "^3.13.1"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.29.0"
