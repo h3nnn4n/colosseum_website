@@ -15,7 +15,7 @@ def get_next():
         return
 
     while True:
-        match_id = redis.spop(settings.MATCH_QUEUE_KEY)
+        match_id = redis.lpop(settings.MATCH_QUEUE_KEY)
 
         # Queue is empty. Nothing to do
         if not match_id:
@@ -29,10 +29,9 @@ def get_next():
 
 def add(value):
     redis = get_redis_connection("default")
-    redis.sadd(settings.MATCH_QUEUE_KEY, str(value))
+    redis.rpush(settings.MATCH_QUEUE_KEY, str(value))
 
 
 def add_many(*values):
     redis = get_redis_connection("default")
-    for value in values:
-        redis.sadd(settings.MATCH_QUEUE_KEY, str(value))
+    redis.rpush(settings.MATCH_QUEUE_KEY, *list(map(str, values)))
