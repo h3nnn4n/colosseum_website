@@ -37,6 +37,7 @@ def get_next():
 
         if models.Match.objects.filter(id=match_id, ran=False).exists():
             return_value = match_id
+            break
 
     t_end = time()
     duration = t_end - t_start
