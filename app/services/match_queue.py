@@ -6,7 +6,7 @@ from app import models
 
 def queue_size():
     redis = get_redis_connection("default")
-    return redis.scard(settings.MATCH_QUEUE_KEY)
+    return redis.llen(settings.MATCH_QUEUE_KEY)
 
 
 def get_next():
