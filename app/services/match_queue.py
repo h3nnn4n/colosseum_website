@@ -71,9 +71,7 @@ def regenerate_queue():
     )
 
     values = list(map(str, pending_records_ids))
-    logger.info(
-        f"regenerate_queue will add {len(values)} new records. previously has {old_size}"
-    )
+    logger.info(f"regenerate_queue will add {len(values)} new records, had {old_size}")
     if values:
         redis.delete(queue_key)
         redis.rpush(queue_key, *values)
