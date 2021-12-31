@@ -11,7 +11,6 @@ from django.db import models
 from django.db.models import F, QuerySet
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django_redis import get_redis_connection
 
 from . import utils
 
@@ -392,7 +391,6 @@ class Tournament(BaseModel):
             n_rounds = 3
 
         participants = list(self.participants.all())
-        redis = get_redis_connection("default")
         for _ in range(n_rounds):
             for bracket in itertools.combinations(participants, 2):
                 bracket = list(bracket)
@@ -407,7 +405,6 @@ class Tournament(BaseModel):
                 )
                 match.participants.add(*bracket)
                 match.save()
-                redis.sadd(settings.MATCH_QUEUE_KEY, str(match.id))
 
         logger.info(
             f"Tournament {self.id} {self.name} {self.mode} has {self.pending_matches_count} matches now"
