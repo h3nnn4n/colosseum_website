@@ -19,6 +19,7 @@ def queue_size():
 def get_next():
     t_start = time()
     return_value = None
+    n_attempts = 0
 
     redis = get_redis_connection("default")
     while True:
@@ -26,6 +27,7 @@ def get_next():
             break
 
         match_id = redis.lpop(settings.MATCH_QUEUE_KEY)
+        n_attempts += 1
 
         # Queue is empty. Nothing to do
         if not match_id:
@@ -38,7 +40,7 @@ def get_next():
 
     t_end = time()
     duration = t_end - t_start
-    metrics.register_get_next_match_from_queue(duration)
+    metrics.register_get_next_match_from_queue(duration, n_attempts)
 
     return return_value
 

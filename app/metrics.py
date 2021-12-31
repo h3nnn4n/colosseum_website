@@ -113,10 +113,10 @@ def register_match_queue_time(match):
     )
 
 
-def register_get_next_match_from_queue(time):
+def register_get_next_match_from_queue(time, n_attempts):
     _push_metric(
         {
-            "fields": {"value": time},
+            "fields": {"value": time, "n_attempts": n_attempts},
             "measurement": "get_next_match_from_queue",
             "time": timezone.now().isoformat(),
         }
