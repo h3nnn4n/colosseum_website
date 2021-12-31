@@ -12,6 +12,8 @@ from django.db.models import F, QuerySet
 from django.utils import timezone
 from django.utils.functional import cached_property
 
+from app import tasks
+
 from . import utils
 
 
@@ -405,6 +407,8 @@ class Tournament(BaseModel):
                 )
                 match.participants.add(*bracket)
                 match.save()
+
+        tasks.regenerate_queue.delay()
 
         logger.info(
             f"Tournament {self.id} {self.name} {self.mode} has {self.pending_matches_count} matches now"
