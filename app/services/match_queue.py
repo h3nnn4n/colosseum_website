@@ -1,9 +1,14 @@
+import logging
 from time import time
 
 from django.conf import settings
 from django_redis import get_redis_connection
 
 from app import metrics, models
+
+
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("MATCH_QUEUE")
 
 
 def queue_size():
@@ -56,8 +61,8 @@ def regenerate_queue():
     unplayed matches, this shouldn't result in any lost records.
     """
     redis = get_redis_connection("default")
-    new_queue = f"{settings.MATCH_QUEUE_KEY}_new"
-    old_queue = settings.MATCH_QUEUE_KEY
+    queue_key = settings.MATCH_QUEUE_KEY
+    old_size = queue_size()
 
     pending_records_ids = (
         models.Match.objects.filter(ran=False)
@@ -66,6 +71,7 @@ def regenerate_queue():
     )
 
     values = list(map(str, pending_records_ids))
+    logger.info(f"regenerate_queue will add {len(values)} new records, had {old_size}")
     if values:
-        redis.rpush(new_queue, *values)
-        redis.rename(new_queue, old_queue)
+        redis.delete(queue_key)
+        redis.rpush(queue_key, *values)
