@@ -29,6 +29,7 @@ from app import (
     services,
     utils,
 )
+from app.services import match_queue
 
 from . import plots
 
@@ -251,21 +252,9 @@ class NextMatchAPIView(APIView):
 
     def get(self, request):
         metrics.register_get_next_match()
-        redis = get_redis_connection("default")
-        if redis.get("disable_next_match_api") == b"1":
-            return Response({"_state": "killswitch engaged"})
 
-        while True:
-            match_id = redis.spop(settings.MATCH_QUEUE_KEY)
-
-            # Queue is empty. Nothing to do
-            if not match_id:
-                break
-
-            match_id = match_id.decode()
-
-            if models.Match.objects.filter(id=match_id, ran=False).exists():
-                return Response({"id": match_id})
+        if match_id := match_queue.get_next():
+            return Response({"id": match_id})
 
         return Response({})
 

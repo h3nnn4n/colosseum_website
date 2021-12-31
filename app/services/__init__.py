@@ -2,9 +2,9 @@ import logging
 
 from django.conf import settings
 from django.utils import timezone
-from django_redis import get_redis_connection
 
 from app import models, serializers
+from app.services import match_queue
 from app.services.ratings import update_ratings_from_match
 
 
@@ -55,9 +55,7 @@ def update_tournament_state(tournament):
         "id", flat=True
     )
     pending_match_ids = list(map(str, pending_match_ids))
-    redis = get_redis_connection("default")
-    for id in pending_match_ids:
-        redis.sadd(settings.MATCH_QUEUE_KEY, id)
+    match_queue.add_many(*pending_match_ids)
 
 
 def update_seasons_state():
@@ -141,8 +139,6 @@ def recalculate_ratings_for_season(season):
 
 
 def enqueue_all_pending_matches():
-    redis = get_redis_connection("default")
-
     for tournament in models.Tournament.objects.all():
         pending_match_ids = tournament.matches.filter(ran=False).values_list(
             "id", flat=True
@@ -156,5 +152,4 @@ def enqueue_all_pending_matches():
             f"'{tournament.name}' had {len(pending_match_ids)} unplayed matches"
         )
 
-        for id in pending_match_ids:
-            redis.sadd(settings.MATCH_QUEUE_KEY, id)
+        match_queue(*pending_match_ids)

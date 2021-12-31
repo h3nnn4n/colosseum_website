@@ -1,10 +1,8 @@
 from celery import shared_task
-from django.conf import settings
 from django.utils import timezone
-from django_redis import get_redis_connection
 
 from app import metrics, models, services
-from app.services import automated_tournaments
+from app.services import automated_tournaments, match_queue
 
 
 @shared_task
@@ -35,11 +33,9 @@ def metrics_logger():
     """
     Periodically collect and send some metrics to influxdb
     """
-    redis = get_redis_connection("default")
-    queue_size = redis.scard(settings.MATCH_QUEUE_KEY)
     metrics._push_metric(
         {
-            "fields": {"value": queue_size},
+            "fields": {"value": match_queue.queue_size()},
             "measurement": "match_queue_size",
             "time": timezone.now().isoformat(),
         }
