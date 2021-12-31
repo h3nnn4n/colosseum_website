@@ -3,8 +3,7 @@ import logging
 from django.conf import settings
 from django.utils import timezone
 
-from app import models, serializers
-from app.services import match_queue
+from app import models, serializers, tasks
 from app.services.ratings import update_ratings_from_match
 
 
@@ -25,6 +24,8 @@ def purge_all_tournaments():
 def update_tournaments_state():
     for tournament in models.Tournament.objects.all():
         update_tournament_state(tournament)
+
+    tasks.regenerate_queue.delay()
 
 
 def update_tournament_state(tournament):
@@ -49,13 +50,6 @@ def update_tournament_state(tournament):
         logger.info(
             f"{tournament.mode} Tournament {tournament.id} was set to done=true"
         )
-
-    # Ensure that pending tournament matches are enqueued to be played
-    pending_match_ids = tournament.matches.filter(ran=False).values_list(
-        "id", flat=True
-    )
-    pending_match_ids = list(map(str, pending_match_ids))
-    match_queue.add_many(*pending_match_ids)
 
 
 def update_seasons_state():
