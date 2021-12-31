@@ -32,7 +32,7 @@ def get_next():
             return_value = match_id
 
     t_end = time()
-    duration = (t_end - t_start).total_seconds()
+    duration = t_end - t_start
     metrics.register_get_next_match_from_queue(duration)
 
     return return_value
