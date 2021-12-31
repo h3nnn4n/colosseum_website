@@ -61,8 +61,7 @@ def regenerate_queue():
     unplayed matches, this shouldn't result in any lost records.
     """
     redis = get_redis_connection("default")
-    new_queue = f"{settings.MATCH_QUEUE_KEY}_new"
-    old_queue = settings.MATCH_QUEUE_KEY
+    queue_key = settings.MATCH_QUEUE_KEY
     old_size = queue_size()
 
     pending_records_ids = (
@@ -76,5 +75,5 @@ def regenerate_queue():
         f"regenerate_queue will add {len(values)} new records. previously has {old_size}"
     )
     if values:
-        redis.rpush(new_queue, *values)
-        redis.rename(new_queue, old_queue)
+        redis.delete(queue_key)
+        redis.rpush(queue_key, *values)
