@@ -1,11 +1,11 @@
-from celery import shared_task
 from django.utils import timezone
 
 from app import metrics, models, services
+from app.celery import app as celery
 from app.services import automated_tournaments, match_queue
 
 
-@shared_task
+@celery.task
 def refresh_agent_count_cache():
     """
     This task refreshes the cache for "games_played_count" to stay warm.  This
@@ -15,7 +15,7 @@ def refresh_agent_count_cache():
         agent.games_played_count
 
 
-@shared_task
+@celery.task
 def automated_manager():
     """
     Creates things automatically
@@ -28,7 +28,7 @@ def automated_manager():
         services.update_tournament_state(tournament)
 
 
-@shared_task
+@celery.task
 def metrics_logger():
     """
     Periodically collect and send some metrics to influxdb
@@ -68,6 +68,6 @@ def metrics_logger():
     )
 
 
-@shared_task
+@celery.task
 def regenerate_queue():
     match_queue.regenerate_queue()
