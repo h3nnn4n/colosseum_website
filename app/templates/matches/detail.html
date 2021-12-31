@@ -65,6 +65,11 @@
           </tr>
 
           <tr>
+            <td> Time in queue </td>
+            <td> {{ time_in_queue }} </td>
+          </tr>
+
+          <tr>
             <td> Duration </td>
             {% if object.duration %}
               <td> {{ object.duration | floatformat:-2 }}s </td>

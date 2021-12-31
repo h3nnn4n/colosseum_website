@@ -127,6 +127,14 @@ class MatchDetailView(generic.DetailView):
     model = models.Match
     template_name = "matches/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        match = self.get_object()
+        time_in_queue = (match.ran_at or timezone.now()) - match.created_at
+        context["time_in_queue"] = humanize.precisedelta(time_in_queue)
+        return context
+
 
 class TournamentListView(generic.ListView):
     template_name = "tournaments/index.html"
