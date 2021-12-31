@@ -111,3 +111,13 @@ def register_match_queue_time(match):
             "time": timezone.now().isoformat(),
         }
     )
+
+
+def register_get_next_match_from_queue(time):
+    _push_metric(
+        {
+            "fields": {"value": time},
+            "measurement": "get_next_match_from_queue",
+            "time": timezone.now().isoformat(),
+        }
+    )

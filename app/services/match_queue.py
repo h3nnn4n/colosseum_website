@@ -1,7 +1,9 @@
+from time import time
+
 from django.conf import settings
 from django_redis import get_redis_connection
 
-from app import models
+from app import metrics, models
 
 
 def queue_size():
@@ -10,21 +12,30 @@ def queue_size():
 
 
 def get_next():
-    redis = get_redis_connection("default")
-    if redis.get("disable_next_match_api") == b"1":
-        return
+    t_start = time()
+    return_value = None
 
+    redis = get_redis_connection("default")
     while True:
+        if redis.get("disable_next_match_api") == b"1":
+            break
+
         match_id = redis.lpop(settings.MATCH_QUEUE_KEY)
 
         # Queue is empty. Nothing to do
         if not match_id:
-            return
+            break
 
         match_id = match_id.decode()
 
         if models.Match.objects.filter(id=match_id, ran=False).exists():
-            return match_id
+            return_value = match_id
+
+    t_end = time()
+    duration = (t_end - t_start).total_seconds()
+    metrics.register_get_next_match_from_queue(duration)
+
+    return return_value
 
 
 def add(value):
