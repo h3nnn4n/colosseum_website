@@ -1,38 +1,71 @@
+from time import time
+
 from django.conf import settings
 from django_redis import get_redis_connection
 
-from app import models
+from app import metrics, models
 
 
 def queue_size():
     redis = get_redis_connection("default")
-    return redis.scard(settings.MATCH_QUEUE_KEY)
+    return redis.llen(settings.MATCH_QUEUE_KEY)
 
 
 def get_next():
-    redis = get_redis_connection("default")
-    if redis.get("disable_next_match_api") == b"1":
-        return
+    t_start = time()
+    return_value = None
 
+    redis = get_redis_connection("default")
     while True:
-        match_id = redis.spop(settings.MATCH_QUEUE_KEY)
+        if redis.get("disable_next_match_api") == b"1":
+            break
+
+        match_id = redis.lpop(settings.MATCH_QUEUE_KEY)
 
         # Queue is empty. Nothing to do
         if not match_id:
-            return
+            break
 
         match_id = match_id.decode()
 
         if models.Match.objects.filter(id=match_id, ran=False).exists():
-            return match_id
+            return_value = match_id
+
+    t_end = time()
+    duration = t_end - t_start
+    metrics.register_get_next_match_from_queue(duration)
+
+    return return_value
 
 
 def add(value):
     redis = get_redis_connection("default")
-    redis.sadd(settings.MATCH_QUEUE_KEY, str(value))
+    redis.rpush(settings.MATCH_QUEUE_KEY, str(value))
 
 
 def add_many(*values):
+    if values:
+        redis = get_redis_connection("default")
+        redis.rpush(settings.MATCH_QUEUE_KEY, *list(map(str, values)))
+
+
+def regenerate_queue():
+    """
+    Gets all unplayed matches from the database, sort them by age and overrides
+    the current queue with it. Since the queue is supposed to only have
+    unplayed matches, this shouldn't result in any lost records.
+    """
     redis = get_redis_connection("default")
-    for value in values:
-        redis.sadd(settings.MATCH_QUEUE_KEY, str(value))
+    new_queue = f"{settings.MATCH_QUEUE_KEY}_new"
+    old_queue = settings.MATCH_QUEUE_KEY
+
+    pending_records_ids = (
+        models.Match.objects.filter(ran=False)
+        .order_by("created_at")
+        .values_list("id", flat=True)
+    )
+
+    values = list(map(str, pending_records_ids))
+    if values:
+        redis.rpush(new_queue, *values)
+        redis.rename(new_queue, old_queue)

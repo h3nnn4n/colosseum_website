@@ -30,8 +30,8 @@ app.conf.beat_schedule = {
         "task": "app.tasks.metrics_logger",
         "schedule": 5.0,
     },
-    "enqueue_all_pending_matches": {
-        "task": "app.tasks.enqueue_all_pending_matches",
+    "regenerate_queue": {
+        "task": "app.tasks.regenerate_queue",
         "schedule": crontab(minute=0),  # Every hour, on the minute
     },
 }
