@@ -115,10 +115,14 @@ class MatchSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        # Never change a match result
-        if validated_data.get("ran_at") and instance.ran_at != validated_data["ran_at"]:
+        if (
+            validated_data.get("ran_at")
+            and instance.ran_at
+            and instance.ran_at != validated_data["ran_at"]
+        ):
             metrics.register_match_played_twice(instance.game.name)
 
+        # Never change a match result
         if not instance.ran:
             super(MatchSerializer, self).update(instance, validated_data)
 
