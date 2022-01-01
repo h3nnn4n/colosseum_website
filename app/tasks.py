@@ -27,8 +27,6 @@ def automated_manager():
     for tournament in models.Tournament.objects.filter(done=False):
         services.update_tournament_state(tournament)
 
-    regenerate_queue.delay()
-
 
 @celery.task
 def metrics_logger():

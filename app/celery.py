@@ -32,7 +32,7 @@ app.conf.beat_schedule = {
     },
     "regenerate_queue": {
         "task": "app.tasks.regenerate_queue",
-        "schedule": crontab(minute=0),  # Every hour, on the minute
+        "schedule": crontab(minute="*/5"),  # Every 5th minute
     },
 }
 
