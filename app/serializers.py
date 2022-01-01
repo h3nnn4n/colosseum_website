@@ -116,8 +116,8 @@ class MatchSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # Never change a match result
-        if validated_data.get("ran_at") and instance.ran_at == validated_data["ran_at"]:
-            metrics.register_match_played_twice()
+        if validated_data.get("ran_at") and instance.ran_at != validated_data["ran_at"]:
+            metrics.register_match_played_twice(instance.game.name)
 
         if not instance.ran:
             super(MatchSerializer, self).update(instance, validated_data)
