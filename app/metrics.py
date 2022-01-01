@@ -121,3 +121,13 @@ def register_get_next_match_from_queue(time, n_attempts):
             "time": timezone.now().isoformat(),
         }
     )
+
+
+def register_match_played_twice():
+    _push_metric(
+        {
+            "fields": {"value": 1},
+            "measurement": "match_played_twice",
+            "time": timezone.now().isoformat(),
+        }
+    )
