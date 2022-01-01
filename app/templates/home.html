@@ -110,7 +110,30 @@
         </div>
 
         <p class="text-justify">
+          To get started please it is necessary to have an account. If you
+          don't have one you can create one
+          <a href="{% url 'register' %}">here</a>.
+        </p>
 
+        <p class="text-justify">
+          Next, you need an agent. The agent is the robot program that will
+          play the games, based on some strategy that it was programed to
+          follow. We have some basic agents available in our repository
+          <a href="https://github.com/h3nnn4n/colosseum_agents">colosseum_agents</a>
+          to use as a reference.
+        </p>
+
+        <p class="text-justify">
+          Alternativelly, you can start from scratch using one of our SDK's
+          from our repository:
+          <a href="https://github.com/h3nnn4n/colosseum_sdk">colosseum_sdk</a>.
+          It is also possible to interface directly with Colosseum. The
+          comunication
+          <a href="https://colosseum.website/wiki/protocol/">protocol</a>
+          is quite simple and can be implemented in any language.
+          Each game has it's own set of commands, so please refer to the
+          <a href="https://colosseum.website/wiki/games/">games</a> and pick
+          one for a complete protocol documentation.
         </p>
       </div>
 
