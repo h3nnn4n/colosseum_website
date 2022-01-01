@@ -121,3 +121,36 @@ def register_get_next_match_from_queue(time, n_attempts):
             "time": timezone.now().isoformat(),
         }
     )
+
+
+def register_match_played_twice(game_name):
+    _push_metric(
+        {
+            "fields": {"value": 1},
+            "measurement": "match_played_twice",
+            "tags": {"game": game_name},
+            "time": timezone.now().isoformat(),
+        }
+    )
+
+
+def register_replay_uploaded_for_unplayed_match(game_name):
+    _push_metric(
+        {
+            "fields": {"value": 1},
+            "measurement": "replay_uploaded_for_unplayed_match",
+            "tags": {"game": game_name},
+            "time": timezone.now().isoformat(),
+        }
+    )
+
+
+def register_replay_being_overwritten(game_name):
+    _push_metric(
+        {
+            "fields": {"value": 1},
+            "measurement": "replay_being_overwritten",
+            "tags": {"game": game_name},
+            "time": timezone.now().isoformat(),
+        }
+    )
