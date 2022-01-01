@@ -51,7 +51,7 @@ def add(value):
     redis.rpush(settings.MATCH_QUEUE_KEY, str(value))
 
 
-def add_many(*values):
+def add_many(values):
     if values:
         redis = get_redis_connection("default")
         redis.rpush(settings.MATCH_QUEUE_KEY, *list(map(str, values)))
