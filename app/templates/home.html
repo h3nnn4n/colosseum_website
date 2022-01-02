@@ -6,7 +6,7 @@
 
 <div class="container py-5">
   <div class="container">
-    <div class="row justify-content-md-left">
+    <div class="row">
       <div class="col-md-auto">
 
         <h1>Colosseum</h1>
@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div class="row justify-content-md-left">
+    <div class="row">
       <div class="col">
 
         <div class="row">
@@ -68,6 +68,8 @@
         </div>
 
         <p class="text-justify">
+          {% comment %} made with https://vole.wtf/text-generator/ {% endcomment %}
+
           Top Cat! The most effectual Top Cat! Who’s intellectual close friends
           get to call him T.C., providing it’s with dignity. Top Cat! The
           indisputable leader of the gang. He’s the boss, he’s a pip, he’s the
@@ -92,6 +94,85 @@
           Current Season: {{ current_season_name }} <br>
           Pending Matches: {{ pending_matches }} <br>
           Oldest Pending Match Age: {{ oldest_pending_match_age }}
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+
+        <div class="row">
+          <div class="col"><hr></div>
+          <div class="col-auto">
+            Getting Started
+          </div>
+          <div class="col"><hr></div>
+        </div>
+
+        <p class="text-justify">
+          To get started please it is necessary to have an account. If you
+          don't have one you can create one
+          <a href="{% url 'register' %}">here</a>.
+        </p>
+
+        <p class="text-justify">
+          Next, you need an agent. The agent is the robot program that will
+          play the games, based on some strategy that it was programmed to
+          follow. We have some basic agents available in our repository
+          <a href="https://github.com/h3nnn4n/colosseum_agents">colosseum_agents</a>
+          to use as a reference.
+        </p>
+
+        <p class="text-justify">
+          Alternativelly, you can start from scratch using one of our SDK's
+          from our repository:
+          <a href="https://github.com/h3nnn4n/colosseum_sdk">colosseum_sdk</a>.
+          It is also possible to interface directly with Colosseum. The
+          communication
+          <a href="https://colosseum.website/wiki/protocol/">protocol</a>
+          is quite simple and can be implemented in any language.
+          Each game has it's own set of commands, so please refer to the
+          <a href="https://colosseum.website/wiki/colosseum_games/">games</a>
+          wiki page and pick one for a complete protocol documentation. An
+          alternative up-to-date list is also available
+          <a href="{% url 'games' %}">here</a>.
+        </p>
+      </div>
+
+      <div class="col">
+
+        <div class="row">
+          <div class="col"><hr></div>
+          <div class="col-auto">
+            Random Text
+          </div>
+          <div class="col"><hr></div>
+        </div>
+
+        <p class="text-justify">
+          Ulysses, Ulysses — Soaring through all the galaxies. In search of
+          Earth, flying in to the night. Ulysses, Ulysses — Fighting evil and
+          tyranny, with all his power, and with all of his might. Ulysses —
+          no-one else can do the things you do. Ulysses — like a bolt of
+          thunder from the blue. Ulysses — always fighting all the evil forces
+          bringing peace and justice to all.
+        </p>
+      </div>
+
+      <div class="col-sm">
+        <div class="row">
+          <div class="col"><hr></div>
+          <div class="col-auto">
+            Random Text
+          </div>
+          <div class="col"><hr></div>
+        </div>
+
+        <p class="text-justify">
+          There’s a voice that keeps on calling me. Down the road, that’s where
+          I’ll always be. Every stop I make, I make a new friend. Can’t stay for
+          long, just turn around and I’m gone again. Maybe tomorrow, I’ll want to
+          settle down, Until tomorrow, I’ll just keep moving on.
         </p>
       </div>
     </div>
