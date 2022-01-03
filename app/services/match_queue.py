@@ -38,6 +38,7 @@ def get_next():
         if use_random:
             random_index = randint(0, queue_length)
             match_id = redis.lindex(settings.MATCH_QUEUE_KEY, random_index)
+            redis.lrem(settings.MATCH_QUEUE_KEY, 1, match_id)
         else:
             match_id = redis.lpop(settings.MATCH_QUEUE_KEY)
 
