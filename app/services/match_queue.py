@@ -1,4 +1,5 @@
 import logging
+from random import randint, random
 from time import time
 
 from django.conf import settings
@@ -17,16 +18,29 @@ def queue_size():
 
 
 def get_next():
+    RANDOM_MATCH_ENABLED = settings.RANDOM_MATCH_ENABLED
+    RANDOM_MATCH_RATIO = settings.RANDOM_MATCH_RATIO
+    use_random = RANDOM_MATCH_ENABLED and RANDOM_MATCH_RATIO > random()
+    logger.info(f"get_next {RANDOM_MATCH_ENABLED=} {RANDOM_MATCH_RATIO=} {use_random=}")
+
     t_start = time()
     return_value = None
     n_attempts = 0
 
     redis = get_redis_connection("default")
-    while True:
+    queue_length = redis.llen(settings.MATCH_QUEUE_KEY)
+
+    while queue_length > 0:
         if redis.get("disable_next_match_api") == b"1":
             break
+        queue_length = redis.llen(settings.MATCH_QUEUE_KEY)
 
-        match_id = redis.lpop(settings.MATCH_QUEUE_KEY)
+        if use_random:
+            random_index = randint(0, queue_length)
+            match_id = redis.lindex(settings.MATCH_QUEUE_KEY, random_index)
+        else:
+            match_id = redis.lpop(settings.MATCH_QUEUE_KEY)
+
         n_attempts += 1
 
         # Queue is empty. Nothing to do

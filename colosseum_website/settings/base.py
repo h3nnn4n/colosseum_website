@@ -208,6 +208,8 @@ INFLUXDB_TIMEOUT = 5
 INFLUXDB_DISABLED = False
 
 
+RANDOM_MATCH_ENABLED = os.environ.get("RANDOM_MATCH_ENABLED") == "true"
+RANDOM_MATCH_RATIO = float(os.environ.get("RANDOM_MATCH_RATIO", 0.5))
 MATCH_QUEUE_KEY = "match_queue"
 
 
