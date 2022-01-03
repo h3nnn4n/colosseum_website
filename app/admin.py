@@ -28,5 +28,5 @@ class MatchAdmin(admin.ModelAdmin):
 @admin.register(models.Tournament)
 class TournamentAdmin(admin.ModelAdmin):
     list_display = ("name", "id", "mode", "start_date", "end_date")
-    list_filter = ("mode", "season")
+    list_filter = ("done", "mode", "season")
     search_fields = ("name", "id")
