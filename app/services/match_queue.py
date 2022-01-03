@@ -20,7 +20,7 @@ def queue_size():
 def get_next():
     RANDOM_MATCH_ENABLED = settings.RANDOM_MATCH_ENABLED
     RANDOM_MATCH_RATIO = settings.RANDOM_MATCH_RATIO
-    use_random = not RANDOM_MATCH_ENABLED or RANDOM_MATCH_RATIO < random()
+    use_random = RANDOM_MATCH_ENABLED and RANDOM_MATCH_RATIO > random()
     logger.info(f"get_next {RANDOM_MATCH_ENABLED=} {RANDOM_MATCH_RATIO=} {use_random=}")
 
     t_start = time()
