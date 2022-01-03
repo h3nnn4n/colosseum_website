@@ -233,7 +233,14 @@ class Match(BaseModel):
     errors = models.JSONField(default=dict)
     replay = models.FileField(null=True, upload_to=utils.replay_filepath)
 
-    end_reason = models.CharField(null=True, max_length=255)
+    end_reason = models.CharField(
+        null=True,
+        max_length=255,
+        choices=[
+            ("RULES", "Rules"),
+            ("TAINTED", "Tainted"),
+        ],
+    )
     outcome = models.JSONField(default=dict)
 
     game = models.ForeignKey("Game", on_delete=models.CASCADE, related_name="matches")
