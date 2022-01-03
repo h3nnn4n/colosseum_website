@@ -233,6 +233,16 @@ class Match(BaseModel):
     errors = models.JSONField(default=dict)
     replay = models.FileField(null=True, upload_to=utils.replay_filepath)
 
+    end_reason = models.CharField(
+        null=True,
+        max_length=255,
+        choices=[
+            ("RULES", "Rules"),
+            ("TAINTED", "Tainted"),
+        ],
+    )
+    outcome = models.JSONField(default=dict)
+
     game = models.ForeignKey("Game", on_delete=models.CASCADE, related_name="matches")
     season = models.ForeignKey(
         "Season", on_delete=models.CASCADE, related_name="matches"
@@ -248,6 +258,18 @@ class Match(BaseModel):
             models.Index(fields=["season"]),
             models.Index(fields=["tournament"]),
         ]
+
+    @property
+    def pretty_end_reason(self):
+        if not self.end_reason:
+            return "-"
+
+        pretty_str = self.end_reason
+
+        if outcome := self.outcome.get("termination"):
+            pretty_str += f" [{outcome}]"
+
+        return pretty_str
 
     @property
     def pretty_result(self):
