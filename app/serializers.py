@@ -80,7 +80,6 @@ class MatchSerializer(serializers.ModelSerializer):
             "player2",
             "result",
             "game",
-            "errors",
             "outcome",
             "end_reason",
             "data",
