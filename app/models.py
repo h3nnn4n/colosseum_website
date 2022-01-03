@@ -260,6 +260,18 @@ class Match(BaseModel):
         ]
 
     @property
+    def pretty_end_reason(self):
+        if not self.end_reason:
+            return "-"
+
+        pretty_str = self.end_reason
+
+        if outcome := self.outcome.get("termination"):
+            pretty_str += f" [{outcome}]"
+
+        return pretty_str
+
+    @property
     def pretty_result(self):
         if not self.ran:
             return "-"
