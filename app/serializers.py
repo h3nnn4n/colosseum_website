@@ -84,6 +84,8 @@ class MatchSerializer(serializers.ModelSerializer):
             "outcome",
             "end_reason",
             "data",
+            "outcome",
+            "end_reason",
             "ran",
             "ran_at",
             "duration",
