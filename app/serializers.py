@@ -81,6 +81,7 @@ class MatchSerializer(serializers.ModelSerializer):
             "result",
             "game",
             "outcome",
+            "raw_result",
             "end_reason",
             "data",
             "outcome",

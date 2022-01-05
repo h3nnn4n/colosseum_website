@@ -241,6 +241,7 @@ class Match(BaseModel):
         ],
     )
     outcome = models.JSONField(default=dict)
+    raw_result = models.JSONField(default=dict)
 
     game = models.ForeignKey("Game", on_delete=models.CASCADE, related_name="matches")
     season = models.ForeignKey(
