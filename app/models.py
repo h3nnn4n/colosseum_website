@@ -266,7 +266,11 @@ class Match(BaseModel):
         pretty_str = self.end_reason
 
         if outcome := self.outcome.get("termination"):
-            pretty_str += f" [{outcome}]"
+            if outcome == "TAINTED":
+                tainted_reason = self.outcome.get("tainted_reason", outcome)
+                pretty_str += f" [{tainted_reason}]"
+            else:
+                pretty_str += f" [{outcome}]"
 
         return pretty_str
 
