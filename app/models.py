@@ -404,6 +404,12 @@ class Tournament(BaseModel):
             )
         return results
 
+    def pending_matches(self, limit=25):
+        return self.matches.filter(ran=False).order_by("created_at")[0:limit]
+
+    def played_matches(self, limit=25):
+        return self.matches.filter(ran=True).order_by("-ran_at")[0:limit]
+
     def create_matches(self):
         from app.services import match_queue
 
