@@ -96,6 +96,8 @@ def create_automated_seasons():
     if serializer.is_valid():
         logger.info(f'creating automated season "{name}"')
         serializer.save()
+
+        create_ratings_for_season(serializer.instance)
     else:
         logger.warning(f'failed to create season "{name}"')
 
@@ -130,3 +132,8 @@ def recalculate_ratings_for_season(season):
             )
 
     logger.info(f"Finished recalculating rankings for season '{season.name}'")
+
+
+def create_ratings_for_season(season):
+    for agent in models.Agent.objects.active().all():
+        models.AgentRatings.objects.create(season=season, agent=agent, game=agent.game)

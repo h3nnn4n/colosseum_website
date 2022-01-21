@@ -84,7 +84,7 @@ class Agent(BaseModel):
 
     @cached_property
     def games_played_count(self):
-        cache_key = f"games_played_count__{self.id}"
+        cache_key = f"games_played_count__{self.id}__{self.current_ratings.id}"
         count = cache.get(cache_key)
 
         if count is None:
