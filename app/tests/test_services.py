@@ -72,6 +72,13 @@ class UpdateSeasonStatesTestCase(TestCase):
 
 
 class CreateAutomatedSeasonsTestCase(TestCase):
+    def setUp(self):
+        self.game = factories.GameFactory()
+        factories.AgentFactory(game=self.game)
+        factories.AgentFactory(game=self.game)
+        factories.AgentFactory(game=self.game)
+        factories.AgentFactory(game=self.game)
+
     def test_create_first_season(self):
         self.assertEqual(models.Season.objects.count(), 0)
         services.create_automated_seasons()
@@ -97,6 +104,11 @@ class CreateAutomatedSeasonsTestCase(TestCase):
 
             services.create_automated_seasons()
             self.assertEqual(models.Season.objects.count(), 2)
+
+    def test_create_agent_ratings(self):
+        self.assertEqual(models.AgentRatings.objects.count(), 0)
+        services.create_automated_seasons()
+        self.assertEqual(models.AgentRatings.objects.count(), 4)
 
 
 class MatchQueueTestCase(TestCase):
