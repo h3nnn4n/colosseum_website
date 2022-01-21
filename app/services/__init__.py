@@ -11,6 +11,10 @@ logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("SERVICES")
 
 
+def purge_all_agents():
+    models.Agent.objects.all().delete()
+
+
 def purge_all_played_games():
     for agent in models.Agent.objects.all():
         agent.current_ratings.delete()
