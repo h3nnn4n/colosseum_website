@@ -11,8 +11,14 @@ logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("SERVICES")
 
 
+def purge_all_agents():
+    models.Agent.objects.all().delete()
+
+
 def purge_all_played_games():
-    models.Agent.objects.all().update(wins=0, loses=0, draws=0, elo=1500, score=0)
+    for agent in models.Agent.objects.all():
+        agent.current_ratings.delete()
+
     models.Match.objects.all().delete()
 
 
@@ -96,6 +102,8 @@ def create_automated_seasons():
     if serializer.is_valid():
         logger.info(f'creating automated season "{name}"')
         serializer.save()
+
+        create_ratings_for_season(serializer.instance)
     else:
         logger.warning(f'failed to create season "{name}"')
 
@@ -130,3 +138,8 @@ def recalculate_ratings_for_season(season):
             )
 
     logger.info(f"Finished recalculating rankings for season '{season.name}'")
+
+
+def create_ratings_for_season(season):
+    for agent in models.Agent.objects.active().all():
+        models.AgentRatings.objects.create(season=season, agent=agent, game=agent.game)
