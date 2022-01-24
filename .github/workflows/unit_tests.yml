@@ -52,6 +52,12 @@ jobs:
         run: |
           poetry install
 
+      - name: Collect static files
+        run: |
+          poetry run python manage.py collectstatic
+        env:
+          DJANGO_SETTINGS_MODULE: colosseum_website.settings.testing
+
       - name: Run pytest
         run: |
           DJANGO_SETTINGS_MODULE=colosseum_website.settings.testing poetry run pytest
