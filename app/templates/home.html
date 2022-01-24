@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}Home{% endblock %}
 
 {% block content %}
@@ -9,7 +11,12 @@
     <div class="row">
       <div class="col-md-auto">
 
-        <h1>Colosseum</h1>
+        {% comment %}
+        <h1>
+          <img src="{% static 'images/logo_tight.svg' %}" height="45" alt="Colosseum">
+          Colosseum
+        </h1>
+        {% endcomment %}
         <p>
           Hi, welcome to the Colosseum!
 
