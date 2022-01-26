@@ -55,7 +55,7 @@
             <th scope="col"> Matches left </th>
           </thead>
           <tbody>
-            {% for tournament in object.tournaments.all %}
+            {% for tournament in tournaments %}
             <tr>
               <td>
                 <a href={% url 'tournament_detail' tournament.id %}>

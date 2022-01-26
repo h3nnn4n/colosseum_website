@@ -124,6 +124,12 @@ class SeasonDetailView(generic.DetailView):
     model = models.Season
     template_name = "seasons/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        season = self.get_object()
+        context["tournaments"] = season.tournaments.order_by("-end_date")[:25]
+        return context
+
 
 class MatchListView(generic.ListView):
     template_name = "matches/index.html"
