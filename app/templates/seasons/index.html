@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} Seasons {% endblock %}
+
+{% block content %}
+
+<h1> Seasons </h1>
+
+<div>
+  <table class="table table-hover table-striped table-sm">
+    <thead>
+      <th scope="col"> Name </th>
+      <th scope="col"> Active </th>
+      <th scope="col"> Start Date </th>
+      <th scope="col"> End Date </th>
+      <th scope="col"> Duration </th>
+    </thead>
+    <tbody>
+      {% for season in seasons %}
+      <tr>
+        <td>{{ season.name }}</td>
+        <td>{{ season.active }}</td>
+        <td>{{ season.start_date }}</td>
+        <td>{{ season.end_date }}</td>
+        <td>{{ season.duration }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+<div>
+
+{% endblock %}
