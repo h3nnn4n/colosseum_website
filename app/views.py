@@ -107,6 +107,19 @@ class GameDetailView(generic.DetailView):
     template_name = "games/detail.html"
 
 
+class SeasonListView(generic.ListView):
+    template_name = "seasons/index.html"
+    context_object_name = "seasons"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["seasons"] = models.Season.objects.all().order_by("-end_date")[:25]
+        return context
+
+    def get_queryset(self):
+        return models.Season.objects.all()
+
+
 class MatchListView(generic.ListView):
     template_name = "matches/index.html"
     context_object_name = "matches"

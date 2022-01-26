@@ -185,6 +185,10 @@ class Season(BaseModel):
     def __str__(self):
         return f"{self.name} ({self.id})"
 
+    @property
+    def duration(self):
+        return self.end_date - self.start_date
+
 
 class GameQuerySet(QuerySet):
     def active(self):

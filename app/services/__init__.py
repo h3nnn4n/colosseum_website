@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 
 from django.conf import settings
 from django.utils import timezone
@@ -74,7 +75,9 @@ def update_season_state(season):
 def create_automated_seasons():
     now = timezone.now()
     start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    end_date = now.replace(hour=23, minute=59, second=59, microsecond=999)
+    end_date = now.replace(
+        hour=23, minute=59, second=59, microsecond=999999
+    ) + timedelta(days=1)
     last_automated_season = (
         models.Season.objects.filter(is_automated=True)
         .order_by("-automated_number")
