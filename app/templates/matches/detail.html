@@ -20,7 +20,11 @@
 
           <tr>
             <td> Season </td>
-            <td> {{ object.season.name }} </td>
+            <td>
+              <a href={% url 'season_detail' object.season.id %}>
+                {{ object.season.name }}
+              </a>
+            </td>
           </tr>
 
           <tr>

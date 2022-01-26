@@ -52,7 +52,7 @@ class RatingsServiceTestCase(TestCase):
 
 class UpdateSeasonStatesTestCase(TestCase):
     def test_update(self):
-        with freeze_time("2021-05-14"):
+        with freeze_time("2021-05-01"):
             self.assertEqual(models.Season.objects.filter(active=True).count(), 0)
 
             services.create_automated_seasons()
@@ -63,7 +63,7 @@ class UpdateSeasonStatesTestCase(TestCase):
 
             self.assertEqual(models.Season.objects.filter(active=True).count(), 1)
 
-        with freeze_time("2021-05-16"):
+        with freeze_time("2021-06-01"):
             self.assertEqual(models.Season.objects.filter(active=True).count(), 1)
 
             services.update_seasons_state()
@@ -92,14 +92,14 @@ class CreateAutomatedSeasonsTestCase(TestCase):
         self.assertEqual(models.Season.objects.count(), 1)
 
     def test_create_new_season_if_there_isnt_an_active_one(self):
-        with freeze_time("2021-05-14"):
+        with freeze_time("2021-05-01"):
             self.assertEqual(models.Season.objects.count(), 0)
             services.create_automated_seasons()
             self.assertEqual(models.Season.objects.count(), 1)
             services.create_automated_seasons()
             self.assertEqual(models.Season.objects.count(), 1)
 
-        with freeze_time("2021-05-16"):
+        with freeze_time("2021-07-01"):
             services.update_seasons_state()
 
             services.create_automated_seasons()
