@@ -24,8 +24,19 @@
             {{ tournament.name }}
           </a>
         </td>
-        <td> {{ tournament.season.name }} </td>
-        <td> {{ tournament.game.name }} </td>
+
+        <td>
+          <a href={% url 'season_detail' tournament.season.id %}>
+            {{ tournament.season.name }}
+          </a>
+        </td>
+
+        <td>
+          <a href={% url 'game_detail' tournament.game.id %}>
+            {{ tournament.game.name }}
+          </a>
+        </td>
+
         <td> {{ tournament.mode }} </td>
         <td> {{ tournament.played_matches_count }} </td>
         <td> {{ tournament.pending_matches_count }} </td>

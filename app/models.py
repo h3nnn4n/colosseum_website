@@ -189,6 +189,22 @@ class Season(BaseModel):
     def duration(self):
         return self.end_date - self.start_date
 
+    @cached_property
+    def matches_count(self):
+        return self.matches.count()
+
+    @cached_property
+    def matches_pending_count(self):
+        return self.matches.filter(ran=False).count()
+
+    @cached_property
+    def matches_played_count(self):
+        return self.matches.filter(ran=True).count()
+
+    @cached_property
+    def tournaments_count(self):
+        return self.tournaments.count()
+
 
 class GameQuerySet(QuerySet):
     def active(self):

@@ -43,8 +43,18 @@
           {% endif %}
         </td>
 
-        <td> {{ match.season.name }} </td>
-        <td> {{ match.game.name }} </td>
+        <td>
+          <a href={% url 'season_detail' match.season.id %}>
+            {{ match.season.name }}
+          </a>
+        </td>
+
+        <td>
+          <a href={% url 'game_detail' match.game.id %}>
+            {{ match.game.name }}
+          </a>
+        </td>
+
         <td> {{ match.ran_at | date:"Y-m-d H:i:s" }} </td>
 
         {% if match.ran and match.replay %}
