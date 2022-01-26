@@ -43,7 +43,12 @@
           {% endif %}
         </td>
 
-        <td> {{ match.season.name }} </td>
+        <td>
+          <a href={% url 'season_detail' match.season.id %}>
+            {{ match.season.name }}
+          </a>
+        </td>
+
         <td> {{ match.game.name }} </td>
         <td> {{ match.ran_at | date:"Y-m-d H:i:s" }} </td>
 
