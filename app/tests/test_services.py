@@ -63,7 +63,7 @@ class UpdateSeasonStatesTestCase(TestCase):
 
             self.assertEqual(models.Season.objects.filter(active=True).count(), 1)
 
-        with freeze_time("2021-05-15"):
+        with freeze_time("2021-05-16"):
             self.assertEqual(models.Season.objects.filter(active=True).count(), 1)
 
             services.update_seasons_state()
@@ -99,7 +99,7 @@ class CreateAutomatedSeasonsTestCase(TestCase):
             services.create_automated_seasons()
             self.assertEqual(models.Season.objects.count(), 1)
 
-        with freeze_time("2021-05-15"):
+        with freeze_time("2021-05-16"):
             services.update_seasons_state()
 
             services.create_automated_seasons()
