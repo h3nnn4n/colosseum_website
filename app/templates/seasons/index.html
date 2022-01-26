@@ -18,7 +18,11 @@
     <tbody>
       {% for season in seasons %}
       <tr>
-        <td>{{ season.name }}</td>
+        <td>
+          <a href={% url 'season_detail' season.id %}>
+            {{ season.name }}
+          </a>
+        </td>
         <td>{{ season.active }}</td>
         <td>{{ season.start_date }}</td>
         <td>{{ season.end_date }}</td>

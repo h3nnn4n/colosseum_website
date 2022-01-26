@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>{{ object.name }}</h1>
+      <table class="table table-hover table-striped table-sm">
+        <tbody>
+          <tr>
+            <td> Tournaments </td>
+            <td> {{ object.tournaments_count }} </td>
+          </tr>
+          <tr>
+            <td> Matches played </td>
+            <td> {{ object.matches_played_count }} </td>
+          </tr>
+          <tr>
+            <td> Matches pending </td>
+            <td> {{ object.matches_pending_count }} </td>
+          </tr>
+          <tr>
+            <td> Start Date </td>
+            <td> {{ object.start_date }} </td>
+          </tr>
+          <tr>
+            <td> End Date </td>
+            <td> {{ object.end_date }} </td>
+          </tr>
+          <tr>
+            <td> Duration </td>
+            <td> {{ object.duration }} </td>
+          </tr>
+          <tr>
+            <td> Active </td>
+            <td> {{ object.active }} </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h2> Tournaments </h2>
+
+      <div>
+        <table class="table table-hover table-striped table-sm">
+          <thead>
+            <th scope="col"> Name </th>
+            <th scope="col"> Game </th>
+            <th scope="col"> Mode </th>
+            <th scope="col"> Matches played </th>
+            <th scope="col"> Matches left </th>
+          </thead>
+          <tbody>
+            {% for tournament in object.tournaments.all %}
+            <tr>
+              <td>
+                <a href={% url 'tournament_detail' tournament.id %}>
+                  {{ tournament.name }}
+                </a>
+              </td>
+              <td>
+                <a href={% url 'game_detail' tournament.game.id %}>
+                  {{ tournament.game.name }}
+                </a>
+              </td>
+              <td> {{ tournament.mode }} </td>
+              <td> {{ tournament.played_matches_count }} </td>
+              <td> {{ tournament.pending_matches_count }} </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div>
+        </div>
+      </div>
+    </div>
+
+    {% endblock %}

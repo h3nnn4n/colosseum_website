@@ -120,6 +120,11 @@ class SeasonListView(generic.ListView):
         return models.Season.objects.all()
 
 
+class SeasonDetailView(generic.DetailView):
+    model = models.Season
+    template_name = "seasons/detail.html"
+
+
 class MatchListView(generic.ListView):
     template_name = "matches/index.html"
     context_object_name = "matches"
