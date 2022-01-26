@@ -113,7 +113,7 @@ class SeasonListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["seasons"] = models.Season.objects.all().order_by("-end_date")
+        context["seasons"] = models.Season.objects.all().order_by("-end_date")[:25]
         return context
 
     def get_queryset(self):
