@@ -22,6 +22,8 @@ urlpatterns = [
     # Games pages
     path("games/", views.GameListView.as_view(), name="games"),
     path("games/<str:pk>/", views.GameDetailView.as_view(), name="game_detail"),
+    # Seasons pages
+    path("seasons/", views.SeasonListView.as_view(), name="seasons"),
     # Match pages
     path("matches/", views.MatchListView.as_view(), name="matches"),
     path("matches/<str:pk>/", views.MatchDetailView.as_view(), name="match_detail"),
