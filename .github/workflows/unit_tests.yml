@@ -60,7 +60,7 @@ jobs:
 
       - name: Run pytest
         run: |
-          DJANGO_SETTINGS_MODULE=colosseum_website.settings.testing poetry run pytest
+          DJANGO_SETTINGS_MODULE=colosseum_website.settings.testing poetry run pytest --verbose
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           REDIS_URL: redis://localhost:6379/5
