@@ -4,54 +4,85 @@
 
 {% load crispy_forms_tags %}
 
+
 <div class="container">
-  <div class="row justify-content-md-center">
-    <div class="col-md-auto">
-      <h1>{{ object.name }}</h1>
-      <p>by: {{ object.owner.username }}</p>
-      <p>Agent id: {{ object.id }}</p>
-      <p>Agent version: {{ object.file_hash }}</p>
-    </div>
-  </div>
+  <div class="row">
+    <div class="col">
+      <div class="row align-items-end">
+        <div class="col">
+          <h1>{{ object.name }}</h1>
+        </div>
 
-  <div class="row justify-content-md-center">
-    <div class="col col-lg-2">
-      <p>Wins: {{ object.wins }}</p>
-    </div>
-    <div class="col-md-auto">
-      <p>Loses: {{ object.loses }}</p>
-    </div>
-    <div class="col col-lg-2">
-      <p>Draws: {{ object.draws }}</p>
-    </div>
-  </div>
+        <div class="col">
+        {% if object.owner == request.user %}
+          <a href={% url 'agent_edit' object.id %} class="align-text-bottom">Edit</a>
+        {% endif %}
+        </div>
+      </div>
 
-  <div class="row justify-content-md-center">
-    <div class="col col-lg-2">
-      <p>Games Played: {{ object.games_played_count }}</p>
-    </div>
-    <div class="col col-lg-2">
-      <p>Win Ratio: {{ object.pretty_win_ratio }}% </p>
-    </div>
-    <div class="col col-lg-2">
-      <p>Elo: {{ object.elo }}</p>
-    </div>
-  </div>
+      <table class="table table-hover table-striped table-sm">
+        <tbody>
+          <tr>
+            <td> Game </td>
+            <td>
+              <a href={% url 'game_detail' object.game.id %}>
+                {{ object.game.name }}
+              </a>
+            </td>
+          </tr>
 
-  <div class="row justify-content-md-center">
-    <div class="col col-lg-2">
-      <p>Created: {{ object.created_at|date }}</p>
-    </div>
+          <tr>
+            <td> ID </td>
+            <td> {{ object.id }} </td>
+          </tr>
 
-    <div class="col col-lg-2">
-      <p>Most recent game: {{ object.most_recent_match.ran_at | date:"Y-m-d H:i:s" }}</p>
-    </div>
+          <tr>
+            <td> Hash </td>
+            <td> {{ object.file_hash }} </td>
+          </tr>
 
-    {% if object.owner == request.user %}
-    <div class="col col-lg-2">
-      <a href={% url 'agent_edit' object.id %}>Edit</a>
+          <tr>
+            <td> Wins </td>
+            <td> {{ object.wins }} </td>
+          </tr>
+
+          <tr>
+            <td> Loses </td>
+            <td> {{ object.loses }} </td>
+          </tr>
+
+          <tr>
+            <td> Draws </td>
+            <td> {{ object.draws }} </td>
+          </tr>
+
+          <tr>
+            <td> Win ratio </td>
+            <td> {{ object.pretty_win_ratio }} </td>
+          </tr>
+
+          <tr>
+            <td> Elo Rating </td>
+            <td> {{ object.elo }} </td>
+          </tr>
+
+          <tr>
+            <td> Games Played </td>
+            <td> {{ object.games_played_count }} </td>
+          </tr>
+
+          <tr>
+            <td> Created </td>
+            <td> {{ object.created_at | date }} </td>
+          </tr>
+
+          <tr>
+            <td> Most recent game </td>
+            <td> {{ object.most_recent_match.ran_at | date:"Y-m-d H:i:s" }} </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    {% endif %}
   </div>
 
   <div class="row justify-content-md-center">
