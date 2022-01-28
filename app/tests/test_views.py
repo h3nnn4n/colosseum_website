@@ -24,6 +24,19 @@ class AgentListViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class AgentDetailViewTestCase(TestCase):
+    def setUp(self):
+        self.game = factories.GameFactory()
+        self.agent = factories.AgentFactory(game=self.game)
+        self.season = factories.SeasonFactory()
+
+        self.client = Client()
+
+    def test_get(self):
+        response = self.client.get(f"/agents/{self.agent.id}/")
+        self.assertEqual(response.status_code, 200)
+
+
 class NextMatchAPIViewTestCase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()

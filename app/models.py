@@ -234,6 +234,17 @@ class Game(BaseModel):
         return self.tournaments.filter(done=False)
 
 
+class MatchQuerySet(QuerySet):
+    def played(self):
+        return self.filter(ran=True)
+
+    def by_ran_at(self):
+        return self.order_by("-ran_at")
+
+    def top_n(self, n=25):
+        return self[:n]
+
+
 class Match(BaseModel):
     participants = models.ManyToManyField(Agent, related_name="matches")
     player1 = models.ForeignKey(
@@ -267,6 +278,8 @@ class Match(BaseModel):
     season = models.ForeignKey(
         "Season", on_delete=models.CASCADE, related_name="matches"
     )
+
+    objects = MatchQuerySet.as_manager()
 
     class Meta:
         indexes = [
