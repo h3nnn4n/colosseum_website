@@ -35,6 +35,12 @@ def plot_matches_per_day(trailing_average_n=15):
     y_ta = []
     trailing_average_queue = []
 
+    if len(x_) == 0:
+        x = [timezone.now() - timedelta(days=1), x.append(timezone.now())]
+        y = [0, 0]
+        y_ta = [0, 0]
+        return _matches_per_day_plot(x, y, y_ta)
+
     for i in range(len(x_)):
         date = x_[i]
         count = y_[i]
