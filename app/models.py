@@ -2,6 +2,7 @@ import itertools
 import logging
 import uuid
 from collections import defaultdict
+from datetime import timedelta
 from math import ceil
 
 import humanize
@@ -203,13 +204,13 @@ class Season(BaseModel):
     def time_left(self):
         now = timezone.now()
         if self.end_date < now:
-            return 0
+            return timedelta()
 
         return self.end_date - now
 
     @property
     def time_left_humanized(self):
-        if self.time_left <= 0:
+        if self.time_left.total_seconds() <= 0:
             return "-"
 
         return humanize.precisedelta(

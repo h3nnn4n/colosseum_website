@@ -310,3 +310,25 @@ class MatchViewSetTestCase(TestCase):
 
         self.assertEqual(match.data["elo_change"][str(self.agent1.id)], 12)
         self.assertEqual(match.data["elo_change"][str(self.agent2.id)], -12)
+
+
+class SeasonDetailViewTestCase(TestCase):
+    def setUp(self):
+        self.season = factories.SeasonFactory(
+            start_date=timezone.now() - timedelta(hours=1),
+            end_date=timezone.now() + timedelta(hours=1),
+        )
+        self.season_old = factories.SeasonFactory(
+            start_date=timezone.now() - timedelta(hours=2),
+            end_date=timezone.now() - timedelta(hours=1),
+        )
+
+        self.client = Client()
+
+    def test_get_active_season(self):
+        response = self.client.get(f"/seasons/{self.season.id}/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_old_season(self):
+        response = self.client.get(f"/seasons/{self.season_old.id}/")
+        self.assertEqual(response.status_code, 200)
