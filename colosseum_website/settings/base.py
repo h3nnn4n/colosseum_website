@@ -16,6 +16,7 @@ from pathlib import Path
 
 import dj_database_url
 import sentry_sdk
+from decouple import config
 from dotenv import load_dotenv
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -50,6 +51,7 @@ _BASE_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "influxdb_metrics",
     "bootstrap4",
     "rest_framework",
     "rest_framework.authtoken",
@@ -77,6 +79,7 @@ _WIKI_APPS = [
 INSTALLED_APPS = _BASE_APPS + _WIKI_APPS
 
 MIDDLEWARE = [
+    "influxdb_metrics.middleware.InfluxDBRequestMiddleware",
     "django_cprofile_middleware.middleware.ProfilerMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -204,8 +207,10 @@ INFLUXDB_USER = os.environ.get("INFLUXDB_USER")
 INFLUXDB_PASSWORD = os.environ.get("INFLUXDB_PASSWORD")
 INFLUXDB_DATABASE = os.environ.get("INFLUXDB_DATABASE")
 INFLUXDB_TAGS_HOST = socket.gethostname()
-INFLUXDB_TIMEOUT = 5
-INFLUXDB_DISABLED = os.environ.get("INFLUXDB_DISABLED", False)
+INFLUXDB_TIMEOUT = os.environ.get("INFLUXDB_TIMEOUT", 5)
+INFLUXDB_DISABLED = config("INFLUXDB_DISABLED", default=False, cast=bool)
+INFLUXDB_USE_CELERY = config("INFLUXDB_USE_CELERY", default=True, cast=bool)
+INFLUXDB_USE_THREADING = config("INFLUXDB_USE_THREADING", default=False, cast=bool)
 
 
 RANDOM_MATCH_ENABLED = os.environ.get("RANDOM_MATCH_ENABLED") == "true"
