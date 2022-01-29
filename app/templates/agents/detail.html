@@ -3,7 +3,7 @@
 {% block content %}
 
 {% load crispy_forms_tags %}
-
+{% load humanize %}
 
 <div class="container">
   <div class="row">
@@ -73,12 +73,18 @@
 
           <tr>
             <td> Created </td>
-            <td> {{ object.created_at | date }} </td>
+            <td>
+              {{ object.created_at | date }}
+              ( {{ object.created_at | naturaltime }} )
+            </td>
           </tr>
 
           <tr>
             <td> Most recent game </td>
-            <td> {{ object.most_recent_match.ran_at | date:"Y-m-d H:i:s" }} </td>
+            <td>
+              {{ object.most_recent_match.ran_at | date:"Y-m-d H:i:s" }}
+              ( {{ object.most_recent_match.ran_at | naturaltime }} )
+            </td>
           </tr>
         </tbody>
       </table>
