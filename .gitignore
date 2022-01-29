@@ -2,6 +2,7 @@ __pycache__
 *.sqlite
 *.sqlite3
 
+.poetry
 .env
 
 staticfiles

@@ -48,7 +48,20 @@ jobs:
           curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
           source $HOME/.poetry/env
 
+          poetry config virtualenvs.create true
+          poetry config virtualenvs.in-project true
+          poetry config cache-dir .poetry
+          poetry config virtualenvs.path .poetry/venv
+
+      - name: Load poetry cache
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .poetry
+          key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
       - name: Install project deps
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: |
           poetry install
 
@@ -60,8 +73,9 @@ jobs:
 
       - name: Run pytest
         run: |
-          DJANGO_SETTINGS_MODULE=colosseum_website.settings.testing poetry run pytest --verbose
+          poetry run pytest --verbose
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           REDIS_URL: redis://localhost:6379/5
           CELERY_REDIS_URL: redis://localhost:6379/6
+          DJANGO_SETTINGS_MODULE: colosseum_website.settings.testing
