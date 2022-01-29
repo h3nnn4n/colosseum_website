@@ -51,7 +51,6 @@ _BASE_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "influxdb_metrics",
     "bootstrap4",
     "rest_framework",
     "rest_framework.authtoken",
@@ -79,7 +78,7 @@ _WIKI_APPS = [
 INSTALLED_APPS = _BASE_APPS + _WIKI_APPS
 
 MIDDLEWARE = [
-    "influxdb_metrics.middleware.InfluxDBRequestMiddleware",
+    "app.middleware.InfluxDBRequestMiddleware",
     "django_cprofile_middleware.middleware.ProfilerMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",

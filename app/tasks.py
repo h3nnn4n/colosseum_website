@@ -6,6 +6,13 @@ from app.services import automated_tournaments, match_queue
 
 
 @celery.task
+def push_metric(data):
+    from app import metrics
+
+    metrics._process_points(data)
+
+
+@celery.task
 def refresh_agent_count_cache():
     """
     This task refreshes the cache for "games_played_count" to stay warm.  This
