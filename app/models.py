@@ -2,7 +2,9 @@ import itertools
 import logging
 import uuid
 from collections import defaultdict
+from math import ceil
 
+import humanize
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -188,6 +190,32 @@ class Season(BaseModel):
     @property
     def duration(self):
         return self.end_date - self.start_date
+
+    @property
+    def duration_humanized(self):
+        duration = ceil(self.duration.total_seconds())
+        return humanize.precisedelta(
+            duration,
+            format="%0.0f",
+        )
+
+    @property
+    def time_left(self):
+        now = timezone.now()
+        if self.end_date < now:
+            return 0
+
+        return self.end_date - now
+
+    @property
+    def time_left_humanized(self):
+        if self.time_left <= 0:
+            return "-"
+
+        return humanize.precisedelta(
+            self.time_left,
+            format="%0.0f",
+        )
 
     @cached_property
     def matches_count(self):
