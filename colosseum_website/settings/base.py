@@ -19,6 +19,7 @@ import sentry_sdk
 from decouple import config
 from dotenv import load_dotenv
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 
 load_dotenv()
@@ -26,7 +27,7 @@ load_dotenv()
 
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN"),
-    integrations=[DjangoIntegration()],
+    integrations=[DjangoIntegration(), RedisIntegration()],
     traces_sample_rate=1.0,
     send_default_pii=True,
 )
