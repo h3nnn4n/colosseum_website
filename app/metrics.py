@@ -5,9 +5,10 @@ from django.conf import settings
 from django.utils import timezone
 from influxdb import InfluxDBClient
 
+from . import tasks
+
 
 logger = logging.getLogger("METRICS")
-INFLUXDB_DISABLED = settings.INFLUXDB_DISABLED
 
 
 def _influxdb():
@@ -24,17 +25,23 @@ def _influxdb():
 
 
 def _push_metric(data):
-    if INFLUXDB_DISABLED:
+    if settings.INFLUXDB_DISABLED:
         return
 
     if not isinstance(data, list):
         data = [data]
 
-    thread = Thread(target=_process_points, args=(data,))
-    thread.start()
+    if settings.INFLUXDB_USE_CELERY:
+        tasks.push_metric.delay(data)
+    else:
+        thread = Thread(target=_process_points, args=(data,))
+        thread.start()
 
 
 def _process_points(data):
+    if settings.INFLUXDB_DISABLED:
+        return
+
     try:
         client = _influxdb()
         client.write_points(data)
@@ -43,6 +50,10 @@ def _process_points(data):
             logger.exception(f"Error while writing data points: {data}")
         else:
             raise
+
+
+def push_metric(data):
+    _push_metric(data)
 
 
 def register_replay(game_name):
