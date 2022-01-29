@@ -13,7 +13,11 @@ router.register(r"seasons", views.SeasonViewSet)
 router.register(r"matches", views.MatchViewSet)
 router.register(r"tournaments", views.TournamentViewSet)
 
+favicon_view = RedirectView.as_view(url="/static/favicon.ico", permanent=True)
+
 urlpatterns = [
+    # favicon
+    path("favicon.ico", favicon_view, name="favicon"),
     # Agents pages
     path("agents/", views.AgentListView.as_view(), name="agents"),
     path("agents/create/", views.AgentCreateView.as_view(), name="agent_create"),
