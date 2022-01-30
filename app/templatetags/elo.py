@@ -14,25 +14,22 @@ ELO_CHANGE_ICONS = {
 
 @register.inclusion_tag("elo_change.html")
 def elo_change(value):
-    if value == 0:
-        icon = ELO_CHANGE_ICONS["same"]
-        color_class = "text-muted"
-    elif value < -10:
+    if value < -10:
         icon = ELO_CHANGE_ICONS["double-down"]
         color_class = "text-danger"
-    elif value < -5:
+    elif value < 0:
         icon = ELO_CHANGE_ICONS["down"]
         color_class = "text-danger"
     elif value > 10:
         icon = ELO_CHANGE_ICONS["double-up"]
         color_class = "text-success"
-    elif value > 5:
+    elif value > 0:
         icon = ELO_CHANGE_ICONS["up"]
         color_class = "text-success"
+    else:
+        icon = ELO_CHANGE_ICONS["same"]
+        color_class = "text-muted"
 
-    return {"icon": icon, "elo": value, "color_class": color_class}
+    elo = str(int(abs(value)))
 
-
-@register.filter
-def lower(value):
-    return value.lower()
+    return {"icon": icon, "elo": elo, "color_class": color_class}
