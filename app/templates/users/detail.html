@@ -25,15 +25,15 @@
           <tr>
             <td> Agents </td>
             <td>
-              {{ user.agents.count }}
+              {{ object.agents.count }}
             </td>
           </tr>
 
           <tr>
             <td> Date Joined </td>
             <td>
-              {{ user.date_joined }}
-              ( {{ user.date_joined | naturaltime }} )
+              {{ object.date_joined }}
+              ( {{ object.date_joined | naturaltime }} )
             </td>
           </tr>
         </tbody>
@@ -57,7 +57,7 @@
       </thead>
 
       <tbody>
-        {% for agent in user.agents.by_elo %}
+        {% for agent in object.agents.by_elo %}
         <tr>
           <td>
             <a href={% url 'agent_detail' agent.id %}>
