@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="row align-items-end">
+        <div class="col">
+          <h1>{{ object.username }}</h1>
+        </div>
+
+        <div class="col">
+        {% if object.id == request.user.id %}
+          <a href={% url 'user_edit' object.id %} class="align-text-bottom">Edit</a>
+        {% endif %}
+        </div>
+      </div>
+
+      <table class="table table-hover table-striped table-sm">
+        <tbody>
+          <tr>
+            <td> Bio </td>
+            <td>
+              {{ object.profile.bio }}
+            </td>
+          </tr>
+
+          <tr>
+            <td> Agents </td>
+            <td>
+              {{ object.agents.count }}
+            </td>
+          </tr>
+
+          <tr>
+            <td> Date Joined </td>
+            <td>
+              {{ object.date_joined }}
+              ( {{ object.date_joined | naturaltime }} )
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3> Agents </h3>
+
+  <div>
+    <table class="table table-hover table-striped table-sm">
+      <thead>
+        <th scope="col"> Name </th>
+        <th scope="col"> Game </th>
+        <th scope="col"> Elo Rating </th>
+        <th scope="col"> Win Ratio </th>
+        <th scope="col"> Wins </th>
+        <th scope="col"> Loses </th>
+        <th scope="col"> Draws </th>
+        <th scope="col"> Games </th>
+      </thead>
+
+      <tbody>
+        {% for agent in object.agents.by_elo %}
+        <tr>
+          <td>
+            <a href={% url 'agent_detail' agent.id %}>
+              {{ agent.name }}
+            </a>
+          </td>
+
+          <td>
+            <a href={% url 'game_detail' agent.game.id %}>
+              {{ agent.game.name }}
+            </a>
+          </td>
+          <td>{{ agent.elo }}</td>
+          <td>{{ agent.pretty_win_ratio }}%</td>
+          <td>{{ agent.wins }}</td>
+          <td>{{ agent.loses }}</td>
+          <td>{{ agent.draws }}</td>
+          <td>{{ agent.games_played_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  <div>
+<div>
+
+{% endblock %}

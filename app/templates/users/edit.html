@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="container">
+  <h1>User</h1>
+  <form action="{% url 'user_edit' object.id %}" method="POST">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <button class="btn btn-primary" type="submit">Update</button>
+  </form>
+</div>
+
+{% endblock %}
