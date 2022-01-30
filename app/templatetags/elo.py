@@ -16,16 +16,21 @@ ELO_CHANGE_ICONS = {
 def elo_change(value):
     if value == 0:
         icon = ELO_CHANGE_ICONS["same"]
+        color_class = "text-muted"
     elif value < -10:
         icon = ELO_CHANGE_ICONS["double-down"]
+        color_class = "text-danger"
     elif value < -5:
         icon = ELO_CHANGE_ICONS["down"]
+        color_class = "text-danger"
     elif value > 10:
         icon = ELO_CHANGE_ICONS["double-up"]
+        color_class = "text-success"
     elif value > 5:
         icon = ELO_CHANGE_ICONS["up"]
+        color_class = "text-success"
 
-    return {"icon": icon, "elo": value}
+    return {"icon": icon, "elo": value, "color_class": color_class}
 
 
 @register.filter
