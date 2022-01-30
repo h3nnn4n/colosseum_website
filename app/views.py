@@ -187,8 +187,14 @@ class UserListView(generic.ListView):
 
 
 class UserDetailView(generic.DetailView):
-    model = models.User
+    model = User
     template_name = "users/detail.html"
+
+
+class UserEditView(generic.UpdateView):
+    model = User
+    template_name = "users/edit.html"
+    form_class = forms.UserForm
 
 
 class AboutView(generic.TemplateView):

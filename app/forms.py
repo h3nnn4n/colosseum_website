@@ -20,6 +20,15 @@ class NewUserForm(UserCreationForm):
         return user
 
 
+class UserForm(forms.ModelForm):
+    username = forms.CharField(max_length=50)
+    email = forms.CharField(max_length=50)
+
+    class Meta:
+        model = User
+        fields = ("username", "email")
+
+
 class AgentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
