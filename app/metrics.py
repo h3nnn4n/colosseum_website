@@ -1,4 +1,5 @@
 import logging
+import re
 from threading import Thread
 
 from django.conf import settings
@@ -167,3 +168,10 @@ def register_replay_being_overwritten(game_name):
             "time": timezone.now().isoformat(),
         }
     )
+
+
+def process_urls_into_tags(url):
+    processed_url = re.sub(
+        "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", "<pk>", url
+    )
+    return processed_url
