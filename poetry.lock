@@ -589,6 +589,14 @@ python-dateutil = ">=2.4"
 text-unidecode = "1.3"
 
 [[package]]
+name = "fontawesome-free"
+version = "5.15.4"
+description = "Font Awesome Free"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "fonttools"
 version = "4.29.0"
 description = "Tools to manipulate font files"
@@ -1763,7 +1771,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.*"
-content-hash = "cd6b2fabcb0e37bde719a707528ba6539b5260daa303d89c188d1ab1cdeae28c"
+content-hash = "9bb4ad1744a4374bab45ec0b8ad85edff108d0eee720b65a4bea86e2f2b04608"
 
 [metadata.files]
 amqp = [
@@ -2041,6 +2049,9 @@ factory-boy = [
 faker = [
     {file = "Faker-11.3.0-py3-none-any.whl", hash = "sha256:61f97034cea252b8426d81810afab2f3c27b584f2b4313400a0cc83a9b013ded"},
     {file = "Faker-11.3.0.tar.gz", hash = "sha256:adbe567e64da6a1097feacab699000e1ad16e17a6592a8f0ae1ee0b7fbf19887"},
+]
+fontawesome-free = [
+    {file = "fontawesome_free-5.15.4-py3-none-any.whl", hash = "sha256:5d3d0edbf6ce0f7cd56978a31ea4ea697a8bb28103b5c528b3aa1f0a4474d9a1"},
 ]
 fonttools = [
     {file = "fonttools-4.29.0-py3-none-any.whl", hash = "sha256:ed9496e5650b977a697c50ac99c8e8331f9eae3f99e5ae649623359103306dfe"},
