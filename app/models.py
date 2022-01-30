@@ -9,7 +9,6 @@ import humanize
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.cache import cache
 from django.db import models
 from django.db.models import F, QuerySet
 from django.utils import timezone
@@ -85,16 +84,9 @@ class Agent(BaseModel):
     def pretty_win_ratio(self):
         return f"{self.win_ratio * 100.0:.2f}"
 
-    @cached_property
+    @property
     def games_played_count(self):
-        cache_key = f"games_played_count__{self.id}__{self.current_ratings.id}"
-        count = cache.get(cache_key)
-
-        if count is None:
-            count = self.games_played.count()
-            cache.set(cache_key, count, timeout=30)
-
-        return count
+        return int(self.wins + self.loses + self.draws * 2)
 
     @property
     def games_played(self):
