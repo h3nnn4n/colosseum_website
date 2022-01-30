@@ -23,15 +23,6 @@
       <table class="table table-hover table-striped table-sm">
         <tbody>
           <tr>
-            <td> Game </td>
-            <td>
-              <a href={% url 'game_detail' object.game.id %}>
-                {{ object.game.name }}
-              </a>
-            </td>
-          </tr>
-
-          <tr>
             <td> ID </td>
             <td> {{ object.id }} </td>
           </tr>
@@ -39,6 +30,24 @@
           <tr>
             <td> Hash </td>
             <td> {{ object.file_hash }} </td>
+          </tr>
+
+          <tr>
+            <td> Owner </td>
+            <td>
+              <a href={% url 'user_detail' agent.owner.id %}>
+                {{ agent.owner.username }}
+              </a>
+            </td>
+          </tr>
+
+          <tr>
+            <td> Game </td>
+            <td>
+              <a href={% url 'game_detail' object.game.id %}>
+                {{ object.game.name }}
+              </a>
+            </td>
           </tr>
 
           <tr>

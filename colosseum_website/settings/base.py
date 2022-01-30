@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 import socket
+import sys
 from pathlib import Path
 
 import dj_database_url
@@ -34,6 +35,7 @@ sentry_sdk.init(
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+sys.modules["fontawesome_free"] = __import__("fontawesome-free")
 
 DEFAULT_KEY = "django-insecure-y5lc8xiuknt^u=x8ugmo9!5xwoug!m9^b1-)+mx08i&e9jfj$x"
 SECRET_KEY = os.environ.get("SECRET_KEY", DEFAULT_KEY)
@@ -58,6 +60,7 @@ _BASE_APPS = [
     "django_extensions",
     "memoize",
     "debug_toolbar",
+    "fontawesome_free",
     "app",
 ]
 

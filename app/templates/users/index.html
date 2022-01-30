@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block title %} Users {% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table class="table table-hover table-striped table-sm">
+        <thead>
+          <th scope="col"> Name </th>
+          <th scope="col"> Agents </th>
+          <th scope="col"> Joined At </th>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>
+              <a href={% url 'user_detail' user.id %}>
+                {{ user.username }}
+              </a>
+            </td>
+            <td>{{ user.agents.count }}</td>
+            <td>
+              {{ user.date_joined }}
+              ( {{ user.date_joined | naturaltime }} )
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

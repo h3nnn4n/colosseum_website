@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 
+{% load elo %}
+
 {% block title %} Matches {% endblock %}
 
 {% block content %}
+
 <h1> Matches </h1>
 
 <div>
@@ -22,12 +25,12 @@
       {% for match in matches %}
       <tr>
         <td> <a href={% url 'match_detail' match.id %}> View </a> </td>
-        <td> {{ match.player1_elo_change }}
+        <td> {% elo_change match.player1_elo_change %}
           <a href={% url 'agent_detail' match.player1.id %}>
             {{ match.player1.name }}
           </a>
         </td>
-        <td> {{ match.player2_elo_change }}
+        <td> {% elo_change match.player2_elo_change %}
           <a href={% url 'agent_detail' match.player2.id %}>
             {{ match.player2.name }}
           </a>

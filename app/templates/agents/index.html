@@ -28,7 +28,12 @@
             </a>
           </td>
 
-          <td>{{ agent.owner.username }}</td>
+          <td>
+            <a href={% url 'user_detail' agent.owner.id %}>
+              {{ agent.owner.username }}
+            </a>
+          </td>
+
           <td>{{ agent.elo }}</td>
           <td>{{ agent.pretty_win_ratio }}%</td>
           <td>{{ agent.wins }}</td>

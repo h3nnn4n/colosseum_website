@@ -178,6 +178,28 @@ class TournamentDetailView(generic.DetailView):
     template_name = "tournaments/detail.html"
 
 
+class UserListView(generic.ListView):
+    template_name = "users/index.html"
+    context_object_name = "users"
+
+    def get_queryset(self):
+        return models.User.objects.order_by("-date_joined")
+
+
+class UserDetailView(generic.DetailView):
+    model = User
+    template_name = "users/detail.html"
+
+
+class UserEditView(generic.UpdateView):
+    model = User
+    template_name = "users/edit.html"
+    form_class = forms.UserForm
+
+    # FIXME: We should redirect to the detail view
+    success_url = "/"
+
+
 class AboutView(generic.TemplateView):
     template_name = "about.html"
 

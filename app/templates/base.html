@@ -7,6 +7,8 @@
   <title>{% block title %}Colosseum Arena{% endblock %}</title>
   <script async defer data-domain="colosseum.website" src="https://plausible.h3nnn4n.me/js/plausible.js"></script>
 
+  <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
   <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
   <link rel="apple-touch-icon" sizes="180x180" href="{%  static 'apple-touch-icon.png' %}">
   <link rel="icon" type="image/png" sizes="32x32" href="{%  static 'favicon-32x32.png' %}">
@@ -48,16 +50,19 @@
             <a class="nav-link" href="{% url 'games' %}">Games</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{% url 'users' %}">Users</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'about' %}">About</a>
           </li>
         </ul>
       </div>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
-          {% if user.is_authenticated %}
+          {% if request.user.is_authenticated %}
           <li class="nav-item">
             <span class="navbar-text">
-              Logged in as {{ user.username }}
+              Logged in as {{ request.user.username }}
             </span>
           </li>
           <li class="nav-item">
