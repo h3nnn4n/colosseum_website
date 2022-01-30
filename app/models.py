@@ -91,7 +91,7 @@ class Agent(BaseModel):
 
     @property
     def games_played_count(self):
-        return int(self.wins + self.loses + self.draws * 2)
+        return int(self.wins + self.loses + self.draws)
 
     @property
     def games_played(self):
