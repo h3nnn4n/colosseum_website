@@ -178,6 +178,19 @@ class TournamentDetailView(generic.DetailView):
     template_name = "tournaments/detail.html"
 
 
+class UserListView(generic.ListView):
+    template_name = "users/index.html"
+    context_object_name = "users"
+
+    def get_queryset(self):
+        return models.User.objects.order_by("-date_joined")
+
+
+class UserDetailView(generic.DetailView):
+    model = models.User
+    template_name = "users/detail.html"
+
+
 class AboutView(generic.TemplateView):
     template_name = "about.html"
 

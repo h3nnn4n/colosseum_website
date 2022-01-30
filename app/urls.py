@@ -39,6 +39,9 @@ urlpatterns = [
         views.TournamentDetailView.as_view(),
         name="tournament_detail",
     ),
+    # Users pages
+    path("users/", views.UserListView.as_view(), name="users"),
+    path("users/<str:pk>/", views.UserDetailView.as_view(), name="user_detail"),
     # About page
     path("about/", views.AboutView.as_view(), name="about"),
     # Home

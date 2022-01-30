@@ -44,7 +44,7 @@ class AgentQuerySet(QuerySet):
 
 class Agent(BaseModel):
     name = models.CharField(max_length=64, unique=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="agents")
     file = models.FileField(null=True, upload_to=utils.agent_filepath)
     file_hash = models.CharField(max_length=128, null=True)
     active = models.BooleanField(default=True)

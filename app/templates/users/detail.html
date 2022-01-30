@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="row align-items-end">
+        <div class="col">
+          <h1>{{ object.username }}</h1>
+        </div>
+
+        <div class="col">
+        {% if object.id == request.user.id %}
+          <a href={% url 'user_edit' object.id %} class="align-text-bottom">Edit</a>
+        {% endif %}
+        </div>
+      </div>
+
+      <table class="table table-hover table-striped table-sm">
+        <tbody>
+          <tr>
+            <td> Agents </td>
+            <td>
+              {{ user.agents.count }}
+            </td>
+          </tr>
+
+          <tr>
+            <td> Date Joined </td>
+            <td>
+              {{ user.date_joined }}
+              ( {{ user.date_joined | naturaltime }} )
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<div>
+
+{% endblock %}
