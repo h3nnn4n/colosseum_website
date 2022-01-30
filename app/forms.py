@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 
 from . import models, utils
 
@@ -23,10 +24,37 @@ class NewUserForm(UserCreationForm):
 class UserForm(forms.ModelForm):
     username = forms.CharField(max_length=50)
     email = forms.CharField(max_length=50)
+    bio = forms.CharField(required=False, widget=forms.Textarea)
 
     class Meta:
         model = User
-        fields = ("username", "email")
+        fields = ("username", "email", "bio")
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+
+        # HACK: We should figure our how to do the OneToOne fields properly
+        instance = kwargs.get("instance")
+        self.fields["bio"].initial = instance.profile.bio
+
+    def save(self, commit=True):
+        user = super(UserForm, self).save(commit=False)
+
+        bio = self.data["bio"]
+
+        # HACK: This should be created automatically, instead of "lazily"
+        try:
+            user.profile
+        except ObjectDoesNotExist:
+            models.UserProfile.objects.create(user=user)
+
+        user.profile.bio = bio
+
+        if commit:
+            user.save()
+            user.profile.save()
+
+        return user
 
 
 class AgentForm(forms.ModelForm):

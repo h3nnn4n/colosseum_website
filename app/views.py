@@ -196,6 +196,9 @@ class UserEditView(generic.UpdateView):
     template_name = "users/edit.html"
     form_class = forms.UserForm
 
+    # FIXME: We should redirect to the detail view
+    success_url = "/"
+
 
 class AboutView(generic.TemplateView):
     template_name = "about.html"
