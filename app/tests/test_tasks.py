@@ -6,39 +6,6 @@ from django.utils import timezone
 from app import factories, models, tasks
 
 
-class RefreshAgentCountCacheTestCase(TestCase):
-    def setUp(self):
-        self.game = factories.GameFactory()
-        self.season = factories.SeasonFactory()
-        self.tournament = factories.TournamentFactory(
-            game=self.game, season=self.season
-        )
-        self.agent1 = factories.AgentFactory(game=self.game)
-        self.agent2 = factories.AgentFactory(game=self.game)
-        self.match1 = factories.MatchFactory(
-            player1=self.agent1,
-            player2=self.agent2,
-            season=self.season,
-            tournament=self.tournament,
-            game=self.game,
-            result=1,
-        )
-        self.match2 = factories.MatchFactory(
-            player1=self.agent1,
-            player2=self.agent2,
-            season=self.season,
-            tournament=self.tournament,
-            game=self.game,
-            result=0,
-        )
-
-    def test_for_smoke(self):
-        """
-        Basic smoke test, so we don't have any bad surprises
-        """
-        tasks.refresh_agent_count_cache()
-
-
 class AutomatedManagerTestcase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
