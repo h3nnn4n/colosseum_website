@@ -9,7 +9,7 @@ from django.utils.deprecation import MiddlewareMixin
 from tld import get_tld
 from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
 
-from .metrics import push_metric
+from .metrics import process_urls_into_tags, push_metric
 
 
 logger = logging.getLogger(__name__)
@@ -102,8 +102,7 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
                         "view": request._view_name,
                         "referer": referer,
                         "referer_tld": referer_tld_string,
-                        "full_path": url,
-                        "path": request.path,
+                        "path": process_urls_into_tags(request.path),
                         "campaign": campaign,
                     },
                     "fields": {
