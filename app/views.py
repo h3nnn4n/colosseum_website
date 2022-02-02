@@ -309,6 +309,18 @@ class RedisInfoAPIView(APIView):
         return Response({"ping": conn.ping(), "info": conn.info()})
 
 
+class MatchQueueDebugAPIView(APIView):
+    permission_classes = []
+    queryset = models.Match.objects.none()
+
+    def get(self, request):
+        redis = get_redis_connection("default")
+        queue_length = redis.llen(settings.MATCH_QUEUE_KEY)
+        matches = redis.lrange(settings.MATCH_QUEUE_KEY, 0, queue_length)
+
+        return Response(matches)
+
+
 class NextMatchAPIView(APIView):
     """
     GET returns a next match to be ran. Intended to run multiple tournaments at
