@@ -316,9 +316,9 @@ class MatchQueueDebugAPIView(APIView):
     def get(self, request):
         redis = get_redis_connection("default")
         queue_length = redis.llen(settings.MATCH_QUEUE_KEY)
-        matches = redis.lrange(settings.MATCH_QUEUE_KEY, 0, queue_length)
+        match_ids = redis.lrange(settings.MATCH_QUEUE_KEY, 0, queue_length)
 
-        return Response(matches)
+        return Response({"match_ids": match_ids, "count": len(match_ids)})
 
 
 class NextMatchAPIView(APIView):
