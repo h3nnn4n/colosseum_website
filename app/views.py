@@ -321,6 +321,50 @@ class MatchQueueDebugAPIView(APIView):
         return Response({"match_ids": match_ids, "count": len(match_ids)})
 
 
+class TaintedMatchesDebugAPIView(APIView):
+    permission_classes = []
+    queryset = models.Match.objects.none()
+
+    def get(self, request):
+        tainted_matches_24h = utils.get_api_urls_for_pks(
+            models.Match.objects.all()
+            .played.tainted.by_ran_at.filter(
+                ran_at__gte=timezone.now() - timedelta(days=1)
+            )
+            .values_list("id", flat=True),
+            "match-detail",
+            request,
+        )
+
+        tainted_matches_1h = utils.get_api_urls_for_pks(
+            models.Match.objects.all()
+            .played.tainted.by_ran_at.filter(
+                ran_at__gte=timezone.now() - timedelta(hours=1)
+            )
+            .values_list("id", flat=True),
+            "match-detail",
+            request,
+        )
+
+        tainted_matches_15m = utils.get_api_urls_for_pks(
+            models.Match.objects.all()
+            .played.tainted.by_ran_at.filter(
+                ran_at__gte=timezone.now() - timedelta(minutes=15)
+            )
+            .values_list("id", flat=True),
+            "match-detail",
+            request,
+        )
+
+        return Response(
+            {
+                "tainted_matches_24h": tainted_matches_24h,
+                "tainted_matches_1h": tainted_matches_1h,
+                "tainted_matches_15m": tainted_matches_15m,
+            }
+        )
+
+
 class NextMatchAPIView(APIView):
     """
     GET returns a next match to be ran. Intended to run multiple tournaments at

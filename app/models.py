@@ -261,9 +261,15 @@ class Game(BaseModel):
 
 
 class MatchQuerySet(QuerySet):
+    @property
     def played(self):
         return self.filter(ran=True)
 
+    @property
+    def tainted(self):
+        return self.filter(outcome__termination="TAINTED")
+
+    @property
     def by_ran_at(self):
         return self.order_by("-ran_at")
 
