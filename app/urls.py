@@ -66,4 +66,9 @@ urlpatterns = [
     # Debug
     path("api/debug/ping/", views.PingAPIView.as_view(), name="ping"),
     path("api/debug/redis_info/", views.RedisInfoAPIView.as_view(), name="redis_info"),
+    path(
+        "api/debug/match_queue/",
+        views.MatchQueueDebugAPIView.as_view(),
+        name="match_queue_debug",
+    ),
 ]
