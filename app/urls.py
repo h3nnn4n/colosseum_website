@@ -71,4 +71,9 @@ urlpatterns = [
         views.MatchQueueDebugAPIView.as_view(),
         name="match_queue_debug",
     ),
+    path(
+        "api/debug/tainted_matches/",
+        views.TaintedMatchesDebugAPIView.as_view(),
+        name="tainted_matches_debug",
+    ),
 ]
