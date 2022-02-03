@@ -140,6 +140,9 @@ class MatchSerializer(serializers.ModelSerializer):
             metrics.register_match_duration(instance)
             metrics.register_match_queue_time(instance)
 
+            if instance.tainted:
+                metrics.register_tainted_match(instance)
+
         return instance
 
 

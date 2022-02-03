@@ -1,6 +1,7 @@
 import hashlib
 
 import magic
+from django.urls import reverse
 
 
 def agent_filepath(agent, filename):
@@ -26,3 +27,9 @@ def guess_mime(file):
     mime = magic.from_buffer(file.read(), mime=True)
     file.seek(0)
     return mime
+
+
+def get_api_urls_for_pks(pks, view_name, request):
+    return [
+        request.build_absolute_uri(reverse(view_name, kwargs={"pk": pk})) for pk in pks
+    ]

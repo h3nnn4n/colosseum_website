@@ -108,6 +108,26 @@ def register_match_duration(match):
     )
 
 
+def register_tainted_match(match):
+    _push_metric(
+        {
+            "fields": {"value": 1},
+            "measurement": "tainted_match",
+            "tags": {
+                "game": match.game.name,
+                "player1": match.player1.id,
+                "player2": match.player2.id,
+                "season": match.season.name,
+                "tournament": match.tournament.name,
+                "tainted_reason": match.outcome.get(
+                    "tainted_reason", "TAINTED_REASON_NOT_SET"
+                ),
+            },
+            "time": timezone.now().isoformat(),
+        }
+    )
+
+
 def register_match_queue_time(match):
     queue_time = (match.ran_at - match.created_at).total_seconds()
 
