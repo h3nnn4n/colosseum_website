@@ -371,6 +371,10 @@ class Match(BaseModel):
         except KeyError:
             return None
 
+    @property
+    def tainted(self):
+        return self.outcome.get("termination") == "TAINTED"
+
 
 class Tournament(BaseModel):
     MODES = [
