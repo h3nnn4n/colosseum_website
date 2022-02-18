@@ -3,6 +3,7 @@ import lzma
 from datetime import timedelta
 
 import humanize
+import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
@@ -432,6 +433,17 @@ class MatchViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = models.Match.objects.all()
     serializer_class = serializers.MatchSerializer
+
+    @action(detail=True, methods=["get"])
+    def replay(self, request, pk=None):
+        match = self.get_object()
+        if not match.ran:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        raw_file = requests.get(match.replay.url).content
+        decompressed_data = lzma.decompress(raw_file)
+
+        return Response(decompressed_data)
 
     @action(detail=True, methods=["post"])
     def upload_replay(self, request, pk=None):
