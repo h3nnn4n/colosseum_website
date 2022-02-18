@@ -390,6 +390,17 @@ python-versions = ">=3.7"
 django = ">=2.2"
 
 [[package]]
+name = "django-cors-headers"
+version = "3.11.0"
+description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Django = ">=2.2"
+
+[[package]]
 name = "django-cprofile-middleware"
 version = "1.0.5"
 description = "Easily add cProfile profiling to django views."
@@ -1771,7 +1782,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.*"
-content-hash = "9bb4ad1744a4374bab45ec0b8ad85edff108d0eee720b65a4bea86e2f2b04608"
+content-hash = "e48823652074eb68c0ba4f3306fd3cf63a4130d2d589f464b4e5077e16c1f1e2"
 
 [metadata.files]
 amqp = [
@@ -1983,6 +1994,10 @@ django-bootstrap4 = [
 django-classy-tags = [
     {file = "django-classy-tags-3.0.0.tar.gz", hash = "sha256:2ef8b82b4f7d77d4fd152b25c45128d926e7a5840d862f2ecd3e5faf6acbe343"},
     {file = "django_classy_tags-3.0.0-py3-none-any.whl", hash = "sha256:c69753685d2445dc12b37e0388082608c989e19302144fa110fc1e8ce7115f09"},
+]
+django-cors-headers = [
+    {file = "django-cors-headers-3.11.0.tar.gz", hash = "sha256:eb98389bf7a2afc5d374806af4a9149697e3a6955b5a2dc2bf049f7d33647456"},
+    {file = "django_cors_headers-3.11.0-py3-none-any.whl", hash = "sha256:a22be2befd4069c4fc174f11cf067351df5c061a3a5f94a01650b4e928b0372b"},
 ]
 django-cprofile-middleware = [
     {file = "django-cprofile-middleware-1.0.5.tar.gz", hash = "sha256:b942185a38f3b582935a55c768f126ce9a6f0cefceee3b5d19e6b307ad129889"},
