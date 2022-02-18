@@ -1,3 +1,4 @@
+import json
 import logging
 import lzma
 from datetime import timedelta
@@ -443,7 +444,13 @@ class MatchViewSet(viewsets.ModelViewSet):
         raw_file = requests.get(match.replay.url).content
         decompressed_data = lzma.decompress(raw_file)
 
-        return Response(decompressed_data)
+        data = [
+            json.loads(line)
+            for line in decompressed_data.decode("ascii").split("\n")
+            if line
+        ]
+
+        return Response(data)
 
     @action(detail=True, methods=["post"])
     def upload_replay(self, request, pk=None):
