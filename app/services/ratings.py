@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from simple_elo import compute_updated_ratings
+from .elo import compute_updated_ratings
 
 
 def update_ratings_from_match(match):
