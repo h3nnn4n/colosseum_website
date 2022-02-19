@@ -56,6 +56,7 @@ _BASE_APPS = [
     "bootstrap4",
     "rest_framework",
     "rest_framework.authtoken",
+    "corsheaders",
     "crispy_forms",
     "django_extensions",
     "memoize",
@@ -83,6 +84,7 @@ INSTALLED_APPS = _BASE_APPS + _WIKI_APPS
 MIDDLEWARE = [
     "app.middleware.InfluxDBRequestMiddleware",
     "django_cprofile_middleware.middleware.ProfilerMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -233,3 +235,6 @@ CELERY_WORKER_PREFETCH_MULTIPLIER = config(
     "CELERY_WORKER_PREFETCH_MULTIPLIER", 1, cast=int
 )
 CELERY_BROKER_URL = os.environ.get("CELERY_REDIS_URL")
+
+# FIXME
+CORS_ALLOW_ALL_ORIGINS = True
