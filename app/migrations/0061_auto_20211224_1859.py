@@ -10,7 +10,7 @@ def create_records(apps, schema_editor):
 
     season = Season.objects.get(main=True, active=True)
     if season is None:
-        raise ValueError("No season found!")
+        return
 
     for agent in Agent.objects.all().iterator():
         if agent.ratings.filter(season=season).exists():
