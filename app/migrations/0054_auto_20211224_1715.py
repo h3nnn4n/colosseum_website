@@ -9,7 +9,7 @@ def populate_tournament_season(apps, schema_editor):
 
     season = Season.objects.first()
     if season is None:
-        raise ValueError("No season found!")
+        return
 
     while Tournament.objects.filter(season__isnull=True).exists():
         inner_q = Tournament.objects.filter(season__isnull=True)[0:10000]
