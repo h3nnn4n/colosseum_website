@@ -162,6 +162,11 @@ class MatchDetailView(generic.DetailView):
         return context
 
 
+class MatchReplayView(generic.DetailView):
+    model = models.Match
+    template_name = "matches/replay.html"
+
+
 class TournamentListView(generic.ListView):
     template_name = "tournaments/index.html"
     context_object_name = "tournaments"
