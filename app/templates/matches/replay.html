@@ -5,10 +5,12 @@
 
 {% block content %}
 
-<div data-match-id={{ object.id }}></div>
+<div data-match-id={{ match_id }}></div>
+<div data-match-replay-id={{ match_replay_url }}></div>
+
 <div id="root"></div>
 
-<script src="{% static '/js/runtime.69ce4ce0a0d16339135e.bundle.js' %}"></script>
-<script src="{% static '/js/main.56beda170f2bb5c3ff84.bundle.js' %}"></script>
+
+<script src="{{ replay_js_bundle_url }}"></script>
 
 {% endblock %}
