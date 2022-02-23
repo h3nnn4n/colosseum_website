@@ -1,0 +1,42 @@
+name: Staging deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: "h3nnn4n/colosseum_infra"
+          ref: add_staging_env
+
+      - name: Setup ssh
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          if_key_exists: fail
+
+      - name: Install requirements
+        run: |
+          cd ansible
+          ansible-galaxy install -r requirements.yml
+
+      - name: Deploy to webservers
+        run: |
+          cd ansible
+          ansible-playbook -i environments/staging/ web_servers.yml --tags web_server
+        env:
+          VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
+
+      - name: Deploy to celery workers
+        run: |
+          cd ansible
+          ansible-playbook -i environments/staging/ celery_workers.yml --tags celery_worker
+        env:
+          VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
