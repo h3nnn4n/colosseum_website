@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: "h3nnn4n/colosseum_infra"
-          ref: add_staging_env
+          ref: main
 
       - name: Setup ssh
         uses: shimataro/ssh-key-action@v2
