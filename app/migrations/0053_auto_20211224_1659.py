@@ -9,7 +9,7 @@ def populate_match_season(apps, schema_editor):
 
     season = Season.objects.first()
     if season is None:
-        raise ValueError("No season found!")
+        return
 
     while Match.objects.filter(season__isnull=True).exists():
         inner_q = Match.objects.filter(season__isnull=True)[0:10000]

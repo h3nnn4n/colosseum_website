@@ -61,7 +61,10 @@
         <td> {{ match.ran_at | date:"Y-m-d H:i:s" }} </td>
 
         {% if match.ran and match.replay %}
-          <td> <a href={{ match.replay.url }}> Download </a> </td>
+          <td>
+            <a href={{ match.replay.url }}> Download </a> /
+            <a href={% url 'match_replay' match.id %}> View </a>
+          </td>
         {% else %}
           <td> - </td>
         {% endif %}

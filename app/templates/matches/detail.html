@@ -93,7 +93,10 @@
           <tr>
             <td> Replay </td>
             {% if object.ran and object.replay %}
-              <td> <a href={{ object.replay.url }}> Download </a> </td>
+              <td>
+                <a href={{ object.replay.url }}> Download </a> or
+                <a href={% url 'match_replay' match.id %}> View </a>
+              </td>
             {% else %}
               <td> - </td>
             {% endif %}

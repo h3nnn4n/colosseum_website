@@ -47,6 +47,9 @@ class NextMatchAPIViewTestCase(TestCase):
         self.admin_user = factories.UserFactory(is_staff=True)
         self.api_client = APIClient()
 
+        redis = get_redis_connection("default")
+        redis.delete("disable_next_match_api")
+
     def test_without_a_tournament(self):
         self.api_client.force_authenticate(user=self.admin_user)
         response = self.api_client.get("/api/next_match/")

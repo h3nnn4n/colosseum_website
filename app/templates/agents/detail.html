@@ -120,7 +120,7 @@
       <th scope="col"> Replay </th>
     </thead>
     <tbody>
-      {% for match in object.matches.played.by_ran_at.top_n %}
+      {% for match in object.matches.all.played.by_ran_at.top_n %}
       <tr>
         <td> <a href={% url 'match_detail' match.id %}> View </a> </td>
         <td> {{ match.player1_elo_change | default_if_none:"-" }}
@@ -149,7 +149,10 @@
         {% endif %}
 
         {% if match.ran and match.replay %}
-          <td> <a href={{ match.replay.url }}> Download </a> </td>
+          <td>
+            <a href={{ match.replay.url }}> Download </a> /
+            <a href={% url 'match_replay' match.id %}> View </a>
+          </td>
         {% else %}
           <td> - </td>
         {% endif %}

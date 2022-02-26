@@ -1,8 +1,10 @@
+import json
 import logging
 import lzma
 from datetime import timedelta
 
 import humanize
+import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
@@ -157,6 +159,26 @@ class MatchDetailView(generic.DetailView):
         match = self.get_object()
         time_in_queue = (match.ran_at or timezone.now()) - match.created_at
         context["time_in_queue"] = humanize.precisedelta(time_in_queue)
+        return context
+
+
+class MatchReplayView(generic.DetailView):
+    model = models.Match
+    template_name = "matches/replay.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        match = self.get_object()
+        context[
+            "replay_js_bundle_url"
+        ] = "https://colosseum-staging-replay.s3.amazonaws.com/replay_bundle.js"
+        context["match_id"] = match.id
+        # FIXME: We need to handle failures
+        context["match_replay_url"] = utils.get_api_urls_for_pks(
+            [match.id],
+            "match-replay",
+            self.request,
+        )[0]
         return context
 
 
@@ -432,6 +454,23 @@ class MatchViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = models.Match.objects.all()
     serializer_class = serializers.MatchSerializer
+
+    @action(detail=True, methods=["get"])
+    def replay(self, request, pk=None):
+        match = self.get_object()
+        if not match.ran:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        raw_file = requests.get(match.replay.url).content
+        decompressed_data = lzma.decompress(raw_file)
+
+        data = [
+            json.loads(line)
+            for line in decompressed_data.decode("ascii").split("\n")
+            if line
+        ]
+
+        return Response(data)
 
     @action(detail=True, methods=["post"])
     def upload_replay(self, request, pk=None):

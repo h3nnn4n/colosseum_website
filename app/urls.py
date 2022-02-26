@@ -32,6 +32,9 @@ urlpatterns = [
     # Match pages
     path("matches/", views.MatchListView.as_view(), name="matches"),
     path("matches/<str:pk>/", views.MatchDetailView.as_view(), name="match_detail"),
+    path(
+        "matches/<str:pk>/replay/", views.MatchReplayView.as_view(), name="match_replay"
+    ),
     # Tournaments
     path("tournaments/", views.TournamentListView.as_view(), name="tournaments"),
     path(

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Match Replay {% endblock %}
+
+{% block content %}
+
+<div data-match-id={{ match_id }}></div>
+<div data-match-replay-id={{ match_replay_url }}></div>
+
+<div id="root"></div>
+
+
+<script src="{{ replay_js_bundle_url }}"></script>
+
+{% endblock %}
