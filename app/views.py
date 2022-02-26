@@ -171,7 +171,7 @@ class MatchReplayView(generic.DetailView):
         match = self.get_object()
         context[
             "replay_js_bundle_url"
-        ] = "https://colosseum-staging-replay.s3.amazonaws.com/replay_bundle.js"
+        ] = settings.REPLAY_JS_BUNDLE_URL
         context["match_id"] = match.id
         # FIXME: We need to handle failures
         context["match_replay_url"] = utils.get_api_urls_for_pks(

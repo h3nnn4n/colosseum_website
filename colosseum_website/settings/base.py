@@ -238,3 +238,6 @@ CELERY_BROKER_URL = os.environ.get("CELERY_REDIS_URL")
 
 # FIXME
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Replay
+REPLAY_JS_BUNDLE_URL = config("REPLAY_JS_BUNDLE_URL", default="")
