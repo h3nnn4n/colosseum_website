@@ -169,9 +169,7 @@ class MatchReplayView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         match = self.get_object()
-        context[
-            "replay_js_bundle_url"
-        ] = settings.REPLAY_JS_BUNDLE_URL
+        context["replay_js_bundle_url"] = settings.REPLAY_JS_BUNDLE_URL
         context["match_id"] = match.id
         # FIXME: We need to handle failures
         context["match_replay_url"] = utils.get_api_urls_for_pks(
