@@ -18,6 +18,10 @@ app.conf.update(
 )
 
 app.conf.beat_schedule = {
+    "heartbeat": {
+        "task": "app.tasks.heartbeat",
+        "schedule": 1.0,
+    },
     "automated_manager": {
         "task": "app.tasks.automated_manager",
         "schedule": 10.0,

@@ -1,7 +1,7 @@
 import json
 import logging
 import lzma
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 import humanize
 import requests
@@ -302,6 +302,27 @@ class HomeView(generic.TemplateView):
                 minimum_unit = "hours"
 
             context["oldest_pending_match_age"] = humanize.precisedelta(
+                age,
+                minimum_unit=minimum_unit,
+                format="%0.0f",
+            )
+
+        redis = get_redis_connection("default")
+        last_heartbeat_bytes = redis.get(settings.CELERY_HEARTBEAT_KEY)
+        context["celery_heartbeat"] = "-"
+        if last_heartbeat_bytes:
+            last_heartbeat = last_heartbeat_bytes.decode()
+            last_heartbeat = datetime.fromisoformat(last_heartbeat)
+            age = (timezone.now() - last_heartbeat).total_seconds()
+
+            if age < constants.ONE_HOUR:
+                minimum_unit = "seconds"
+            elif age < constants.ONE_DAY:
+                minimum_unit = "minutes"
+            else:
+                minimum_unit = "hours"
+
+            context["celery_heartbeat"] = humanize.precisedelta(
                 age,
                 minimum_unit=minimum_unit,
                 format="%0.0f",
