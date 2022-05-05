@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.utils import timezone
+from django_redis import get_redis_connection
 
 from app import metrics, models, services
 from app.celery import app as celery
@@ -68,3 +70,14 @@ def metrics_logger():
 @celery.task
 def regenerate_queue():
     match_queue.regenerate_queue()
+
+
+@celery.task
+def heartbeat():
+    """
+    Simple heart beat for celery. Stores the time at which this function runs
+    on redis, so we can check later if redis is running.
+    """
+    redis = get_redis_connection("default")
+    heartbeat_key = settings.CELERY_HEARTBEAT_KEY
+    redis.set(heartbeat_key, timezone.now().isoformat())
