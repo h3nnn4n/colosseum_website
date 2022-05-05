@@ -40,6 +40,20 @@ pyenv rehash
 pre-commit install -t pre-commit -t pre-push
 ```
 
+- Install redis and postgres
+
+- Setup postgres to connect with django. The easiest way to do this is to
+  create a database named `postgres`, with a user named `postgres`, with
+  `postgres` as the password. This is only safe for the local environment where
+  no remote connections to the databased are allowed (this is the default
+  behavior).
+  - Open `psql` as the postgres user using `sudo -u postgres psql`
+  - Create the database using `CREATE DATABASE postgres;`
+  - Create the user using
+  `CREATE USER postgres WITH ENCRYPTED PASSWORD 'mypass';`
+  - Grant access to the new user to the newly created table
+  `GRANT ALL PRIVILEGES ON DATABASE postgres TO postgres;`
+
 # LICENSE
 
 Released under the MIT license. See [LICENSE](LICENSE) for more details.
