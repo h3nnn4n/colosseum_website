@@ -18,6 +18,11 @@ class NewUserForm(UserCreationForm):
         user.email = self.cleaned_data["email"]
         if commit:
             user.save()
+
+            try:
+                user.profile
+            except ObjectDoesNotExist:
+                models.UserProfile.objects.create(user=user)
         return user
 
 
@@ -35,7 +40,12 @@ class UserForm(forms.ModelForm):
 
         # HACK: We should figure our how to do the OneToOne fields properly
         instance = kwargs.get("instance")
-        self.fields["bio"].initial = instance.profile.bio
+
+        # HACK: This should be created automatically, instead of "lazily"
+        try:
+            self.fields["bio"].initial = instance.profile.bio
+        except ObjectDoesNotExist:
+            self.fields["bio"].initial = ""
 
     def save(self, commit=True):
         user = super(UserForm, self).save(commit=False)
