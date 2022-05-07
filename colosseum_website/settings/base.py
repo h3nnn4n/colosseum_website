@@ -244,3 +244,4 @@ REPLAY_JS_BUNDLE_URL = config("REPLAY_JS_BUNDLE_URL", default="")
 
 
 CELERY_HEARTBEAT_KEY = "celery_heartbeat"
+COLOSSEUM_HEARTBEAT_KEY = "colosseum_heartbeat"

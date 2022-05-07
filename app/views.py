@@ -331,6 +331,29 @@ class HomeView(generic.TemplateView):
                 + " ago"
             )
 
+        last_heartbeat_bytes = redis.get(settings.COLOSSEUM_HEARTBEAT_KEY)
+        context["colosseum_heartbeat"] = "-"
+        if last_heartbeat_bytes:
+            last_heartbeat = last_heartbeat_bytes.decode()
+            last_heartbeat = datetime.fromisoformat(last_heartbeat)
+            age = (timezone.now() - last_heartbeat).total_seconds()
+
+            if age < constants.ONE_HOUR:
+                minimum_unit = "seconds"
+            elif age < constants.ONE_DAY:
+                minimum_unit = "minutes"
+            else:
+                minimum_unit = "hours"
+
+            context["colosseum_heartbeat"] = (
+                humanize.precisedelta(
+                    age,
+                    minimum_unit=minimum_unit,
+                    format="%0.0f",
+                )
+                + " ago"
+            )
+
         return context
 
 
@@ -572,6 +595,17 @@ class AutomatedSeasonsAPIView(APIView):
     def post(self, request):
         services.update_seasons_state()
         services.create_automated_seasons()
+        return Response()
+
+
+class ColosseumHeartbeatAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+    queryset = models.Season.objects.none()
+
+    def post(self, request):
+        redis = get_redis_connection("default")
+        heartbeat_key = settings.COLOSSEUM_HEARTBEAT_KEY
+        redis.set(heartbeat_key, timezone.now().isoformat())
         return Response()
 
 
