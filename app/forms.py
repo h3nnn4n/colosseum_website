@@ -35,7 +35,12 @@ class UserForm(forms.ModelForm):
 
         # HACK: We should figure our how to do the OneToOne fields properly
         instance = kwargs.get("instance")
-        self.fields["bio"].initial = instance.profile.bio
+
+        # HACK: This should be created automatically, instead of "lazily"
+        try:
+            self.fields["bio"].initial = instance.profile.bio
+        except ObjectDoesNotExist:
+            self.fields["bio"].initial = ""
 
     def save(self, commit=True):
         user = super(UserForm, self).save(commit=False)
