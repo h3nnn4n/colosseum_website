@@ -56,6 +56,11 @@ pre-commit install -t pre-commit -t pre-push
   - Grant access to the new user to the newly created table
   `GRANT ALL PRIVILEGES ON DATABASE postgres TO postgres;`
 
+- Run the migrations
+```
+poetry run python manage.py migrate
+```
+
 - Create a superuser. Provide a password when asked. If the password is too
   simple, a warning will be shown, but the validating can be bypassed. Since
   this is only for local enviroment, it is safe to do so.
@@ -68,6 +73,22 @@ poetry run python manage.py createsuperuser --username=admin --email=admin@admin
 ```
 poetry run python manage.py drf_create_token admin
 ```
+
+- Start the server
+```
+poetry run python manage.py runserver
+```
+
+- Start celery. Some functionality of the site depents on the celery workers
+  being running.
+```
+poetry run celery --app app worker --loglevel=INFO --beat
+```
+
+- TODO: Setup minio
+
+- Setup the colosseum tournament engine. Follow the instructions from
+  [https://github.com/h3nnn4n/colosseum](https://github.com/h3nnn4n/colosseum)
 
 # LICENSE
 
