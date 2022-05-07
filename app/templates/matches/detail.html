@@ -37,23 +37,38 @@
               </a>
             </td>
           </tr>
-
           <tr>
             <td> Player 1 </td>
-            <td> {% elo_change match.player1_elo_change %}
-              <a href={% url 'agent_detail' object.player1.id %}>
-                {{ object.player1.name }}
-              </a>
-            </td>
+            {% if object.ran %}
+              <td> {% elo_change match.player1_elo_change %}
+                <a href={% url 'agent_detail' object.player1.id %}>
+                  {{ object.player1.name }}
+                </a>
+              </td>
+            {% else %}
+              <td>
+                <a href={% url 'agent_detail' object.player1.id %}>
+                  {{ object.player1.name }}
+                </a>
+              </td>
+            {% endif %}
           </tr>
 
           <tr>
             <td> Player 2 </td>
-            <td> {% elo_change match.player2_elo_change %}
+            {% if object.ran %}
+              <td> {% elo_change match.player2_elo_change %}
+                <a href={% url 'agent_detail' object.player2.id %}>
+                  {{ object.player2.name }}
+                </a>
+              </td>
+            {% else %}
+            <td>
               <a href={% url 'agent_detail' object.player2.id %}>
                 {{ object.player2.name }}
               </a>
             </td>
+            {% endif %}
           </tr>
 
           <tr>
