@@ -92,9 +92,15 @@ def register_get_next_match():
 
 
 def register_match_duration(match):
+    try:
+        duration = float(match.duration)
+    except TypeError:
+        logger.warning(f"match {match.id} had no duration: {match.duration}")
+        return
+
     _push_metric(
         {
-            "fields": {"value": match.duration},
+            "fields": {"value": duration},
             "measurement": "match_duration",
             "tags": {
                 "game": match.game.name,
