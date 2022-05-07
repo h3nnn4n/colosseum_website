@@ -198,7 +198,7 @@ class TournamentSerializer(serializers.ModelSerializer):
             )
             game_id = data["game_id"]
             data["participants"] = list(
-                models.Agent.objects.filter(game_id=game_id).values_list(
+                models.Agent.objects.filter(game_id=game_id, active=True).values_list(
                     "id", flat=True
                 )
             )
