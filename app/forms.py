@@ -18,6 +18,11 @@ class NewUserForm(UserCreationForm):
         user.email = self.cleaned_data["email"]
         if commit:
             user.save()
+
+            try:
+                user.profile
+            except ObjectDoesNotExist:
+                models.UserProfile.objects.create(user=user)
         return user
 
 
