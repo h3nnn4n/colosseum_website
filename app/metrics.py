@@ -94,7 +94,7 @@ def register_get_next_match():
 def register_match_duration(match):
     _push_metric(
         {
-            "fields": {"value": match.duration},
+            "fields": {"value": float(match.duration)},
             "measurement": "match_duration",
             "tags": {
                 "game": match.game.name,
