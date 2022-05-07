@@ -63,7 +63,7 @@ poetry run python manage.py migrate
 
 - Create a superuser. Provide a password when asked. If the password is too
   simple, a warning will be shown, but the validating can be bypassed. Since
-  this is only for local enviroment, it is safe to do so.
+  this is only for local environment, it is safe to do so.
 ```
 poetry run python manage.py createsuperuser --username=admin --email=admin@admin.com
 ```
