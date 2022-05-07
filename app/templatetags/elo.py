@@ -14,23 +14,29 @@ ELO_CHANGE_ICONS = {
 
 @register.inclusion_tag("elo_change.html")
 def elo_change(value):
-    if value is not None:
-        if value < -10:
-            icon = ELO_CHANGE_ICONS["double-down"]
-            color_class = "text-danger"
-        elif value < 0:
-            icon = ELO_CHANGE_ICONS["down"]
-            color_class = "text-danger"
-        elif value > 10:
-            icon = ELO_CHANGE_ICONS["double-up"]
-            color_class = "text-success"
-        elif value > 0:
-            icon = ELO_CHANGE_ICONS["up"]
-            color_class = "text-success"
-        else:
-            icon = ELO_CHANGE_ICONS["same"]
-            color_class = "text-muted"
+    if value is None:
+        return {
+            "icon": ELO_CHANGE_ICONS["same"],
+            "elo": "-",
+            "color_class": "text-muted",
+        }
 
-        elo = str(int(abs(value)))
+    if value < -10:
+        icon = ELO_CHANGE_ICONS["double-down"]
+        color_class = "text-danger"
+    elif value < 0:
+        icon = ELO_CHANGE_ICONS["down"]
+        color_class = "text-danger"
+    elif value > 10:
+        icon = ELO_CHANGE_ICONS["double-up"]
+        color_class = "text-success"
+    elif value > 0:
+        icon = ELO_CHANGE_ICONS["up"]
+        color_class = "text-success"
+    else:
+        icon = ELO_CHANGE_ICONS["same"]
+        color_class = "text-muted"
 
-        return {"icon": icon, "elo": elo, "color_class": color_class}
+    elo = str(int(abs(value)))
+
+    return {"icon": icon, "elo": elo, "color_class": color_class}
