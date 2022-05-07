@@ -56,6 +56,19 @@ pre-commit install -t pre-commit -t pre-push
   - Grant access to the new user to the newly created table
   `GRANT ALL PRIVILEGES ON DATABASE postgres TO postgres;`
 
+- Create a superuser. Provide a password when asked. If the password is too
+  simple, a warning will be shown, but the validating can be bypassed. Since
+  this is only for local enviroment, it is safe to do so.
+```
+poetry run python manage.py createsuperuser --username=admin --email=admin@admin.com
+```
+
+- Create an auth token for the superuser. Save this token. It will be used to
+  connect to other parts of the system.
+```
+poetry run python manage.py drf_create_token admin
+```
+
 # LICENSE
 
 Released under the MIT license. See [LICENSE](LICENSE) for more details.
