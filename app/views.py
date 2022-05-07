@@ -326,7 +326,7 @@ class HomeView(generic.TemplateView):
                 age,
                 minimum_unit=minimum_unit,
                 format="%0.0f",
-            )
+            ) + " ago"
 
         return context
 
