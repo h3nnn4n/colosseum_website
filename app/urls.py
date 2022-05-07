@@ -61,6 +61,11 @@ urlpatterns = [
         views.AutomatedSeasonsAPIView.as_view(),
         name="automated_seasons",
     ),
+    path(
+        "api/colosseum_heartbeat/",
+        views.ColosseumHeartbeatAPIView.as_view(),
+        name="colosseum_heartbeat",
+    ),
     # Register page
     path("accounts/register/", views.register_request, name="register"),
     # Plots
