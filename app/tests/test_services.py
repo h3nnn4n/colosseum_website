@@ -41,10 +41,17 @@ class RatingsServiceTestCase(TestCase):
 
         ratings.update_ratings_from_match(self.match1)
 
+        self.agent1 = models.Agent.objects.get(id=self.agent1.id)
+        self.agent2 = models.Agent.objects.get(id=self.agent2.id)
+
         self.assertEqual(self.agent1.elo, Decimal("1512"))
         self.assertEqual(self.agent2.elo, Decimal("1488"))
 
+        self.match2 = models.Match.objects.get(id=self.match2.id)
         ratings.update_ratings_from_match(self.match2)
+
+        self.agent1 = models.Agent.objects.get(id=self.agent1.id)
+        self.agent2 = models.Agent.objects.get(id=self.agent2.id)
 
         self.assertEqual(self.agent1.elo, Decimal("1499"))
         self.assertEqual(self.agent2.elo, Decimal("1501"))

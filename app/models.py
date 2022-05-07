@@ -66,7 +66,7 @@ class Agent(BaseModel):
             models.Index(fields=["owner"]),
         ]
 
-    @property
+    @cached_property
     def current_ratings(self):
         # FIXME: We shouldn't be creating stuff on a getter
         # TODO: Cache this so we are not querrying the database all the time.
