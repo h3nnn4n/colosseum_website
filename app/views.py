@@ -322,10 +322,13 @@ class HomeView(generic.TemplateView):
             else:
                 minimum_unit = "hours"
 
-            context["celery_heartbeat"] = humanize.precisedelta(
-                age,
-                minimum_unit=minimum_unit,
-                format="%0.0f",
+            context["celery_heartbeat"] = (
+                humanize.precisedelta(
+                    age,
+                    minimum_unit=minimum_unit,
+                    format="%0.0f",
+                )
+                + " ago"
             )
 
         return context
