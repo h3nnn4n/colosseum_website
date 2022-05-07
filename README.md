@@ -1,6 +1,8 @@
 # Colosseum Website
 
-The website for [Colosseum](https://colosseum.website), the automated AI Tournament engine.
+The website for [Colosseum](https://colosseum.website), the automated AI
+Tournament engine.  This project contains the user facing website, a public API
+as well as the internal API used by the tournament engine.
 
 # Local setup
 
