@@ -53,7 +53,10 @@ class AgentListView(generic.ListView):
     def get_queryset(self):
         return (
             models.Agent.objects.all()
-            .annotate(elo_rating=F("ratings__elo"))
+            .annotate(
+                elo_rating=F("ratings__elo"),
+                owner_username=F("owner__username"),
+            )
             .filter(ratings__season__active=True, ratings__season__main=True)
             .order_by("-elo_rating")
         )
