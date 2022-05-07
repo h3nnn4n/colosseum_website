@@ -1,5 +1,9 @@
 from decimal import Decimal
 
+from django.core.exceptions import ObjectDoesNotExist
+
+from app.models import AgentRatings
+
 from .elo import compute_updated_ratings
 
 
@@ -19,8 +23,23 @@ def update_ratings_from_match(match):
     match_result = {(player1_id, player2_id): float(match.result)}
 
     updated_elos = compute_updated_ratings(elos, match_result)
-    p1_ratings = match.player1.ratings.select_for_update().get(season=match.season)
-    p2_ratings = match.player2.ratings.select_for_update().get(season=match.season)
+
+    # HACK: Not gonna lie, idk if this is even safe. Seems to be prone to race
+    # conditions and record duplication because of that. Ideally we would
+    # ensure that all agent / season pair have a respective AgentRating
+    try:
+        p1_ratings = match.player1.ratings.select_for_update().get(season=match.season)
+    except ObjectDoesNotExist:
+        p1_ratings = AgentRatings.objects.create(
+            season=match.season, agent=match.player1, game=match.game
+        )
+
+    try:
+        p2_ratings = match.player2.ratings.select_for_update().get(season=match.season)
+    except ObjectDoesNotExist:
+        p2_ratings = AgentRatings.objects.create(
+            season=match.season, agent=match.player2, game=match.game
+        )
 
     if match.result == 1:
         p1_ratings.wins += 1
