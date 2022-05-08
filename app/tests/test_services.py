@@ -124,3 +124,55 @@ class MatchQueueTestCase(TestCase):
         automated_tournaments.create_automated_tournaments()
         services.update_tournaments_state()
         match_queue.regenerate_queue()
+
+
+class TrophyTestCase(TestCase):
+    def setUp(self):
+        models.Season.objects.all().delete()
+
+        self.game = factories.GameFactory()
+        self.season = factories.SeasonFactory()
+        self.tournament = factories.TournamentFactory(
+            game=self.game, season=self.season
+        )
+        self.agent1 = factories.AgentFactory(game=self.game)
+        self.agent2 = factories.AgentFactory(game=self.game)
+        self.agent3 = factories.AgentFactory(game=self.game)
+
+        self.match1 = factories.MatchFactory(
+            player1=self.agent1,
+            player2=self.agent2,
+            season=self.season,
+            tournament=self.tournament,
+            game=self.game,
+            result=1,
+            ran=True,
+        )
+        self.match2 = factories.MatchFactory(
+            player1=self.agent2,
+            player2=self.agent3,
+            season=self.season,
+            tournament=self.tournament,
+            game=self.game,
+            result=1,
+            ran=True,
+        )
+        self.match3 = factories.MatchFactory(
+            player1=self.agent1,
+            player2=self.agent3,
+            season=self.season,
+            tournament=self.tournament,
+            game=self.game,
+            result=1,
+            ran=True,
+        )
+
+    def test_for_smoke(self):
+        # This calls create tournament internally
+        services.update_tournaments_state()
+
+        self.assertEqual(self.agent1.trophies.first().type, "FIRST")
+        self.assertEqual(self.agent2.trophies.first().type, "SECOND")
+        self.assertEqual(self.agent3.trophies.first().type, "THIRD")
+
+        self.assertEqual(self.tournament.trophies.count(), 3)
