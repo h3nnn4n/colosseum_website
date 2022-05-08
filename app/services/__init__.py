@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from app import models, serializers, tasks
 from app.services.ratings import update_ratings_from_match
+from app.services.trophy import create_trophies
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -57,6 +58,8 @@ def update_tournament_state(tournament):
         logger.info(
             f"{tournament.mode} Tournament {tournament.id} was set to done=true"
         )
+
+        create_trophies(tournament)
 
 
 def update_seasons_state():

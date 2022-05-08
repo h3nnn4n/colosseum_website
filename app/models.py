@@ -440,35 +440,40 @@ class Tournament(BaseModel):
         wins = defaultdict(int)
         loses = defaultdict(int)
         draws = defaultdict(int)
+        player_map = {}
 
         for match in self.matches.all():
+            # Dumb way to have an id -> Object mapping without extra queries
+            player_map[match.player1.id] = match.player1
+            player_map[match.player2.id] = match.player2
+
             if match.result == 0:
-                score[match.player1.name] += 0
-                score[match.player2.name] += 1
-                wins[match.player2.name] += 1
-                loses[match.player1.name] += 1
+                score[match.player1.id] += 0
+                score[match.player2.id] += 1
+                wins[match.player2.id] += 1
+                loses[match.player1.id] += 1
             if match.result == 0.5:
-                score[match.player1.name] += 0.5
-                score[match.player2.name] += 0.5
-                draws[match.player1.name] += 1
-                draws[match.player2.name] += 1
+                score[match.player1.id] += 0.5
+                score[match.player2.id] += 0.5
+                draws[match.player1.id] += 1
+                draws[match.player2.id] += 1
             if match.result == 1:
-                score[match.player1.name] += 1
-                score[match.player2.name] += 0
-                wins[match.player1.name] += 1
-                loses[match.player2.name] += 1
+                score[match.player1.id] += 1
+                score[match.player2.id] += 0
+                wins[match.player1.id] += 1
+                loses[match.player2.id] += 1
 
         sorted_score = sorted(score.items(), key=lambda x: x[1], reverse=True)
 
         results = []
-        for name, _ in sorted_score:
+        for id, _ in sorted_score:
             results.append(
                 TournamentResult(
-                    name=name,
-                    score=score[name],
-                    wins=wins[name],
-                    loses=loses[name],
-                    draws=draws[name],
+                    agent=player_map[id],
+                    score=score[id],
+                    wins=wins[id],
+                    loses=loses[id],
+                    draws=draws[id],
                 )
             )
         return results
@@ -518,11 +523,45 @@ class Tournament(BaseModel):
         )
 
 
+class Trophy(BaseModel):
+    TYPE_CHOICES = [
+        ("FIRST", "First Place"),
+        ("SECOND", "Second Place"),
+        ("THIRD", "Third Place"),
+    ]
+
+    game = models.ForeignKey("Game", on_delete=models.CASCADE, related_name="trophies")
+    season = models.ForeignKey(
+        "Season", on_delete=models.CASCADE, related_name="trophies"
+    )
+    tournament = models.ForeignKey(
+        "Tournament", on_delete=models.CASCADE, related_name="trophies"
+    )
+    agent = models.ForeignKey(
+        "Agent", on_delete=models.CASCADE, related_name="trophies"
+    )
+    type = models.CharField(
+        max_length=255,
+        choices=TYPE_CHOICES,
+    )
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["agent"]),
+            models.Index(fields=["game"]),
+            models.Index(fields=["season"]),
+            models.Index(fields=["tournament"]),
+            models.Index(fields=["type"]),
+        ]
+
+
 # Non ORM models.  Just stuff to make passing data around easier. Not that this
 # is ephemeral and not persisted on the database.
 class TournamentResult:
-    def __init__(self, *, name, score, wins, loses, draws):
-        self.name = name
+    def __init__(self, *, agent, score, wins, loses, draws):
+        self.agent = agent
+        self.name = agent.name
+        self.id = agent.id
         self.score = score
         self.wins = wins
         self.loses = loses
@@ -539,3 +578,26 @@ class TournamentResult:
     @property
     def games_played_count(self):
         return self.loses + self.draws + self.wins
+
+
+class SeasonTrophies:
+    def __init__(self, agent, first_places=0, second_places=0, third_places=0):
+        self.agent = agent
+        self.agent_name = agent.name
+        self.agent_id = agent.id
+        self.first_places = first_places
+        self.second_places = second_places
+        self.third_places = third_places
+
+    @property
+    def trophy_score(self):
+        """
+        One first place is equal 2 second places
+        One second place is equal 2 third places
+        One first place is equal 4 third places
+        """
+        return self.first_places + self.second_places * 0.5 + self.third_places * 0.25
+
+    @property
+    def trophy_count(self):
+        return self.first_places + self.second_places + self.third_places

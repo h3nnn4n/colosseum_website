@@ -66,6 +66,16 @@ class AgentDetailView(generic.DetailView):
     model = models.Agent
     template_name = "agents/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        trophies = services.trophy.trophies_for_agent(self.get_object())
+        context["first_place_trophies"] = trophies["FIRST"]
+        context["second_place_trophies"] = trophies["SECOND"]
+        context["third_place_trophies"] = trophies["THIRD"]
+
+        return context
+
 
 class AgentCreateView(LoginRequiredMixin, generic.CreateView):
     model = models.Agent
@@ -131,8 +141,11 @@ class SeasonDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         season = self.get_object()
         context["tournaments"] = season.tournaments.order_by("-end_date")[:25]
+        context["trophies"] = services.trophy.trophies_for_season(season)
+
         return context
 
 
