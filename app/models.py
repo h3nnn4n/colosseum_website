@@ -578,3 +578,22 @@ class TournamentResult:
     @property
     def games_played_count(self):
         return self.loses + self.draws + self.wins
+
+
+class SeasonTrophies:
+    def __init__(self, agent, first_places=0, second_places=0, third_places=0):
+        self.agent = agent
+        self.agent_name = agent.name
+        self.agent_id = agent.id
+        self.first_places = first_places
+        self.second_places = second_places
+        self.third_places = third_places
+
+    @property
+    def trophy_score(self):
+        """
+        One first place is equal 2 second places
+        One second place is equal 2 third places
+        One first place is equal 4 third places
+        """
+        return self.first_places + self.second_places * 0.5 + self.third_places * 0.25

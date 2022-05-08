@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from django.db.models import Count
 
-from app.models import Tournament, Trophy
+from app.models import SeasonTrophies, Tournament, Trophy
 
 
 PLACE_TO_TROPHY_TYPE = {
@@ -10,6 +10,33 @@ PLACE_TO_TROPHY_TYPE = {
     2: "SECOND",
     3: "THIRD",
 }
+
+
+TROPHY_TYPE_TO_PLACE = {
+    "FIRST": 1,
+    "SECOND": 2,
+    "THIRD": 3,
+}
+
+
+def trophies_for_season(season):
+    data = {}
+
+    for trophy in season.trophies.all():
+        if trophy.agent_id not in data.keys():
+            data[trophy.agent_id] = SeasonTrophies(trophy.agent)
+
+        match trophy.type:
+            case "FIRST":
+                data[trophy.agent_id].first_places += 1
+            case "SECOND":
+                data[trophy.agent_id].second_places += 1
+            case "THIRD":
+                data[trophy.agent_id].third_places += 1
+
+    rankings = sorted((data.values()), reverse=True, key=lambda t: t.trophy_score)
+
+    return rankings
 
 
 def trophies_for_agent(agent):

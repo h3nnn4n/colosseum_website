@@ -47,6 +47,45 @@
 
   <div class="row">
     <div class="col">
+      <h2> Rankings </h2>
+
+      <div>
+        <table class="table table-hover table-striped table-sm">
+          <thead>
+            <th scope="col"> Agent </th>
+            <th scope="col"> Trophies </th>
+          </thead>
+          <tbody>
+            {% for trophy in trophies %}
+            <tr>
+              <td>
+                <a href={% url 'agent_detail' trophy.agent_id %}>
+                  {{ trophy.agent_name }}
+                </a>
+              </td>
+              <td>
+                <span>
+                  🥇 {{ trophy.first_places }}
+                </span>
+                <span>
+                  🥈 {{ trophy.second_places }}
+                </span>
+                <span>
+                  🥉 {{ trophy.third_places }}
+                </span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
       <h2> Tournaments </h2>
 
       <div>

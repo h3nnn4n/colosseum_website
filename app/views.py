@@ -141,8 +141,11 @@ class SeasonDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         season = self.get_object()
         context["tournaments"] = season.tournaments.order_by("-end_date")[:25]
+        context["trophies"] = services.trophy.trophies_for_season(season)
+
         return context
 
 
