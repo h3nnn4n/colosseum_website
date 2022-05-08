@@ -597,3 +597,7 @@ class SeasonTrophies:
         One first place is equal 4 third places
         """
         return self.first_places + self.second_places * 0.5 + self.third_places * 0.25
+
+    @property
+    def trophy_count(self):
+        return self.first_places + self.second_places + self.third_places

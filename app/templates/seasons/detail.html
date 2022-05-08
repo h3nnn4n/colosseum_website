@@ -52,17 +52,24 @@
       <div>
         <table class="table table-hover table-striped table-sm">
           <thead>
+            <th scope="col"> </th>
             <th scope="col"> Agent </th>
             <th scope="col"> Trophies </th>
+            <th scope="col"> Trophy count </th>
           </thead>
           <tbody>
             {% for trophy in trophies %}
             <tr>
               <td>
+                {{ forloop.counter }}
+              </td>
+
+              <td>
                 <a href={% url 'agent_detail' trophy.agent_id %}>
                   {{ trophy.agent_name }}
                 </a>
               </td>
+
               <td>
                 <span>
                   🥇 {{ trophy.first_places }}
@@ -73,6 +80,10 @@
                 <span>
                   🥉 {{ trophy.third_places }}
                 </span>
+              </td>
+
+              <td>
+                {{ trophy.trophy_count }}
               </td>
             </tr>
             {% endfor %}
