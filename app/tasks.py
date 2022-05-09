@@ -34,7 +34,7 @@ def metrics_logger():
     """
     metrics._push_metric(
         {
-            "fields": {"value": match_queue.queue_size()},
+            "fields": {"value": int(match_queue.queue_size())},
             "measurement": "match_queue_size",
             "time": timezone.now().isoformat(),
         }
@@ -43,7 +43,7 @@ def metrics_logger():
     unplayed_matches_count = models.Match.objects.filter(ran=False).count()
     metrics._push_metric(
         {
-            "fields": {"value": unplayed_matches_count},
+            "fields": {"value": int(unplayed_matches_count)},
             "measurement": "unplayed_matches_count",
             "time": timezone.now().isoformat(),
         }
