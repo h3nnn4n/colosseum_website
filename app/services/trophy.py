@@ -1,8 +1,14 @@
+import logging
 from collections import defaultdict
 
+from django.conf import settings
 from django.db.models import Count
 
 from app.models import SeasonTrophies, Tournament, Trophy
+
+
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("TROPHY_SERVICE")
 
 
 PLACE_TO_TROPHY_TYPE = {
@@ -66,6 +72,12 @@ def create_trophies(tournament):
 
     if tournament.pending_matches_count > 0:
         raise ValueError(f"Complete tournament {tournament.id} has pending matches")
+
+    if tournament.trophies.count() > 0:
+        logger.warning(
+            f"Tournament {tournament.id} had {tournament.trophies.count()} trophies. Recreating them"
+        )
+        tournament.trophies.delete()
 
     results = tournament.ratings
     top_3_scores = sorted([result.score for result in results], reverse=True)[:3]

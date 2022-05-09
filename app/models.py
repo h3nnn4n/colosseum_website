@@ -548,11 +548,14 @@ class Trophy(BaseModel):
     class Meta:
         indexes = [
             models.Index(fields=["agent"]),
+            models.Index(fields=["agent", "tournament"]),
             models.Index(fields=["game"]),
             models.Index(fields=["season"]),
             models.Index(fields=["tournament"]),
             models.Index(fields=["type"]),
         ]
+
+        unique_together = [["agent", "tournament"]]
 
 
 # Non ORM models.  Just stuff to make passing data around easier. Not that this

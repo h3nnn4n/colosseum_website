@@ -3,13 +3,11 @@
 from django.db import migrations
 
 
-def backfill_trophies(apps, schema_editor):
-    from app import services
-
-    services.trophy.backfill_missing_trophies()
-
-
 class Migration(migrations.Migration):
     dependencies = [("app", "0082_auto_20220508_1558")]
 
-    operations = [migrations.RunPython(backfill_trophies)]
+    operations = [
+        migrations.RunPython(
+            migrations.RunPython.noop, reverse_code=migrations.RunPython.noop
+        )
+    ]
