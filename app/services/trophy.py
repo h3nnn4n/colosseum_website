@@ -80,7 +80,7 @@ def create_trophies(tournament):
         tournament.trophies.delete()
 
     results = tournament.ratings
-    top_3_scores = sorted([result.score for result in results], reverse=True)[:3]
+    top_3_scores = sorted([result.score for result in set(results)], reverse=True)[:3]
     rankings = defaultdict(list)
 
     for result in results:
