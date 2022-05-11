@@ -1,6 +1,7 @@
 import json
 import logging
 import lzma
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 import humanize
@@ -144,7 +145,14 @@ class SeasonDetailView(generic.DetailView):
 
         season = self.get_object()
         context["tournaments"] = season.tournaments.order_by("-end_date")[:25]
-        context["trophies"] = services.trophy.trophies_for_season(season)
+        trophies = services.trophy.trophies_for_season(season)
+
+        trophies_by_game = defaultdict(list)
+        for trophy in trophies:
+            game = trophy.agent.game.pretty_name
+            trophies_by_game[game].append(trophy)
+
+        context["trophies_by_game"] = dict(trophies_by_game)
 
         return context
 

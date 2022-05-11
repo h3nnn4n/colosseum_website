@@ -2,6 +2,7 @@ import logging
 from collections import defaultdict
 
 from django.conf import settings
+from django.db import IntegrityError
 from django.db.models import Count
 
 from app.models import SeasonTrophies, Tournament, Trophy
@@ -80,7 +81,7 @@ def create_trophies(tournament):
         tournament.trophies.delete()
 
     results = tournament.ratings
-    top_3_scores = sorted([result.score for result in results], reverse=True)[:3]
+    top_3_scores = sorted([result.score for result in set(results)], reverse=True)[:3]
     rankings = defaultdict(list)
 
     for result in results:
@@ -90,13 +91,18 @@ def create_trophies(tournament):
         trophy_type = PLACE_TO_TROPHY_TYPE[place + 1]
 
         for agent in rankings[score]:
-            Trophy.objects.create(
-                agent=agent,
-                game=tournament.game,
-                season=tournament.season,
-                tournament=tournament,
-                type=trophy_type,
-            )
+            try:
+                Trophy.objects.create(
+                    agent=agent,
+                    game=tournament.game,
+                    season=tournament.season,
+                    tournament=tournament,
+                    type=trophy_type,
+                )
+            except IntegrityError as e:
+                logger.warning(
+                    f"failed to generate trophy for {agent.id=} {tournament.id=} with error: {e}"
+                )
 
 
 def backfill_missing_trophies():
@@ -107,11 +113,14 @@ def backfill_missing_trophies():
         .filter(stuff=0)
     )
 
-    print(f"backfilling {tournaments.count()} tournaments with trophies")
+    count = tournaments.count()
 
-    for tournament in tournaments:
+    print(f"backfilling {count} tournaments with trophies")
+
+    for index, tournament in enumerate(tournaments):
         try:
             create_trophies(tournament)
+            print(f"{index} / {count} : {tournament.id=}")
         except ValueError as e:
             print(
                 f"failed to create trophies for tournament {tournament} with error: {e}"
