@@ -113,11 +113,14 @@ def backfill_missing_trophies():
         .filter(stuff=0)
     )
 
-    print(f"backfilling {tournaments.count()} tournaments with trophies")
+    count = tournaments.count()
 
-    for tournament in tournaments:
+    print(f"backfilling {count} tournaments with trophies")
+
+    for index, tournament in enumerate(tournaments):
         try:
             create_trophies(tournament)
+            print(f"{index} / {count} : {tournament.id=}")
         except ValueError as e:
             print(
                 f"failed to create trophies for tournament {tournament} with error: {e}"
