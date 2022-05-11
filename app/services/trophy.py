@@ -2,6 +2,7 @@ import logging
 from collections import defaultdict
 
 from django.conf import settings
+from django.db import IntegrityError
 from django.db.models import Count
 
 from app.models import SeasonTrophies, Tournament, Trophy
@@ -90,13 +91,18 @@ def create_trophies(tournament):
         trophy_type = PLACE_TO_TROPHY_TYPE[place + 1]
 
         for agent in rankings[score]:
-            Trophy.objects.create(
-                agent=agent,
-                game=tournament.game,
-                season=tournament.season,
-                tournament=tournament,
-                type=trophy_type,
-            )
+            try:
+                Trophy.objects.create(
+                    agent=agent,
+                    game=tournament.game,
+                    season=tournament.season,
+                    tournament=tournament,
+                    type=trophy_type,
+                )
+            except IntegrityError as e:
+                logger.warning(
+                    f"failed to generate trophy for {agent.id=} {tournament.id=} with error: {e}"
+                )
 
 
 def backfill_missing_trophies():
