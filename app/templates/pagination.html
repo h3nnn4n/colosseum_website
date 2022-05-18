@@ -1,0 +1,41 @@
+{% if list_items.paginator.num_pages > 1 %}
+  <div class="d-flex justify-content-center">
+    <nav aria-label="generic navigation">
+        <ul class="pagination">
+          {% if list_items.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="{% url context_object_name %}?page=1">First</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="{% url context_object_name %}?page={{ list_items.previous_page_number }}">Prev</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link">First</a>
+            </li>
+            <li class="page-item disabled">
+              <a class="page-link">Prev</a>
+            </li>
+          {% endif %}
+          <li class="page-item active">
+            <a class="page-link">{{list_items.number}}</a>
+          </li>
+          {% if list_items.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="{% url context_object_name %}?page={{ list_items.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="{% url context_object_name %}?page={{ list_items.paginator.num_pages }}">Last</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link">Next</a>
+            </li>
+            <li class="page-item disabled">
+              <a class="page-link">Last</a>
+            </li>
+          {% endif %}
+        </ul>
+    </nav>
+  </div>
+{% endif %}

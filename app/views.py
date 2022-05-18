@@ -11,6 +11,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
+from django.core.paginator import Paginator
 from django.db.models import F
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -128,11 +129,16 @@ class SeasonListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["seasons"] = models.Season.objects.all().order_by("-end_date")[:25]
+        context["context_object_name"] = "seasons"
         return context
 
     def get_queryset(self):
-        return models.Season.objects.all()
+        season_list = models.Season.objects.all().order_by("-end_date")
+        season_page_number = utils.validate_page_number(
+            self.request.GET.get("page"), len(season_list), 25
+        )
+
+        return Paginator(season_list, 25).page(season_page_number)
 
 
 class SeasonDetailView(generic.DetailView):
@@ -153,16 +159,27 @@ class MatchListView(generic.ListView):
     template_name = "matches/index.html"
     context_object_name = "matches"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["context_object_name"] = "matches"
+        return context
+
     def get_queryset(self):
-        return (
+        match_list = (
             models.Match.objects.filter(ran=True)
             .prefetch_related("game")
             .prefetch_related("player1")
             .prefetch_related("player2")
             .prefetch_related("season")
             .prefetch_related("tournament")
-            .order_by("-ran_at")[0:25]
+            .order_by("-ran_at")
         )
+
+        match_page_number = utils.validate_page_number(
+            self.request.GET.get("page"), len(match_list), 25
+        )
+
+        return Paginator(match_list, 25).page(match_page_number)
 
 
 class MatchDetailView(generic.DetailView):
@@ -200,13 +217,25 @@ class TournamentListView(generic.ListView):
     template_name = "tournaments/index.html"
     context_object_name = "tournaments"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["context_object_name"] = "tournaments"
+        return context
+
     def get_queryset(self):
-        return (
+        tournament_list = (
             models.Tournament.objects.filter(done=False)
             .prefetch_related("game")
             .prefetch_related("season")
             .order_by("-season__created_at", "game__name", "-created_at")[0:25]
         )
+
+        tournament_page_number = utils.validate_page_number(
+            self.request.GET.get("page"), len(tournament_list), 25
+        )
+
+        return Paginator(tournament_list, 25).page(tournament_page_number)
 
 
 class TournamentDetailView(generic.DetailView):
