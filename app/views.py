@@ -170,9 +170,23 @@ class MatchListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["context_object_name"] = "matches"
+        context["match_options"] = {
+            "Agent 1": "player1",
+            "Agent 2": "player2",
+            "Result": "disabled",
+            "Tournament": "tournament",
+            "Season": "disabled",
+            "Game": "game",
+            "When": "date",
+            "Replay": "disabled",
+        }
         return context
 
     def get_queryset(self):
+
+        # search = self.request.GET.get("search")
+        # search_by = self.request.GET.get("search_by")
+
         match_list = (
             models.Match.objects.filter(ran=True)
             .prefetch_related("game")

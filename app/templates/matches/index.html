@@ -6,20 +6,18 @@
 
 {% block content %}
 
-<h1> Matches </h1>
+<div class="d-flex flex-row justify-content-between">
+  <h1> Matches </h1>
+  {% include 'filter.html' with options=options %}
+</div>
 
 <div>
   <table class="table table-hover table-striped table-sm">
     <thead>
-      <th scope="col">  </th>
-      <th scope="col"> Agent 1 </th>
-      <th scope="col"> Agent 2 </th>
-      <th scope="col"> Result </th>
-      <th scope="col"> Tournament </th>
-      <th scope="col"> Season </th>
-      <th scope="col"> Game </th>
-      <th scope="col"> When </th>
-      <th scope="col"> Replay </th>
+      <th scope="col"></th>
+      {% for option in match_options %}
+        <th scope="col">{{ option }}</th>
+      {% endfor %}
     </thead>
     <tbody>
       {% for match in matches %}
