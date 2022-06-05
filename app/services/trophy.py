@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import IntegrityError
 from django.db.models import Count
 
+from app import tasks
 from app.models import SeasonTrophies, Tournament, Trophy
 
 
@@ -125,3 +126,8 @@ def backfill_missing_trophies():
             print(
                 f"failed to create trophies for tournament {tournament} with error: {e}"
             )
+
+
+def regen_all_trophies():
+    for tournament in Tournament.objects.filter(done=True).iterator():
+        tasks.create_trophies.delay(tournament.id)
