@@ -131,5 +131,5 @@ def backfill_missing_trophies():
 
 
 def regen_all_trophies():
-    for tournament in Tournament.objects.filter(done=True).iterator():
+    for tournament in Tournament.objects.filter(done=True).only("id").iterator():
         tasks.create_trophies.delay(tournament.id)
