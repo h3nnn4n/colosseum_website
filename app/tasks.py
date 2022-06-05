@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.utils import timezone
 from django_redis import get_redis_connection
@@ -5,6 +7,10 @@ from django_redis import get_redis_connection
 from app import metrics, models, services
 from app.celery import app as celery
 from app.services import automated_seasons, automated_tournaments, match_queue
+
+
+logging.config.dictConfig(settings.LOGGING)
+logger = logging.getLogger("TASKS")
 
 
 @celery.task
@@ -81,3 +87,10 @@ def heartbeat():
     redis = get_redis_connection("default")
     heartbeat_key = settings.CELERY_HEARTBEAT_KEY
     redis.set(heartbeat_key, timezone.now().isoformat())
+
+
+@celery.task
+def create_trophies(tournament_id):
+    tournament = models.Tournament.objects.get(id=tournament_id)
+    logger.info(f"Creating trophies for {tournament.id} {tournament.name}")
+    services.trophy.create_trophies(tournament)

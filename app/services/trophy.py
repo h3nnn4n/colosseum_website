@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import IntegrityError
 from django.db.models import Count
 
+from app import tasks
 from app.models import SeasonTrophies, Tournament, Trophy
 
 
@@ -81,7 +82,9 @@ def create_trophies(tournament):
         tournament.trophies.all().delete()
 
     results = tournament.ratings
-    top_3_scores = sorted([result.score for result in set(results)], reverse=True)[:3]
+    top_3_scores = sorted(
+        list(set([result.score for result in set(results)])), reverse=True
+    )[:3]
     rankings = defaultdict(list)
 
     for result in results:
@@ -125,3 +128,8 @@ def backfill_missing_trophies():
             print(
                 f"failed to create trophies for tournament {tournament} with error: {e}"
             )
+
+
+def regen_all_trophies():
+    for tournament in Tournament.objects.filter(done=True).iterator():
+        tasks.create_trophies.delay(tournament.id)
