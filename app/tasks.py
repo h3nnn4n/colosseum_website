@@ -4,7 +4,7 @@ from django_redis import get_redis_connection
 
 from app import metrics, models, services
 from app.celery import app as celery
-from app.services import automated_tournaments, match_queue
+from app.services import automated_seasons, automated_tournaments, match_queue
 
 
 @celery.task
@@ -19,8 +19,8 @@ def automated_manager():
     """
     Creates things automatically
     """
-    services.update_seasons_state()
-    services.create_automated_seasons()
+    automated_seasons.update_seasons_state()
+    automated_seasons.create_automated_seasons()
     automated_tournaments.create_automated_tournaments()
 
     for tournament in models.Tournament.objects.filter(done=False):

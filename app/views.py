@@ -646,8 +646,8 @@ class AutomatedSeasonsAPIView(APIView):
     queryset = models.Season.objects.none()
 
     def post(self, request):
-        services.update_seasons_state()
-        services.create_automated_seasons()
+        services.automated_seasons.update_seasons_state()
+        services.automated_seasons.create_automated_seasons()
         return Response()
 
 
