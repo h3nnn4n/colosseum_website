@@ -10,7 +10,7 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import F, QuerySet
+from django.db.models import Count, F, QuerySet
 from django.utils import timezone
 from django.utils.functional import cached_property
 
@@ -235,6 +235,9 @@ class Season(BaseModel):
 class GameQuerySet(QuerySet):
     def active(self):
         return self.filter(active=True)
+
+    def with_agents(self):
+        return self.annotate(agent_count=Count("agents__id")).filter(agent_count__gt=0)
 
 
 class Game(BaseModel):
