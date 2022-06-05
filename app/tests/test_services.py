@@ -198,3 +198,32 @@ class TrophyTestCase(TestCase):
         self.assertEqual(self.agent3.trophies.first().type, "THIRD")
 
         self.assertEqual(self.tournament.trophies.count(), 3)
+
+    def test_tie(self):
+        self.agent4 = factories.AgentFactory(game=self.game)
+        for a1, a2 in [
+            (self.agent3, self.agent4),
+            (self.agent4, self.agent3),
+            (self.agent2, self.agent4),
+            (self.agent1, self.agent2),
+        ]:
+            factories.MatchFactory(
+                player1=a1,
+                player2=a2,
+                season=self.season,
+                tournament=self.tournament,
+                game=self.game,
+                result=1,
+                ran=True,
+            )
+
+        services.update_tournaments_state()
+        self.tournament.refresh_from_db()
+        trophy.create_trophies(self.tournament)
+
+        self.assertEqual(self.agent1.trophies.first().type, "FIRST")
+        self.assertEqual(self.agent2.trophies.first().type, "SECOND")
+        self.assertEqual(self.agent3.trophies.first().type, "THIRD")
+        self.assertEqual(self.agent4.trophies.first().type, "THIRD")
+
+        self.assertEqual(self.tournament.trophies.count(), 4)
