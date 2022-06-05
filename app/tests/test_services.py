@@ -4,7 +4,7 @@ from django.test import TestCase
 from freezegun import freeze_time
 
 from app import factories, models, services
-from app.services import automated_tournaments, match_queue, ratings
+from app.services import automated_seasons, automated_tournaments, match_queue, ratings
 
 
 class RatingsServiceTestCase(TestCase):
@@ -62,18 +62,18 @@ class UpdateSeasonStatesTestCase(TestCase):
         with freeze_time("2021-05-01"):
             self.assertEqual(models.Season.objects.filter(active=True).count(), 0)
 
-            services.create_automated_seasons()
+            automated_seasons.create_automated_seasons()
 
             self.assertEqual(models.Season.objects.filter(active=True).count(), 1)
 
-            services.update_seasons_state()
+            automated_seasons.update_seasons_state()
 
             self.assertEqual(models.Season.objects.filter(active=True).count(), 1)
 
         with freeze_time("2021-06-01"):
             self.assertEqual(models.Season.objects.filter(active=True).count(), 1)
 
-            services.update_seasons_state()
+            automated_seasons.update_seasons_state()
 
             self.assertEqual(models.Season.objects.filter(active=True).count(), 0)
 
@@ -88,39 +88,39 @@ class CreateAutomatedSeasonsTestCase(TestCase):
 
     def test_create_first_season(self):
         self.assertEqual(models.Season.objects.count(), 0)
-        services.create_automated_seasons()
+        automated_seasons.create_automated_seasons()
         self.assertEqual(models.Season.objects.count(), 1)
 
     def test_dont_create_new_season_if_there_is_an_active_one(self):
         self.assertEqual(models.Season.objects.count(), 0)
-        services.create_automated_seasons()
+        automated_seasons.create_automated_seasons()
         self.assertEqual(models.Season.objects.count(), 1)
-        services.create_automated_seasons()
+        automated_seasons.create_automated_seasons()
         self.assertEqual(models.Season.objects.count(), 1)
 
     def test_create_new_season_if_there_isnt_an_active_one(self):
         with freeze_time("2021-05-01"):
             self.assertEqual(models.Season.objects.count(), 0)
-            services.create_automated_seasons()
+            automated_seasons.create_automated_seasons()
             self.assertEqual(models.Season.objects.count(), 1)
-            services.create_automated_seasons()
+            automated_seasons.create_automated_seasons()
             self.assertEqual(models.Season.objects.count(), 1)
 
         with freeze_time("2021-07-01"):
-            services.update_seasons_state()
+            automated_seasons.update_seasons_state()
 
-            services.create_automated_seasons()
+            automated_seasons.create_automated_seasons()
             self.assertEqual(models.Season.objects.count(), 2)
 
     def test_create_agent_ratings(self):
         self.assertEqual(models.AgentRatings.objects.count(), 0)
-        services.create_automated_seasons()
+        automated_seasons.create_automated_seasons()
         self.assertEqual(models.AgentRatings.objects.count(), 4)
 
 
 class MatchQueueTestCase(TestCase):
     def test_for_smoke(self):
-        services.create_automated_seasons()
+        automated_seasons.create_automated_seasons()
         automated_tournaments.create_automated_tournaments()
         services.update_tournaments_state()
         match_queue.regenerate_queue()
