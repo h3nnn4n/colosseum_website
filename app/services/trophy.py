@@ -78,7 +78,7 @@ def create_trophies(tournament):
         logger.warning(
             f"Tournament {tournament.id} had {tournament.trophies.count()} trophies. Recreating them"
         )
-        tournament.trophies.delete()
+        tournament.trophies.all().delete()
 
     results = tournament.ratings
     top_3_scores = sorted([result.score for result in set(results)], reverse=True)[:3]
