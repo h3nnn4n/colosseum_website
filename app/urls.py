@@ -51,7 +51,7 @@ urlpatterns = [
     # Home
     path(
         "home/",
-        RedirectView.as_view(url="home/", permanent=False),
+        RedirectView.as_view(url="", permanent=False),
         name="redirect_to_home",
     ),
     path("", views.HomeView.as_view(), name="home"),
