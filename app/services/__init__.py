@@ -57,6 +57,13 @@ def update_tournament_state(tournament):
             f"{tournament.mode} Tournament {tournament.id} was set to done=true"
         )
 
+    if tournament.done and not tournament.has_pending_matches:
+        """
+        This is important for timed tournaments, since they may be "done", in
+        the sense that the time window for it has passed, but there may be
+        pending matches to be played.  These matches were created before the
+        tournament was marked as done.
+        """
         create_trophies(tournament)
 
 
