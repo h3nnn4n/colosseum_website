@@ -49,11 +49,7 @@ urlpatterns = [
     # About page
     path("about/", views.AboutView.as_view(), name="about"),
     # Home
-    path(
-        "home/",
-        RedirectView.as_view(url="", permanent=False),
-        name="redirect_to_home",
-    ),
+    path("home/", views.HomeView.as_view(), name="home_old"),
     path("", views.HomeView.as_view(), name="home"),
     # API
     path("api/", include(router.urls)),
