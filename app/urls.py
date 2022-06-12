@@ -50,9 +50,11 @@ urlpatterns = [
     path("about/", views.AboutView.as_view(), name="about"),
     # Home
     path(
-        "", RedirectView.as_view(url="home/", permanent=True), name="redirect_to_home"
+        "home/",
+        RedirectView.as_view(url="home/", permanent=False),
+        name="redirect_to_home",
     ),
-    path("home/", views.HomeView.as_view(), name="home"),
+    path("/", views.HomeView.as_view(), name="home"),
     # API
     path("api/", include(router.urls)),
     path("api/next_match/", views.NextMatchAPIView.as_view(), name="next_match"),
