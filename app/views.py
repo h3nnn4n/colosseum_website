@@ -412,6 +412,7 @@ class HomeView(generic.TemplateView):
 
 # Debug Views
 
+
 class DebugListView(generic.TemplateView):
     template_name = "debug/index.html"
 
@@ -424,9 +425,10 @@ class DebugListView(generic.TemplateView):
             {"name": "Tainted Matches", "url": "tainted_matches_debug"},
             {"name": "Redis Info", "url": "redis_info"},
             {"name": "Ping", "url": "ping"},
-            ]
+        ]
 
         return context
+
 
 class MatchQueueDebugDetailView(generic.TemplateView):
     template_name = "debug/match_queue.html"
@@ -448,7 +450,9 @@ class MatchQueueDebugDetailView(generic.TemplateView):
 
         return context
 
+
 # API Views
+
 
 class PingAPIView(APIView):
     permission_classes = []
