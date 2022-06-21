@@ -410,8 +410,45 @@ class HomeView(generic.TemplateView):
         return context
 
 
-# API Views
+# Debug Views
 
+class DebugListView(generic.TemplateView):
+    template_name = "debug/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["context_object_name"] = "debug"
+        context["endpoint_list"] = [
+            {"name": "Match Queue", "url": "match_queue_debug_view"},
+            {"name": "Tainted Matches", "url": "tainted_matches_debug"},
+            {"name": "Redis Info", "url": "redis_info"},
+            {"name": "Ping", "url": "ping"},
+            ]
+
+        return context
+
+class MatchQueueDebugDetailView(generic.TemplateView):
+    template_name = "debug/match_queue.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["context_object_name"] = "match_queue"
+        context["title"] = "Match Queue Debug Api"
+        context["match_ids"] = []
+
+        redis = get_redis_connection("default")
+        queue_length = redis.llen(settings.MATCH_QUEUE_KEY)
+        match_ids = redis.lrange(settings.MATCH_QUEUE_KEY, 0, queue_length)
+
+        for match in match_ids:
+            context["match_ids"].append(match.decode("utf-8"))
+
+        context["count"] = len(match_ids)
+
+        return context
+
+# API Views
 
 class PingAPIView(APIView):
     permission_classes = []

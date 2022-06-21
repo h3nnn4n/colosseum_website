@@ -1,0 +1,15 @@
+{% extends 'debug/base_debug.html' %}
+
+{% block debug %}
+
+<div>
+    <hr class="my-4">
+    <h5 class="text-secondary">Match_ids: </h5>
+    <div class="list-group mb-3">
+        {% for id in match_ids %}
+            <a href={% url 'match_detail' id %} class="list-group-item list-group-item-action text-danger">"{{id}}"</a>
+        {% endfor %}
+      </div>
+</div>
+
+{% endblock %}
