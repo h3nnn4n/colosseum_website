@@ -82,4 +82,14 @@ urlpatterns = [
         views.TaintedMatchesDebugAPIView.as_view(),
         name="tainted_matches_debug",
     ),
+    path(
+        "debug/",
+        views.DebugListView.as_view(),
+        name="debugs",
+    ),
+    path(
+        "debug/match_queue",
+        views.MatchQueueDebugDetailView.as_view(),
+        name="match_queue_debug_view",
+    ),
 ]
