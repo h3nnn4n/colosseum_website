@@ -18,7 +18,7 @@ def create_automated_tournaments():
             )
             continue
 
-        # _create_automated_tournament("Daily {} Tournament #{}", "TIMED", game)
+        _create_automated_tournament("Daily {} Tournament #{}", "TIMED", game)
         _create_automated_tournament("{} Tournament #{}", "ROUND_ROBIN", game)
         _create_automated_tournament(
             "{} Double RR Tournament #{}", "DOUBLE_ROUND_ROBIN", game
