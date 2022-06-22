@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load elo %}
+
+{% block content %}
+
+<div class="container py-2">
+    <h1>{{ title }}</h1>
+    <div class="list-group">
+        {% for endpoint in endpoint_list %}
+            <a href={% url endpoint.url %} class="list-group-item list-group-item-action">{{ endpoint.name }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
