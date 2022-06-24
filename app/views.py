@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.paginator import Paginator
 from django.db.models import F
@@ -437,14 +438,21 @@ class MatchQueueDebugDetailView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         context["context_object_name"] = "match_queue"
         context["title"] = "Match Queue Debug Api"
-        context["match_ids"] = []
+        context["matches"] = []
 
         redis = get_redis_connection("default")
         queue_length = redis.llen(settings.MATCH_QUEUE_KEY)
         match_ids = redis.lrange(settings.MATCH_QUEUE_KEY, 0, queue_length)
 
-        for match in match_ids:
-            context["match_ids"].append(match.decode("utf-8"))
+        for match_id in match_ids:
+            match_id = match_id.decode("utf-8")
+
+            try:
+                match = models.Match.objects.get(id=match_id)
+                context["matches"].append(match)
+            except ObjectDoesNotExist:
+                # TODO: We should find a way to handle this not silently
+                pass
 
         context["count"] = len(match_ids)
 
