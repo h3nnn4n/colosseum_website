@@ -34,12 +34,12 @@ class AutomatedManagerTestcase(TestCase):
     def test_creates_automated_tournaments(self):
         self.assertEqual(models.Tournament.objects.count(), 1)
         tasks.automated_manager()
-        self.assertEqual(models.Tournament.objects.count(), 5)
+        self.assertEqual(models.Tournament.objects.count(), 4)
 
     def test_creates_matches(self):
         self.assertEqual(models.Match.objects.filter(ran=False).count(), 0)
         tasks.automated_manager()
-        self.assertEqual(models.Match.objects.filter(ran=False).count(), 8)
+        self.assertEqual(models.Match.objects.filter(ran=False).count(), 6)
 
 
 class MetricsLoggerTestCase(TestCase):
