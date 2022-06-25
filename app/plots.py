@@ -122,8 +122,11 @@ def plot_agent_elo(agent, trailing_average_n=15):
         .order_by("ran_at")
     )
 
-    x = [d["ran_at"] for d in data]
-    y = [d[elo_key] for d in data]
+    # It is possible to have a match where we, for some reason, didn't
+    # calculate the elo change. In that case we just skip it Null values.
+    # The system should pick that up automatically to reevaluate
+    x = [d["ran_at"] for d in data if d[elo_key] is not None]
+    y = [d[elo_key] for d in data if d[elo_key] is not None]
     y_ta = []
     trailing_average_queue = []
 
