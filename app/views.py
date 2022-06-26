@@ -60,6 +60,7 @@ class AgentListView(generic.ListView):
                 elo_rating=F("ratings__elo"),
                 owner_username=F("owner__username"),
             )
+            .filter(active=True)
             .filter(ratings__season__active=True, ratings__season__main=True)
             .order_by("-elo_rating")
         )
