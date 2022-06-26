@@ -6,6 +6,7 @@ from app import models
 @admin.register(models.Agent)
 class AgentAdmin(admin.ModelAdmin):
     list_display = ("name", "id", "owner", "wins", "loses", "draws", "score", "elo")
+    list_filter = ("owner", "game__name")
     search_fields = ("name", "id", "owner")
 
 
