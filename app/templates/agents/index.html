@@ -20,7 +20,7 @@
         <th scope="col"> Games </th>
       </thead>
       <tbody>
-        {% for agent in game.agents.by_elo %}
+        {% for agent in game.agents.active.by_elo %}
         <tr>
           <td>
             <a href={% url 'agent_detail' agent.id %}>
