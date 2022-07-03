@@ -198,7 +198,10 @@ LOGGING = {
             "class": "django_loki_reloaded.LokiHandler",
             "url": f"http://{config('LOKI_HOST')}/loki/api/v1/push",
             "tags": {"source": "django"},
-            "auth": (config("LOKI_USER"), config("LOKI_PASSWORD")),
+            "auth": (
+                config("LOKI_USER", default=None),
+                config("LOKI_PASSWORD", default=None),
+            ),
             "formatter": "loki",
             "mode": "thread",
         },
