@@ -196,7 +196,7 @@ LOGGING = {
         "console": {"class": "logging.StreamHandler"},
         "loki": {
             "class": "django_loki_reloaded.LokiHandler",
-            "url": f"http://{config('LOKI_HOST')}/loki/api/v1/push",
+            "url": f"http://{config('LOKI_HOST', default='localhost:3100')}/loki/api/v1/push",
             "tags": {"source": "django"},
             "auth": (
                 config("LOKI_USER", default=None),
