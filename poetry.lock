@@ -498,7 +498,7 @@ tests = ["coverage"]
 
 [[package]]
 name = "django-loki-reloaded"
-version = "1.0.2"
+version = "1.0.3"
 description = "A non-blocking django logging handler for Loki"
 category = "main"
 optional = false
@@ -1927,7 +1927,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.*"
-content-hash = "23a171c20a60dd62c3379696daab06c7ad9ff9267a0fff18ebea609ab44f8cb1"
+content-hash = "b5cfd2e9f950b765f943d459a1d10445aa5bcd8ea3620631477f51355fda93bd"
 
 [metadata.files]
 amqp = [
@@ -2194,8 +2194,8 @@ django-js-asset = [
     {file = "django_js_asset-2.0.0.tar.gz", hash = "sha256:adc1ee1efa853fad42054b540c02205344bb406c9bddf87c9e5377a41b7db90f"},
 ]
 django-loki-reloaded = [
-    {file = "django-loki-reloaded-1.0.2.tar.gz", hash = "sha256:84bc0b01742fa4c7f2c9793cc1e0973328af637e17ddb23c53042d2bca201407"},
-    {file = "django_loki_reloaded-1.0.2-py3-none-any.whl", hash = "sha256:4c59301d7a3b816ec25f8aaf81b34eec3f055a76c80a3c807efaa436b470366e"},
+    {file = "django-loki-reloaded-1.0.3.tar.gz", hash = "sha256:97877c2114e184ef7936a58a07f26d244c4100d1ff26955848d1a5bb295bf07a"},
+    {file = "django_loki_reloaded-1.0.3-py3-none-any.whl", hash = "sha256:a98ce9dd0300705756ee532284bb4e16e42851c16edbf2dfe4cf9176930147b7"},
 ]
 django-memoize = [
     {file = "django-memoize-2.3.1.tar.gz", hash = "sha256:62ac4807710ecf22a7397d008d64d0f798e7230482d4b6072d916cac852a47cd"},

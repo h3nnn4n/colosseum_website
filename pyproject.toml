@@ -40,7 +40,7 @@ python-decouple = "^3.5"
 tld = "^0.12.6"
 fontawesome-free = "^5.15.4"
 django-cors-headers = "^3.11.0"
-django-loki-reloaded = "^1.0.2"
+django-loki-reloaded = "1.0.3"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.29.0"
