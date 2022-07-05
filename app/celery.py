@@ -1,5 +1,6 @@
 from celery import Celery
 from celery.schedules import crontab
+from celery.signals import setup_logging
 from dotenv import load_dotenv
 
 
@@ -35,5 +36,15 @@ app.conf.beat_schedule = {
         "schedule": crontab(minute="*/5"),  # Every 5th minute
     },
 }
+
+
+@setup_logging.connect
+def config_loggers(*args, **kwargs):
+    from logging.config import dictConfig
+
+    from django.conf import settings
+
+    dictConfig(settings.LOGGING)
+
 
 app.autodiscover_tasks()

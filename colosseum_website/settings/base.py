@@ -210,7 +210,12 @@ LOGGING = {
             "mode": "thread",
         },
     },
-    "loggers": {"": {"handlers": ["console", "loki"], "level": "INFO"}},
+    "loggers": {
+        "": {
+            "handlers": ["console", "loki"],
+            "level": "INFO",
+        }
+    },
 }
 
 
