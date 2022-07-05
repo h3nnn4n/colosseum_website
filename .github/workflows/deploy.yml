@@ -9,10 +9,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ansible
+
     steps:
       - uses: actions/checkout@v2
         with:
           repository: "h3nnn4n/colosseum_infra"
+          ref: production
 
       - name: Setup ssh
         uses: shimataro/ssh-key-action@v2
@@ -22,20 +27,14 @@ jobs:
           if_key_exists: fail
 
       - name: Install requirements
-        run: |
-          cd ansible
-          ansible-galaxy install -r requirements.yml
+        run: ansible-galaxy install -r requirements.yml
 
       - name: Deploy to webservers
-        run: |
-          cd ansible
-          ansible-playbook -i environments/production/  web_servers.yml --tags web_server
+        run: ansible-playbook -i environments/production/  web_servers.yml --tags web_server
         env:
           VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
 
       - name: Deploy to celery workers
-        run: |
-          cd ansible
-          ansible-playbook -i environments/production/  celery_workers.yml --tags celery_worker
+        run: ansible-playbook -i environments/production/  celery_workers.yml --tags celery_worker
         env:
           VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
