@@ -30,11 +30,11 @@ jobs:
         run: ansible-galaxy install -r requirements.yml
 
       - name: Deploy to webservers
-        run: ansible-playbook -i environments/production/  web_servers.yml --tags web_server
+        run: ansible-playbook -i environments/production  web_servers.yml
         env:
           VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
 
       - name: Deploy to celery workers
-        run: ansible-playbook -i environments/production/  celery_workers.yml --tags celery_worker
+        run: ansible-playbook -i environments/production celery_workers.yml
         env:
           VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
