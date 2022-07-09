@@ -727,3 +727,10 @@ def plot_matches_per_day(request):
 def plot_agent_elo(request, pk):
     agent = models.Agent.objects.get(id=pk)
     return plots.plot_agent_elo(agent)
+
+
+@cache_page(constants.ONE_MINUTE)
+def plot_game_season_elo(request, game_pk, season_pk):
+    game = models.Game.objects.get(id=game_pk)
+    season = models.Season.objects.get(id=season_pk)
+    return plots.plot_game_season_elo(game, season)
