@@ -180,7 +180,7 @@ def plot_game_season_elo(game, season, trailing_average_n=15):
     sns.set_color_codes("pastel")
 
     with sns.axes_style("whitegrid"):
-        figure, ax = plt.subplots(figsize=(8, 6))
+        figure, ax = plt.subplots(figsize=(11, 8))
 
         for agent_rating in agent_ratings:
             x, y = data[agent_rating.agent_id]
