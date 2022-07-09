@@ -112,12 +112,17 @@ def _matches_per_day_plot(x, y, y_ta):
 
 
 def plot_agent_elo(agent, trailing_average_n=15):
+    season = models.Season.objects.current_season()
+    x, y_ta = _get_agent_elo_data_for_season(agent, season, trailing_average_n=50)
+
+    return _agent_elo_plot(x, y_ta)
+
+
+def _get_agent_elo_data_for_season(agent, season, trailing_average_n=15):
     elo_key = f"data__elo_after__{agent.id}"
 
-    current_season = models.Season.objects.current_season()
-
     data = (
-        agent.matches.filter(ran=True, season=current_season)
+        agent.matches.filter(ran=True, season=season)
         .values("ran_at", elo_key)
         .order_by("ran_at")
     )
@@ -138,7 +143,7 @@ def plot_agent_elo(agent, trailing_average_n=15):
 
         y_ta.append((sum(trailing_average_queue) / len(trailing_average_queue)))
 
-    return _agent_elo_plot(x, y_ta)
+    return x, y_ta
 
 
 def _agent_elo_plot(x, y):
@@ -152,6 +157,39 @@ def _agent_elo_plot(x, y):
     sns.despine(top=True, right=True, left=True, bottom=True)
 
     ax.set_title("Agent Elo")
+    ax.set_ylabel("Elo")
+
+    figure.tight_layout()
+
+    return _make_response(figure)
+
+
+def plot_game_season_elo(game, season, trailing_average_n=15):
+    agent_ratings = models.AgentRatings.objects.filter(
+        game=game, season=season
+    ).prefetch_related("agent")
+
+    data = {
+        agent_rating.agent_id: _get_agent_elo_data_for_season(
+            agent_rating.agent, season, trailing_average_n=trailing_average_n
+        )
+        for agent_rating in agent_ratings
+    }
+
+    sns.set_theme(style="whitegrid")
+    sns.set_color_codes("pastel")
+
+    with sns.axes_style("whitegrid"):
+        figure, ax = plt.subplots(figsize=(8, 6))
+
+        for agent_rating in agent_ratings:
+            x, y = data[agent_rating.agent_id]
+            sns.lineplot(x=x, y=y, label=agent_rating.agent.name, estimator=None)
+
+    sns.despine(top=True, right=True, left=True, bottom=True)
+
+    ax.set_title(f"'{game.pretty_name}' - '{season.name}' ratings")
+    ax.set_xlabel("Time")
     ax.set_ylabel("Elo")
 
     figure.tight_layout()
