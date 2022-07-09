@@ -97,7 +97,7 @@ def _matches_per_day_plot(x, y, y_ta):
     sns.axes_style("whitegrid")
     sns.set_palette(palette)
 
-    figure, ax = plt.subplots(figsize=(12, 8))
+    figure, ax = plt.subplots(figsize=(11, 8))
     sns.lineplot(x=x, y=y, estimator=None)
     sns.lineplot(x=x, y=y_ta, estimator=None)
 
