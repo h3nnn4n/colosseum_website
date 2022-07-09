@@ -166,6 +166,10 @@ class SeasonQuerySet(QuerySet):
     def current_season(self):
         return self.get(active=True, main=True)
 
+    @property
+    def games(self):
+        Game.objects.filter(agentratings__season=self).distinct()
+
 
 class Season(BaseModel):
     name = models.CharField(max_length=64, unique=True)
@@ -230,6 +234,10 @@ class Season(BaseModel):
     @cached_property
     def tournaments_count(self):
         return self.tournaments.count()
+
+    @cached_property
+    def games(self):
+        return Game.objects.filter(agentratings__season=self).distinct()
 
 
 class GameQuerySet(QuerySet):

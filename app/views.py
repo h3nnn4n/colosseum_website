@@ -157,9 +157,12 @@ class SeasonDetailView(generic.DetailView):
 
         trophies_by_game = defaultdict(list)
         for trophy in trophies:
-            game = trophy.agent.game.pretty_name
+            game = str(trophy.agent.game_id)
             trophies_by_game[game].append(trophy)
 
+        context["game_name_by_id"] = {
+            str(game.id): game.pretty_name for game in season.games
+        }
         context["trophies_by_game"] = dict(trophies_by_game)
 
         return context
