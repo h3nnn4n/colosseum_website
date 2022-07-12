@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.utils import timezone
 
 from app import models, tasks
 from app.services.ratings import update_ratings_from_match
@@ -97,3 +98,23 @@ def recalculate_ratings_for_season(season):
             )
 
     logger.info(f"Finished recalculating rankings for season '{season.name}'")
+
+
+def metrics_api_handler(payload):
+    """
+    Parses an api request to push a metric
+    """
+    # FIXME: Accepting just single items for now. Needs to support multiple
+    # ones too
+    if not isinstance(payload, dict):
+        raise TypeError(f"Payload must be a dict. Was {type(payload)}")
+
+    if not payload.get("time"):
+        payload["time"] = timezone.now().isoformat()
+
+    if not payload.get("tags"):
+        payload["tags"] = {}
+
+    payload["tags"]["metric_api"] = True
+
+    tasks.push_metric.delay([payload])

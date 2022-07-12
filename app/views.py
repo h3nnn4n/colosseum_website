@@ -715,6 +715,29 @@ class ColosseumHeartbeatAPIView(APIView):
         return Response()
 
 
+class MetricsAPIView(APIView):
+    """
+    Endpoint to push metrics. While this means that if the api goes down, so
+    goes any metrics going through here, it also simplify infra and worker
+    architecture a lot.
+
+    Payload example:
+    {
+        "fields": {"value": 123},
+        "measurement": "foo_bar",
+        "time": "2022-07-12T00:04:56.147601+00:00"  # e.g. timezone.now().isoformat(),
+    }
+    """
+
+    permission_classes = [permissions.IsAdminUser]
+    queryset = models.Season.objects.none()
+
+    def post(self, request):
+        logger.info(f"Got metric push request: {request}")
+        services.metrics_api_handler(request.data)
+        return Response(status=status.HTTP_201_CREATED)
+
+
 # Plots
 
 
