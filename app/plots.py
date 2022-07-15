@@ -172,9 +172,11 @@ def _agent_elo_plot(x, y):
 
 
 def plot_game_season_elo(game, season, trailing_average_n=15):
-    agent_ratings = models.AgentRatings.objects.filter(
-        game=game, season=season
-    ).prefetch_related("agent")
+    agent_ratings = (
+        models.AgentRatings.objects.filter(game=game, season=season)
+        .prefetch_related("agent")
+        .order_by("-elo")
+    )
 
     data = {
         agent_rating.agent_id: _get_agent_elo_data_for_season(
