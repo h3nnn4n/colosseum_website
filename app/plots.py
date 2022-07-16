@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt  # noqa
 import seaborn as sns  # noqa
 
 
-def plot_matches_per_day(trailing_average_n=15):
+def plot_matches_per_day(trailing_average_sizes=[15]):
     end_date = timezone.now()
     start_date = end_date - timedelta(days=1)
 
@@ -32,8 +32,6 @@ def plot_matches_per_day(trailing_average_n=15):
     y_ = [d["count"] for d in data]
     x = []
     y = []
-    y_ta = []
-    trailing_average_queue = []
 
     if len(x_) == 0:
         x = [timezone.now() - timedelta(days=1), x.append(timezone.now())]
@@ -79,18 +77,26 @@ def plot_matches_per_day(trailing_average_n=15):
         x.append(last_date + timedelta(minutes=missing_minute))
         y.append(0)
 
-    for point in y:
-        trailing_average_queue.append(point)
+    ys = [y]
 
-        if len(trailing_average_queue) > trailing_average_n:
-            trailing_average_queue.pop(0)
+    for trailing_average_size in trailing_average_sizes:
+        y_ta = []
+        trailing_average_queue = []
 
-        y_ta.append((sum(trailing_average_queue) / len(trailing_average_queue)))
+        for point in y:
+            trailing_average_queue.append(point)
 
-    return _matches_per_day_plot(x, y, y_ta)
+            if len(trailing_average_queue) > trailing_average_size:
+                trailing_average_queue.pop(0)
+
+            y_ta.append((sum(trailing_average_queue) / len(trailing_average_queue)))
+
+        ys.append(y_ta)
+
+    return _matches_per_day_plot(x, ys)
 
 
-def _matches_per_day_plot(x, y, y_ta):
+def _matches_per_day_plot(x, ys):
     palette = ["#4cc9f0", "#3f37c9"]
     sns.set_theme(style="whitegrid")
     sns.set_color_codes("pastel")
@@ -98,8 +104,9 @@ def _matches_per_day_plot(x, y, y_ta):
     sns.set_palette(palette)
 
     figure, ax = plt.subplots(figsize=(11, 8))
-    sns.lineplot(x=x, y=y, estimator=None)
-    sns.lineplot(x=x, y=y_ta, estimator=None)
+
+    for y in ys:
+        sns.lineplot(x=x, y=y, estimator=None, linewidth=1)
 
     sns.despine(top=True, right=True, left=True, bottom=True)
 
@@ -165,9 +172,11 @@ def _agent_elo_plot(x, y):
 
 
 def plot_game_season_elo(game, season, trailing_average_n=15):
-    agent_ratings = models.AgentRatings.objects.filter(
-        game=game, season=season
-    ).prefetch_related("agent")
+    agent_ratings = (
+        models.AgentRatings.objects.filter(game=game, season=season)
+        .prefetch_related("agent")
+        .order_by("-elo")
+    )
 
     data = {
         agent_rating.agent_id: _get_agent_elo_data_for_season(
