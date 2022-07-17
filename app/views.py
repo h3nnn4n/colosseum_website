@@ -2,7 +2,7 @@ import json
 import logging
 import lzma
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import humanize
 import requests
@@ -365,50 +365,22 @@ class HomeView(generic.TemplateView):
                 format="%0.0f",
             )
 
-        redis = get_redis_connection("default")
-        last_heartbeat_bytes = redis.get(settings.CELERY_HEARTBEAT_KEY)
         context["celery_heartbeat"] = "-"
-        if last_heartbeat_bytes:
-            last_heartbeat = last_heartbeat_bytes.decode()
-            last_heartbeat = datetime.fromisoformat(last_heartbeat)
-            age = (timezone.now() - last_heartbeat).total_seconds()
-
-            if age < constants.ONE_HOUR:
-                minimum_unit = "seconds"
-            elif age < constants.ONE_DAY:
-                minimum_unit = "minutes"
-            else:
-                minimum_unit = "hours"
-
+        time_since_last_celery_heartbeat = (
+            services.get_time_since_last_celery_heartbeat()
+        )
+        if time_since_last_celery_heartbeat is not None:
             context["celery_heartbeat"] = (
-                humanize.precisedelta(
-                    age,
-                    minimum_unit=minimum_unit,
-                    format="%0.0f",
-                )
-                + " ago"
+                services.prettify_time_delta(time_since_last_celery_heartbeat) + " ago"
             )
 
-        last_heartbeat_bytes = redis.get(settings.COLOSSEUM_HEARTBEAT_KEY)
         context["colosseum_heartbeat"] = "-"
-        if last_heartbeat_bytes:
-            last_heartbeat = last_heartbeat_bytes.decode()
-            last_heartbeat = datetime.fromisoformat(last_heartbeat)
-            age = (timezone.now() - last_heartbeat).total_seconds()
-
-            if age < constants.ONE_HOUR:
-                minimum_unit = "seconds"
-            elif age < constants.ONE_DAY:
-                minimum_unit = "minutes"
-            else:
-                minimum_unit = "hours"
-
+        time_since_last_colosseum_heartbeat = (
+            services.get_time_since_last_colosseum_heartbeat()
+        )
+        if time_since_last_colosseum_heartbeat is not None:
             context["colosseum_heartbeat"] = (
-                humanize.precisedelta(
-                    age,
-                    minimum_unit=minimum_unit,
-                    format="%0.0f",
-                )
+                services.prettify_time_delta(time_since_last_colosseum_heartbeat)
                 + " ago"
             )
 
