@@ -53,8 +53,21 @@ def _process_points(data):
 
 
 def push_metric(data):
+    # Influxdb currently only accepts a list of metrics, so if we recieve a
+    # single one (i.e. a dict) we should wrap it in a list
     if not isinstance(data, list):
         data = [data]
+
+    # Ensure we always have a timestamp
+    if not data.get("time"):
+        data["time"] = timezone.now().isoformat()
+
+    # Ensure we always have the enviroment set
+    if not data.get("tags", {}).get("environment"):
+        if not data.get("tags"):
+            data["tags"] = {}
+
+        data["tags"]["environment"] = settings.ENVIRONMENT
 
     _push_metric(data)
 
