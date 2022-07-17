@@ -1,3 +1,4 @@
+from datetime import timedelta
 from decimal import Decimal
 
 from django.test import TestCase
@@ -227,3 +228,21 @@ class TrophyTestCase(TestCase):
         self.assertEqual(self.agent4.trophies.first().type, "THIRD")
 
         self.assertEqual(self.tournament.trophies.count(), 4)
+
+
+class PrettifyTimeDelta(TestCase):
+    def setUp(self):
+        pass
+
+    def test_multiple_values(self):
+        self.assertEqual(
+            "1 day",
+            services.prettify_time_delta(timedelta(days=1).total_seconds()),
+        )
+
+        self.assertEqual(
+            "1 day and 2 hours",
+            services.prettify_time_delta(
+                timedelta(days=1, seconds=60 * 60 * 2 + 25).total_seconds()
+            ),
+        )
