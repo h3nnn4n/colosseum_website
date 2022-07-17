@@ -29,9 +29,6 @@ def _push_metric(data):
     if settings.INFLUXDB_DISABLED:
         return
 
-    if not isinstance(data, list):
-        data = [data]
-
     if settings.INFLUXDB_USE_CELERY:
         tasks.push_metric.delay(data)
     elif settings.INFLUXDB_USE_THREADING:
@@ -55,12 +52,49 @@ def _process_points(data):
             raise
 
 
+def _ensure_tag(data, tag_name, tag_value):
+    if isinstance(data, list):
+        for d in data:
+            _ensure_tag(d, tag_name, tag_value)
+
+        return
+
+    if data.get("tags", {}).get(tag_name) == tag_value:
+        return
+
+    if not data.get("tags"):
+        data["tags"] = {}
+
+    data["tags"][tag_name] = tag_value
+
+
+def _ensure_timestamp(data):
+    if isinstance(data, list):
+        for d in data:
+            _ensure_timestamp(d)
+
+        return
+
+    if data.get("time"):
+        return
+
+    data["time"] = timezone.now().isoformat()
+
+
 def push_metric(data):
+    # Influxdb currently only accepts a list of metrics, so if we receive a
+    # single one (i.e. a dict) we should wrap it in a list
+    if not isinstance(data, list):
+        data = [data]
+
+    _ensure_timestamp(data)
+    _ensure_tag(data, "environment", settings.ENVIRONMENT)
+    _ensure_tag(data, "host", settings.INFLUXDB_TAGS_HOST)
     _push_metric(data)
 
 
 def register_replay(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"count": 1},
             "measurement": "replay_uploaded",
@@ -71,7 +105,7 @@ def register_replay(game_name):
 
 
 def register_match_played(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"count": 1},
             "measurement": "match_played",
@@ -82,7 +116,7 @@ def register_match_played(game_name):
 
 
 def register_get_next_match():
-    _push_metric(
+    push_metric(
         {
             "fields": {"count": 1},
             "measurement": "get_next_match",
@@ -98,7 +132,7 @@ def register_match_duration(match):
         logger.warning(f"match {match.id} had no duration: {match.duration}")
         return
 
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": duration},
             "measurement": "match_duration",
@@ -115,7 +149,7 @@ def register_match_duration(match):
 
 
 def register_tainted_match(match):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": 1},
             "measurement": "tainted_match",
@@ -137,7 +171,7 @@ def register_tainted_match(match):
 def register_match_queue_time(match):
     queue_time = (match.ran_at - match.created_at).total_seconds()
 
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": queue_time},
             "measurement": "match_queue_time",
@@ -154,7 +188,7 @@ def register_match_queue_time(match):
 
 
 def register_get_next_match_from_queue(time, n_attempts):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": time, "n_attempts": n_attempts},
             "measurement": "get_next_match_from_queue",
@@ -164,7 +198,7 @@ def register_get_next_match_from_queue(time, n_attempts):
 
 
 def register_match_played_twice(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": 1},
             "measurement": "match_played_twice",
@@ -175,7 +209,7 @@ def register_match_played_twice(game_name):
 
 
 def register_replay_uploaded_for_unplayed_match(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": 1},
             "measurement": "replay_uploaded_for_unplayed_match",
@@ -186,7 +220,7 @@ def register_replay_uploaded_for_unplayed_match(game_name):
 
 
 def register_replay_being_overwritten(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": 1},
             "measurement": "replay_being_overwritten",
