@@ -89,6 +89,7 @@ def push_metric(data):
 
     _ensure_timestamp(data)
     _ensure_tag(data, "environment", settings.ENVIRONMENT)
+    _ensure_tag(data, "host", settings.INFLUXDB_TAGS_HOST)
     _push_metric(data)
 
 
