@@ -29,9 +29,6 @@ def _push_metric(data):
     if settings.INFLUXDB_DISABLED:
         return
 
-    if not isinstance(data, list):
-        data = [data]
-
     if settings.INFLUXDB_USE_CELERY:
         tasks.push_metric.delay(data)
     elif settings.INFLUXDB_USE_THREADING:
@@ -56,6 +53,9 @@ def _process_points(data):
 
 
 def push_metric(data):
+    if not isinstance(data, list):
+        data = [data]
+
     _push_metric(data)
 
 
