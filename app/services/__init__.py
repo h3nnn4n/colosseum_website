@@ -1,9 +1,12 @@
 import logging
+from datetime import datetime
 
+import humanize
 from django.conf import settings
 from django.utils import timezone
+from django_redis import get_redis_connection
 
-from app import models, tasks
+from app import constants, models, tasks
 from app.services.ratings import update_ratings_from_match
 from app.services.trophy import create_trophies
 
@@ -118,3 +121,66 @@ def metrics_api_handler(payload):
     payload["tags"]["metric_api"] = True
 
     tasks.push_metric.delay([payload])
+
+
+def get_last_celery_heartbeat():
+    redis = get_redis_connection("default")
+    last_heartbeat_bytes = redis.get(settings.CELERY_HEARTBEAT_KEY)
+
+    if not last_heartbeat_bytes:
+        return
+
+    last_heartbeat = last_heartbeat_bytes.decode()
+    last_heartbeat = datetime.fromisoformat(last_heartbeat)
+    return last_heartbeat
+
+
+def get_time_since_last_celery_heartbeat():
+    last_heartbeat = get_last_celery_heartbeat()
+
+    if last_heartbeat is None:
+        return None
+
+    age = (timezone.now() - last_heartbeat).total_seconds()
+
+    return age
+
+
+def get_last_colosseum_heartbeat():
+    redis = get_redis_connection("default")
+    last_heartbeat_bytes = redis.get(settings.COLOSSEUM_HEARTBEAT_KEY)
+
+    if not last_heartbeat_bytes:
+        return
+
+    last_heartbeat = last_heartbeat_bytes.decode()
+    last_heartbeat = datetime.fromisoformat(last_heartbeat)
+    return last_heartbeat
+
+
+def get_time_since_last_colosseum_heartbeat():
+    last_heartbeat = get_last_colosseum_heartbeat()
+
+    if last_heartbeat is None:
+        return None
+
+    age = (timezone.now() - last_heartbeat).total_seconds()
+
+    return age
+
+
+# FIXME: This is a util, not a service (this talks to no external service and
+# doesn't have any side effects).
+def prettify_time_delta(delta):
+    if delta < constants.ONE_HOUR:
+        minimum_unit = "seconds"
+    elif delta < constants.ONE_DAY:
+        minimum_unit = "minutes"
+    else:
+        minimum_unit = "hours"
+
+    return humanize.precisedelta(
+        delta,
+        minimum_unit=minimum_unit,
+        format="%0.0f",
+    )

@@ -72,6 +72,27 @@ def metrics_logger():
         }
     )
 
+    time_since_last_celery_heartbeat = services.get_time_since_last_celery_heartbeat()
+    time_since_last_colosseum_heartbeat = (
+        services.get_time_since_last_colosseum_heartbeat()
+    )
+
+    if time_since_last_celery_heartbeat is not None:
+        metrics.push_metric(
+            {
+                "fields": {"value": time_since_last_celery_heartbeat},
+                "measurement": "time_since_last_celery_heartbeat",
+            },
+        )
+
+    if time_since_last_colosseum_heartbeat is not None:
+        metrics.push_metric(
+            {
+                "fields": {"value": time_since_last_colosseum_heartbeat},
+                "measurement": "time_since_last_colosseum_heartbeat",
+            },
+        )
+
 
 @celery.task
 def regenerate_queue():
