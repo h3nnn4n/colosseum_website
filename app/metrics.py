@@ -82,7 +82,7 @@ def _ensure_timestamp(data):
 
 
 def push_metric(data):
-    # Influxdb currently only accepts a list of metrics, so if we recieve a
+    # Influxdb currently only accepts a list of metrics, so if we receive a
     # single one (i.e. a dict) we should wrap it in a list
     if not isinstance(data, list):
         data = [data]
