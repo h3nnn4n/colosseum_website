@@ -72,6 +72,23 @@ def metrics_logger():
         }
     )
 
+    metrics.push_metric(
+        [
+            {
+                "fields": {
+                    "value": float(services.get_time_since_last_celery_heartbeat())
+                },
+                "measurement": "time_since_last_celery_heartbeat",
+            },
+            {
+                "fields": {
+                    "value": float(services.get_time_since_last_colosseum_heartbeat())
+                },
+                "measurement": "time_since_last_colosseum_heartbeat",
+            },
+        ]
+    )
+
 
 @celery.task
 def regenerate_queue():
