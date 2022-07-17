@@ -38,7 +38,7 @@ def metrics_logger():
     """
     Periodically collect and send some metrics to influxdb
     """
-    metrics._push_metric(
+    metrics.push_metric(
         {
             "fields": {"value": int(match_queue.queue_size())},
             "measurement": "match_queue_size",
@@ -47,7 +47,7 @@ def metrics_logger():
     )
 
     unplayed_matches_count = models.Match.objects.filter(ran=False).count()
-    metrics._push_metric(
+    metrics.push_metric(
         {
             "fields": {"value": int(unplayed_matches_count)},
             "measurement": "unplayed_matches_count",
@@ -64,7 +64,7 @@ def metrics_logger():
             timezone.now() - oldest_unplayed_match.created_at
         ).total_seconds()
 
-    metrics._push_metric(
+    metrics.push_metric(
         {
             "fields": {"value": float(oldest_unplayed_match_age)},
             "measurement": "oldest_unplayed_match_age",

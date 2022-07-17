@@ -60,7 +60,7 @@ def push_metric(data):
 
 
 def register_replay(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"count": 1},
             "measurement": "replay_uploaded",
@@ -71,7 +71,7 @@ def register_replay(game_name):
 
 
 def register_match_played(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"count": 1},
             "measurement": "match_played",
@@ -82,7 +82,7 @@ def register_match_played(game_name):
 
 
 def register_get_next_match():
-    _push_metric(
+    push_metric(
         {
             "fields": {"count": 1},
             "measurement": "get_next_match",
@@ -98,7 +98,7 @@ def register_match_duration(match):
         logger.warning(f"match {match.id} had no duration: {match.duration}")
         return
 
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": duration},
             "measurement": "match_duration",
@@ -115,7 +115,7 @@ def register_match_duration(match):
 
 
 def register_tainted_match(match):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": 1},
             "measurement": "tainted_match",
@@ -137,7 +137,7 @@ def register_tainted_match(match):
 def register_match_queue_time(match):
     queue_time = (match.ran_at - match.created_at).total_seconds()
 
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": queue_time},
             "measurement": "match_queue_time",
@@ -154,7 +154,7 @@ def register_match_queue_time(match):
 
 
 def register_get_next_match_from_queue(time, n_attempts):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": time, "n_attempts": n_attempts},
             "measurement": "get_next_match_from_queue",
@@ -164,7 +164,7 @@ def register_get_next_match_from_queue(time, n_attempts):
 
 
 def register_match_played_twice(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": 1},
             "measurement": "match_played_twice",
@@ -175,7 +175,7 @@ def register_match_played_twice(game_name):
 
 
 def register_replay_uploaded_for_unplayed_match(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": 1},
             "measurement": "replay_uploaded_for_unplayed_match",
@@ -186,7 +186,7 @@ def register_replay_uploaded_for_unplayed_match(game_name):
 
 
 def register_replay_being_overwritten(game_name):
-    _push_metric(
+    push_metric(
         {
             "fields": {"value": 1},
             "measurement": "replay_being_overwritten",
