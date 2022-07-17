@@ -52,23 +52,43 @@ def _process_points(data):
             raise
 
 
+def _ensure_tag(data, tag_name, tag_value):
+    if isinstance(data, list):
+        for d in data:
+            _ensure_tag(d, tag_name, tag_value)
+
+        return
+
+    if data.get("tags", {}).get(tag_name) == tag_value:
+        return
+
+    if not data.get("tags"):
+        data["tags"] = {}
+
+    data["tags"][tag_name] = tag_value
+
+
+def _ensure_timestamp(data):
+    if isinstance(data, list):
+        for d in data:
+            _ensure_timestamp(d)
+
+        return
+
+    if data.get("time"):
+        return
+
+    data["time"] = timezone.now().isoformat()
+
+
 def push_metric(data):
     # Influxdb currently only accepts a list of metrics, so if we recieve a
     # single one (i.e. a dict) we should wrap it in a list
     if not isinstance(data, list):
         data = [data]
 
-    # Ensure we always have a timestamp
-    if not data.get("time"):
-        data["time"] = timezone.now().isoformat()
-
-    # Ensure we always have the enviroment set
-    if not data.get("tags", {}).get("environment"):
-        if not data.get("tags"):
-            data["tags"] = {}
-
-        data["tags"]["environment"] = settings.ENVIRONMENT
-
+    _ensure_timestamp(data)
+    _ensure_tag(data, "environment", settings.ENVIRONMENT)
     _push_metric(data)
 
 
