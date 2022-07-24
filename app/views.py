@@ -705,7 +705,6 @@ class MetricsAPIView(APIView):
     queryset = models.Season.objects.none()
 
     def post(self, request):
-        logger.info(f"Got metric push request: {request.data}")
         services.metrics_api_handler(request.data)
         return Response(status=status.HTTP_201_CREATED)
 
