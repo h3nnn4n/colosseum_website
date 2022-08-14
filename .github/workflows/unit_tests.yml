@@ -14,6 +14,9 @@ env:
   POSTGRES_PASSWORD: postgres
   POSTGRES_USER: postgres
 
+  REDIS_URL: redis://localhost:6379/5
+  CELERY_REDIS_URL: redis://localhost:6379/6
+  DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
 
 jobs:
   pytest:
