@@ -15,6 +15,10 @@ from .metrics import process_urls_into_tags, push_metric
 logger = logging.getLogger(__name__)
 
 
+def request_is_ajax(request):
+    return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
+
+
 class InfluxDBRequestMiddleware(MiddlewareMixin):
     """
     Measures request time and sends metric to InfluxDB.
@@ -50,11 +54,8 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
     def _record_time(self, request):
         if hasattr(request, "_start_time"):
             ms = int((time.time() - request._start_time) * 1000)
-            if request.is_ajax():
-                is_ajax = True
-            else:
-                is_ajax = False
 
+            is_ajax = request_is_ajax(request)
             is_authenticated = False
             is_staff = False
             is_superuser = False
