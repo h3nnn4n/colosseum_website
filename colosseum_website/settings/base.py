@@ -187,32 +187,12 @@ REST_FRAMEWORK = {
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {
-        "loki": {
-            "class": "django_loki_reloaded.LokiFormatter",
-        },
-    },
     "handlers": {
         "console": {"class": "logging.StreamHandler"},
-        "loki": {
-            "class": "django_loki_reloaded.LokiHandler",
-            "url": f"http://{config('LOKI_HOST', default='localhost:3100')}/loki/api/v1/push",
-            "tags": {
-                "source": "django",
-                "environment": config("DJANGO_SETTINGS_MODULE").split(".")[-1],
-                "hostname": socket.gethostname(),
-            },
-            "auth": (
-                config("LOKI_USER", default=None),
-                config("LOKI_PASSWORD", default=None),
-            ),
-            "formatter": "loki",
-            "mode": "thread",
-        },
     },
     "loggers": {
         "": {
-            "handlers": ["console", "loki"],
+            "handlers": ["console"],
             "level": "INFO",
         }
     },
