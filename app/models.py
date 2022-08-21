@@ -164,7 +164,21 @@ class AgentRatings(BaseModel):
 
 class SeasonQuerySet(QuerySet):
     def current_season(self):
-        return self.get(active=True, main=True)
+        try:
+            return self.get(active=True, main=True)
+        except Season.DoesNotExist:
+            # HACK: We need an active season to render the homepage. Usually
+            # when we dont have that it is because the app is fresh new. In
+            # that case we create a season to make the experience more seamless
+            # for someone running the project for the first time.
+
+            if Season.objects.exists():
+                raise
+
+            from app.services.automated_seasons import create_automated_seasons
+
+            create_automated_seasons()
+            return self.get(active=True, main=True)
 
     @property
     def games(self):
