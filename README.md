@@ -90,6 +90,14 @@ poetry run celery --app app worker --loglevel=INFO --beat
 - Setup the colosseum tournament engine. Follow the instructions from
   [https://github.com/h3nnn4n/colosseum](https://github.com/h3nnn4n/colosseum)
 
+## Troubleshooting
+
+- `psycopg2` fails to install
+  - Try installing postgres
+
+- `Django` fails to run and complains about missing `libmagic`
+  - Install libmagic
+
 # LICENSE
 
 Released under the MIT license. See [LICENSE](LICENSE) for more details.
