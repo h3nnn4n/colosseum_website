@@ -211,6 +211,10 @@ AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 INTERNAL_IPS = ["127.0.0.1"]
 
 
+# Metrics
+
+METRICS_ENABLED = config("METRICS_ENABLED", default=True, cast=bool)
+
 # InfluxDB settings
 INFLUXDB_HOST = os.environ.get("INFLUXDB_HOST")
 INFLUXDB_PORT = os.environ.get("INFLUXDB_PORT")
