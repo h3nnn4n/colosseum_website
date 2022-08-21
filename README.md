@@ -90,6 +90,17 @@ poetry run celery --app app worker --loglevel=INFO --beat
 - Setup the colosseum tournament engine. Follow the instructions from
   [https://github.com/h3nnn4n/colosseum](https://github.com/h3nnn4n/colosseum)
 
+## Troubleshooting
+
+- `psycopg2` fails to install
+  - Try installing postgres
+
+- `Django` fails to run and complains about missing `libmagic`
+  - Install libmagic. If you are on macos using homebrew, you might need to symlink it to `/usr/local/lib`
+
+- Running fails with `ModuleNotFoundError: No module named '_lzma'`
+  - If you are using `pyenv`, you need to install `xz` and then rebuild python
+
 # LICENSE
 
 Released under the MIT license. See [LICENSE](LICENSE) for more details.
