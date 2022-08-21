@@ -96,7 +96,7 @@ poetry run celery --app app worker --loglevel=INFO --beat
   - Try installing postgres
 
 - `Django` fails to run and complains about missing `libmagic`
-  - Install libmagic
+  - Install libmagic. If you are on macos using homebrew, you might need to symlink it to `/usr/local/lib`
 
 # LICENSE
 
