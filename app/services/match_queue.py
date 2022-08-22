@@ -17,7 +17,7 @@ def queue_size():
     return redis.llen(settings.MATCH_QUEUE_KEY)
 
 
-def get_next():
+def get_next(game_name=None):
     RANDOM_MATCH_ENABLED = settings.RANDOM_MATCH_ENABLED
     RANDOM_MATCH_RATIO = settings.RANDOM_MATCH_RATIO
     use_random = RANDOM_MATCH_ENABLED and RANDOM_MATCH_RATIO > random()
@@ -33,6 +33,7 @@ def get_next():
     while queue_length > 0:
         if redis.get("disable_next_match_api") == b"1":
             break
+
         queue_length = redis.llen(settings.MATCH_QUEUE_KEY)
 
         if use_random:
@@ -52,8 +53,21 @@ def get_next():
         match_id = match_id.decode()
 
         if models.Match.objects.filter(id=match_id, ran=False).exists():
-            return_value = match_id
-            break
+            if not game_name:
+                return_value = match_id
+                break
+            else:
+                try:
+                    match_game = models.Match.objects.filter(id=match_id).values(
+                        "game__name"
+                    )[0]["game__name"]
+                    if match_game == game_name:
+                        return_value = match_id
+                        break
+                    else:
+                        redis.rpush(settings.MATCH_QUEUE_KEY, match_id)
+                except Exception as e:
+                    logger.info(f"failed to verify the match game name with {e}")
 
     t_end = time()
     duration = t_end - t_start
