@@ -58,7 +58,9 @@ def get_next(game_name=None):
                 break
             else:
                 try:
-                    match_game = models.Match.objects.filter(id=match_id).values("game__name")[0]["game__name"]
+                    match_game = models.Match.objects.filter(id=match_id).values(
+                        "game__name"
+                    )[0]["game__name"]
                     if match_game == game_name:
                         return_value = match_id
                         break
