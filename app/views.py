@@ -529,9 +529,16 @@ class NextMatchAPIView(APIView):
     queryset = models.Match.objects.none()
 
     def get(self, request):
+        from app import tasks
+
+        tasks.regenerate_queue()
+
         metrics.register_get_next_match()
 
-        if match_id := match_queue.get_next():
+        params = request.query_params
+        game_name = params.get("game")
+
+        if match_id := match_queue.get_next(game_name=game_name):
             return Response({"id": match_id})
 
         return Response({})
