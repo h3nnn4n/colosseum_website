@@ -17,7 +17,7 @@ class SeasonAdmin(admin.ModelAdmin):
 
 @admin.register(models.Game)
 class GameAdmin(admin.ModelAdmin):
-    list_display = ("name", "id")
+    list_display = ("name", "active", "id")
 
 
 @admin.register(models.Match)
