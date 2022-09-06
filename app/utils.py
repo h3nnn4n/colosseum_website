@@ -1,4 +1,5 @@
 import hashlib
+from math import ceil
 
 import magic
 from django.urls import reverse
@@ -36,11 +37,14 @@ def get_api_urls_for_pks(pks, view_name, request):
 
 
 def validate_page_number(page_number, list_size, items_per_page):
+
+    print(page_number, list_size, items_per_page)
+
     return (
         int(page_number)
         if page_number
         and page_number.isdigit()
         and int(page_number) > 0
-        and int(page_number) <= round(list_size / items_per_page)
+        and int(page_number) <= ceil(list_size / items_per_page)
         else 1
     )

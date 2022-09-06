@@ -10,4 +10,5 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path("notifications/", include("django_nyt.urls")),
     path("wiki/", include("wiki.urls")),
+    path("tinymce/", include("tinymce.urls")),
 ]

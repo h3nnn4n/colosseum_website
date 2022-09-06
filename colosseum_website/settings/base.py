@@ -62,6 +62,7 @@ _BASE_APPS = [
     "memoize",
     "debug_toolbar",
     "fontawesome_free",
+    "tinymce",
     "app",
 ]
 

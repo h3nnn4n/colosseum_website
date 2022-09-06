@@ -13,6 +13,7 @@ from django.db import models
 from django.db.models import Count, F, QuerySet
 from django.utils import timezone
 from django.utils.functional import cached_property
+from tinymce import models as tinymce_models
 
 from . import utils
 
@@ -559,6 +560,12 @@ class Trophy(BaseModel):
         ]
 
         unique_together = [["agent", "tournament"]]
+
+
+# News Model
+class News(BaseModel):
+    title = models.CharField(max_length=255, unique=True)
+    content = tinymce_models.HTMLField()
 
 
 # Non ORM models.  Just stuff to make passing data around easier. Not that this

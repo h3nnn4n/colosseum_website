@@ -15,6 +15,11 @@ class SeasonAdmin(admin.ModelAdmin):
     list_display = ("name", "id", "active", "start_date", "end_date")
 
 
+@admin.register(models.News)
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ("id", "content", "title")
+
+
 @admin.register(models.Game)
 class GameAdmin(admin.ModelAdmin):
     list_display = ("name", "id")

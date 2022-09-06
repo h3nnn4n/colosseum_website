@@ -412,6 +412,34 @@ class HomeView(generic.TemplateView):
         return context
 
 
+# News Views
+class NewsListView(generic.ListView):
+    template_name = "news/index.html"
+    context_object_name = "news"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["context_object_name"] = "news"
+        return context
+
+    def get_queryset(self):
+        news_per_page = 5
+        news_list = models.News.objects.all().order_by("-created_at")
+
+        news_page_number = utils.validate_page_number(
+            self.request.GET.get("page"), len(news_list), news_per_page
+        )
+
+        print(news_page_number)
+
+        return Paginator(news_list, news_per_page).page(news_page_number)
+
+
+class NewsDetailView(generic.DetailView):
+    model = models.News
+    template_name = "news/detail.html"
+
+
 # Debug Views
 
 

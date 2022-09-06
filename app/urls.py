@@ -51,6 +51,9 @@ urlpatterns = [
     # Home
     path("home/", views.HomeView.as_view(), name="home_old"),
     path("", views.HomeView.as_view(), name="home"),
+    # News pages
+    path("news/", views.NewsListView.as_view(), name="news"),
+    path("news/<str:pk>/", views.NewsDetailView.as_view(), name="news_detail"),
     # API
     path("api/", include(router.urls)),
     path("api/next_match/", views.NextMatchAPIView.as_view(), name="next_match"),

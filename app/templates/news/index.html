@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load elo %}
+
+{% block title %} NEWS {% endblock %}
+
+{% block content %}
+
+<div class="container py-2">
+  <h1 class="py-2 d-flex justify-content-center">News Page</h1>
+  <div class="list-group">
+    {% for new in news %}
+      <a href={% url 'news_detail' new.id %} class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">
+            {% if new.title|length|get_digit:"-1" > 75 %}
+              {{new.title|slice:"0:75"}}...
+            {% else %}
+              {{new.title}}
+            {% endif %}
+          </h5>
+          <small>{{ new.created_at|date:"Y-m-d H:i:s" }}</small>
+        </div>
+          <p class="mb-1">
+            {% if new.content|length|get_digit:"-1" > 50 %}
+                {{new.content|safe|slice:"0:50"}}...
+            {% else %}
+              {{new.content|safe}}
+            {% endif %}
+          </p>
+      </a>
+    {% endfor %}
+  </div>
+  <div class="mt-3">
+    {% include "pagination.html" with list_items=news %}
+  </div>
+</div>
+
+
+{% endblock %}

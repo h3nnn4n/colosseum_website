@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load elo %}
+
+{% block content %}
+
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header text-center">
+        Colosseum News
+        </div>
+        <div class="card-body">
+        <h5 class="card-title">{{object.title}}</h5>
+        <p class="card-text">{{object.content|safe}}</p>
+        </div>
+        <div class="card-footer text-muted text-center">
+            {{ object.created_at|date:"Y-m-d H:i:s" }}
+        </div>
+    </div>
+</div>
+{% endblock %}
