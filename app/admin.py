@@ -26,6 +26,7 @@ class GameAdmin(admin.ModelAdmin):
 class MatchAdmin(admin.ModelAdmin):
     list_display = ("id", "player1", "player2", "ran", "ran_at")
     list_filter = ("ran", "season")
+    ordering = ("-created_at",)
 
 
 @admin.register(models.Tournament)
