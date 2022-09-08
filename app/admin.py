@@ -13,6 +13,7 @@ class AgentAdmin(admin.ModelAdmin):
 @admin.register(models.Season)
 class SeasonAdmin(admin.ModelAdmin):
     list_display = ("name", "id", "active", "start_date", "end_date")
+    ordering = ("-end_date",)
 
 
 @admin.register(models.Game)
@@ -31,3 +32,4 @@ class TournamentAdmin(admin.ModelAdmin):
     list_display = ("name", "id", "mode", "start_date", "end_date")
     list_filter = ("done", "mode", "season")
     search_fields = ("name", "id")
+    ordering = ("-created_at",)
