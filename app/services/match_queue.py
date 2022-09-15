@@ -30,6 +30,9 @@ def get_next(game_name=None):
     redis = get_redis_connection("default")
     queue_length = redis.llen(settings.MATCH_QUEUE_KEY)
 
+    if not queue_length:
+        logger.info("queue length is 0")
+
     while queue_length > 0:
         if redis.get("disable_next_match_api") == b"1":
             break
@@ -48,6 +51,7 @@ def get_next(game_name=None):
 
         # Queue is empty. Nothing to do
         if not match_id:
+            logger.info("queue is empty. No pending matches")
             break
 
         match_id = match_id.decode()
@@ -68,6 +72,8 @@ def get_next(game_name=None):
                         redis.rpush(settings.MATCH_QUEUE_KEY, match_id)
                 except Exception as e:
                     logger.info(f"failed to verify the match game name with {e}")
+
+    logger.info(f"took {n_attempts=} to get match {return_value=}")
 
     t_end = time()
     duration = t_end - t_start
