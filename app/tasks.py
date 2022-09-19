@@ -14,10 +14,17 @@ logger = logging.getLogger("TASKS")
 
 
 @celery.task
-def push_metric(data):
+def _push_metric(data):
     from app import metrics
 
     metrics._process_points(data)
+
+
+@celery.task
+def push_metric(data):
+    from app import metrics
+
+    metrics.push_metric(data)
 
 
 @celery.task
