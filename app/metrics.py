@@ -30,7 +30,7 @@ def _push_metric(data):
         return
 
     if settings.INFLUXDB_USE_CELERY:
-        tasks.push_metric.delay(data)
+        tasks._push_metric.delay(data)
     elif settings.INFLUXDB_USE_THREADING:
         thread = Thread(target=_process_points, args=(data,))
         thread.start()
