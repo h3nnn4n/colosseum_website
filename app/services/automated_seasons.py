@@ -25,6 +25,9 @@ def update_season_state(season):
 
 
 def create_automated_seasons():
+    if not settings.ENABLE_AUTOMATED_SEASONS:
+        return
+
     now = timezone.now()
     start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
     end_date = now.replace(
