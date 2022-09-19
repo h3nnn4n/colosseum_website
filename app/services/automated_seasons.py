@@ -19,11 +19,11 @@ def update_seasons_state():
 def update_season_state(season):
     now = timezone.now()
 
-    if season.end_date < now:
+    if season.end_date < now and season.active:
         season.active = False
         season.save(update_fields=["active"])
 
-    if season.start_date >= now and not season.active:
+    if season.start_date < now and now < season.end_date and not season.active:
         season.active = True
         season.save(update_fields=["active"])
 
