@@ -5,7 +5,7 @@ from time import time
 from django.conf import settings
 from django_redis import get_redis_connection
 
-from app import metrics, models
+from app import metrics, models, tasks
 
 
 logging.config.dictConfig(settings.LOGGING)
@@ -31,7 +31,8 @@ def get_next(game_name=None):
     queue_length = redis.llen(settings.MATCH_QUEUE_KEY)
 
     if not queue_length:
-        logger.info("queue length is 0")
+        logger.info("queue length is 0, regenerating queue")
+        tasks.regenerate_queue.delay()
 
     while queue_length > 0:
         if redis.get("disable_next_match_api") == b"1":
