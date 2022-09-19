@@ -341,7 +341,12 @@ class HomeView(generic.TemplateView):
         context["open_tournament_count"] = models.Tournament.objects.filter(
             done=False
         ).count()
-        context["current_season_name"] = models.Season.objects.current_season().name
+
+        try:
+            context["current_season_name"] = models.Season.objects.current_season().name
+        except Exception:
+            context["current_season_name"] = "-"
+
         context["pending_matches"] = models.Match.objects.filter(ran=False).count()
 
         oldest_pending_match = (
