@@ -23,6 +23,10 @@ def update_season_state(season):
         season.active = False
         season.save(update_fields=["active"])
 
+    if season.start_date >= now and not season.active:
+        season.active = True
+        season.save(update_fields=["active"])
+
 
 def create_automated_seasons():
     if not settings.ENABLE_AUTOMATED_SEASONS:
