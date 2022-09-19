@@ -10,7 +10,8 @@ class AutomatedManagerTestcase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
         self.season = factories.SeasonFactory(
-            end_date=timezone.now() - timedelta(hours=1)
+            start_date=timezone.now() - timedelta(hours=2),
+            end_date=timezone.now() - timedelta(hours=1),
         )
         self.tournament = factories.TournamentFactory(
             game=self.game, season=self.season
@@ -46,7 +47,8 @@ class MetricsLoggerTestCase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
         self.season = factories.SeasonFactory(
-            end_date=timezone.now() - timedelta(hours=1)
+            start_date=timezone.now() - timedelta(hours=2),
+            end_date=timezone.now() - timedelta(hours=1),
         )
         self.tournament = factories.TournamentFactory(
             game=self.game, season=self.season
