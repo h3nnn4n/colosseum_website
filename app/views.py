@@ -186,13 +186,12 @@ class MatchListView(generic.ListView):
             .prefetch_related("season")
             .prefetch_related("tournament")
             .order_by("-ran_at")
-        )
+        )[:25]
 
-        match_page_number = utils.validate_page_number(
-            self.request.GET.get("page"), len(match_list), 25
-        )
+        # FIXME: This times out, probably because of something dumb at the
+        # database. Git blame this message for the old code.
 
-        return Paginator(match_list, 25).page(match_page_number)
+        return match_list
 
 
 class MatchDetailView(generic.DetailView):
