@@ -258,3 +258,5 @@ CELERY_HEARTBEAT_KEY = "celery_heartbeat"
 COLOSSEUM_HEARTBEAT_KEY = "colosseum_heartbeat"
 
 ENABLE_AUTOMATED_SEASONS = config("ENABLE_AUTOMATED_SEASONS", default=True, cast=bool)
+
+X_FRAME_OPTIONS = "ALLOW-FROM https://app.gather.town/"
