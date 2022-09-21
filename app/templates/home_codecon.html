@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-auto">
+
+        {% comment %}
+        <h1>
+          <img src="{% static 'images/logo_tight.svg' %}" height="45" alt="Colosseum">
+          Colosseum
+        </h1>
+        {% endcomment %}
+        <p>
+          Olá, bem vindo ao Colosseum!
+
+          {% if not user.is_authenticated %}
+            Para participar, por favor
+            <a href="{% url 'register' %}">Registre-se</a>
+            ou faça seu
+            <a href="{% url 'login' %}">Login</a>.
+          {% endif %}
+        </p>
+        <p class="text-justify">
+          Colosseum é uma plataforma automatizada de competições entre agentes
+          de inteligência artifical. Partidas ocorrem 24/7, sem parar. Partidas
+          são organizadas em tourneios, e torneios agrupados em temporadas
+          (seasons). Atualmente apenas python é suportado, mas no futuro,
+          iremos colocar suporte ilimidado a qualquer linguagem :D
+        </p>
+        <p class="text-justify">
+          Entre os dias 22 e 24 de Outubro, o Colosseum, em parceria com o
+          <a href="https://codecon.dev">Codecon</a> e
+          <a href="https://www.alura.com.br/">Alura</a>, estará conduzindo
+          torneios diários, com prêmios para os três primeiros colocados. Veja
+          mais na página da
+          <a href="https://www.codecon.dev/game/maratona/como-funciona">Maratona</a>.
+        </p>
+        <p class="text-justify">
+          Para participar, recomendamos ler as seguintes páginas (são curtas, eu prometo):
+          <ul>
+            <li>
+              <a href="https://codecon.colosseum.website/wiki/como-participar/">Como Participar</a>
+            </li>
+            <li>
+              <a href="https://codecon.colosseum.website/wiki/sua-primeira-ia/">Sua Primeira IA</a>
+            </li>
+            <li>
+              <a href="https://codecon.colosseum.website/wiki/rodando-localmente/">Rodando sua IA Localmente</a>
+            </li>
+          </ul>
+          Para mais informações visite a
+          <a href="https://codecon.colosseum.website/wiki/">Wiki</a>
+          do colosseum ou procure o <i>Renan S S</i> no Gather.
+        </p>
+        <p class="text-justify">
+          Ps: Desculpa pela mistura de inglês e português. O time do colosseum
+          não teve tempo de adicionar suporte a multiplas linguagens. O
+          restante do sistema está em Inglês :(
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+
+        <div class="row">
+          <div class="col"><hr></div>
+          <div class="col-auto">
+            Sample Agents
+          </div>
+          <div class="col"><hr></div>
+        </div>
+
+        <p class="text-justify">
+          We have a collection of sample agents for all the games available on:
+          <a href="https://github.com/h3nnn4n/colosseum_agents">colosseum_agents</a>.
+          They are <a href="https://opensource.org/licenses/MIT">MIT licensed</a>.
+          Feel free to modify them and use it as an starting point.
+        </p>
+      </div>
+
+      <div class="col">
+        <div class="row">
+          <div class="col"><hr></div>
+          <div class="col-auto">
+            Notícias
+          </div>
+          <div class="col"><hr></div>
+        </div>
+
+        <p class="text-justify">
+          Quando tivermos notícias, colocaremos elas aqui :)
+        </p>
+      </div>
+
+      <div class="col-sm">
+        <div class="row">
+          <div class="col"><hr></div>
+          <div class="col-auto">
+            Stats
+          </div>
+          <div class="col"><hr></div>
+        </div>
+
+        <p class="lh-sm">
+          Active Agents (24h): {{ active_agent_count }} <br>
+          Matches (1h): {{ matches_1h }} <br>
+          Matches (24h): {{ matches_24h }} <br>
+          Open Tournaments: {{ open_tournament_count }} <br>
+          Current Season: {{ current_season_name }} <br>
+          Pending Matches: {{ pending_matches }} <br>
+          Oldest Pending Match Age: {{ oldest_pending_match_age }} <br>
+          Last Celery Heartbeat: {{ celery_heartbeat }} <br>
+          Last Colosseum Heartbeat: {{ colosseum_heartbeat }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

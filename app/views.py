@@ -323,6 +323,12 @@ def register_request(request):
 class HomeView(generic.TemplateView):
     template_name = "home.html"
 
+    def __init__(self, *args, **kwargs):
+        if settings.ENVIRONMENT == "CODECON":
+            self.template_name = "home_codecon.html"
+
+        super().__init__(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["matches_1h"] = models.Match.objects.filter(
