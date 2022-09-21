@@ -8,6 +8,14 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        environment:
+          - production
+          - codecon
 
     defaults:
       run:
@@ -30,11 +38,13 @@ jobs:
         run: ansible-galaxy install -r requirements.yml
 
       - name: Deploy to webservers
-        run: ansible-playbook -i environments/production  web_servers.yml
+        run: |
+          ansible-playbook -i ${{ matrix.environment }} web_servers.yml
         env:
           VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
 
       - name: Deploy to celery workers
-        run: ansible-playbook -i environments/production celery_workers.yml
+        run: |
+          ansible-playbook -i ${{ matrix.environment }} celery_workers.yml
         env:
           VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
