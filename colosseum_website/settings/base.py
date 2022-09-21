@@ -53,6 +53,7 @@ _BASE_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "csp.middleware.CSPMiddleware",
     "bootstrap4",
     "rest_framework",
     "rest_framework.authtoken",
@@ -258,3 +259,6 @@ CELERY_HEARTBEAT_KEY = "celery_heartbeat"
 COLOSSEUM_HEARTBEAT_KEY = "colosseum_heartbeat"
 
 ENABLE_AUTOMATED_SEASONS = config("ENABLE_AUTOMATED_SEASONS", default=True, cast=bool)
+
+CSP_DEFAULT_SRC = ("'self'", "*")
+CSP_FRAME_ANCESTORS = ("'self'", "gather.town")
