@@ -186,13 +186,12 @@ class MatchListView(generic.ListView):
             .prefetch_related("season")
             .prefetch_related("tournament")
             .order_by("-ran_at")
-        )
+        )[:25]
 
-        match_page_number = utils.validate_page_number(
-            self.request.GET.get("page"), len(match_list), 25
-        )
+        # FIXME: This times out, probably because of something dumb at the
+        # database. Git blame this message for the old code.
 
-        return Paginator(match_list, 25).page(match_page_number)
+        return match_list
 
 
 class MatchDetailView(generic.DetailView):
@@ -322,6 +321,12 @@ def register_request(request):
 
 class HomeView(generic.TemplateView):
     template_name = "home.html"
+
+    def __init__(self, *args, **kwargs):
+        if settings.ENVIRONMENT == "CODECON":
+            self.template_name = "home_codecon.html"
+
+        super().__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
