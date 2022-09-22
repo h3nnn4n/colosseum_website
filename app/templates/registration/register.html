@@ -4,6 +4,13 @@
 {% load crispy_forms_tags %}
 
 <div class="container py-5">
+  {% if is_codecon %}
+    PS: O site não funciona corretamente dentro do Gather por conta dos
+    cookies. Recomendamos utilizar o navegador:
+    <a href={{ base_url }}>{{ base_url }}</a>
+    <br>
+    <br>
+  {% endif %}
   <h1>Register</h1>
   <form method="POST">
     {% csrf_token %}
