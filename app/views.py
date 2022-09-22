@@ -87,6 +87,12 @@ class AgentCreateView(LoginRequiredMixin, generic.CreateView):
     success_url = "/agents/"
     form_class = forms.AgentForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_codecon"] = settings.ENVIRONMENT == "CODECON"
+        context["base_url"] = self.request.build_absolute_uri("/")
+        return context
+
     def get_form_kwargs(self):
         kwargs = super(AgentCreateView, self).get_form_kwargs()
         if hasattr(self, "object"):
@@ -101,6 +107,12 @@ class AgentUpdateView(permissions.IsOwnerPermissionMixin, generic.UpdateView):
     template_name = "agents/edit.html"
     success_url = "/agents/"
     form_class = forms.AgentForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_codecon"] = settings.ENVIRONMENT == "CODECON"
+        context["base_url"] = self.request.build_absolute_uri("/")
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

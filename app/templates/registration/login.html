@@ -5,6 +5,11 @@
 
 {% block content %}
 <div class="container py-5">
+  <div class="alert alert-warning" role="alert">
+    PS: O site não funciona corretamente dentro do Gather por conta dos
+    cookies. Recomendamos utilizar o navegador:
+    <a href={{ base_url }}>{{ base_url }}</a>
+  </div>
 <h2>Log In</h2>
 <form method="post">
   {% csrf_token %}
