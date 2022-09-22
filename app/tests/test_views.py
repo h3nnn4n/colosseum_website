@@ -37,6 +37,33 @@ class AgentDetailViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class AgentApiViewTestCase(TestCase):
+    def setUp(self):
+        self.game = factories.GameFactory()
+        self.agent = factories.AgentFactory(game=self.game)
+        self.season = factories.SeasonFactory()
+
+        self.admin_user = factories.UserFactory(is_staff=True)
+        self.client = APIClient()
+
+    def test_get(self):
+        response = self.client.get(f"/api/agents/{self.agent.id}/")
+        self.assertEqual(response.status_code, 200)
+
+    def test__file__no_auth(self):
+        response = self.client.get(f"/api/agents/{self.agent.id}/")
+        data = response.data
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("file", data.keys())
+
+    def test__file__admin(self):
+        self.client.force_authenticate(user=self.admin_user)
+        response = self.client.get(f"/api/agents/{self.agent.id}/")
+        data = response.data
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("file", data.keys())
+
+
 class NextMatchAPIViewTestCase(TestCase):
     def setUp(self):
         self.game = factories.GameFactory()
