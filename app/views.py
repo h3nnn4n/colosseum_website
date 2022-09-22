@@ -565,6 +565,14 @@ class AgentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUserOrReadOnly]
     queryset = models.Agent.objects.all()
     serializer_class = serializers.AgentSerializer
+    unauth_serializer_class = serializers.AgentNoAuthSerializer
+
+    def get_serializer_class(self, *args, **kwargs):
+        if self.request.user and (
+            self.request.user.is_staff or self.request.user.is_superuser
+        ):
+            return self.serializer_class
+        return self.unauth_serializer_class
 
     @action(detail=True, methods=["post"])
     def update_hash(self, request, pk=None):

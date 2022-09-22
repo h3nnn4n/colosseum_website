@@ -50,6 +50,23 @@ class SeasonSerializer(serializers.ModelSerializer):
         ]
 
 
+class AgentNoAuthSerializer(serializers.ModelSerializer):
+    game = GameSerializer(read_only=True)
+
+    class Meta:
+        model = models.Agent
+        fields = [
+            "id",
+            "name",
+            "game",
+            "file_hash",
+            "owner",
+            "games_played_count",
+            "created_at",
+            "updated_at",
+        ]
+
+
 class AgentSerializer(serializers.ModelSerializer):
     game = GameSerializer(read_only=True)
 
