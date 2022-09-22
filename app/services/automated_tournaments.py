@@ -11,6 +11,10 @@ logger = logging.getLogger("AUTOMATED_TOURNAMENTS")
 
 
 def create_automated_tournaments():
+    if not models.Season.objects.filter(active=True).exists():
+        logger.info("There are no active seasons. Doing nothing")
+        return
+
     for game in models.Game.objects.filter(active=True):
         if game.agents.count() < 2:
             logger.info(
