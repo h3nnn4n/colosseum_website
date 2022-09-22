@@ -39,12 +39,12 @@ jobs:
 
       - name: Deploy to webservers
         run: |
-          ansible-playbook -i ${{ matrix.environment }} web_servers.yml
+          ansible-playbook -i environments/${{ matrix.environment }} web_servers.yml
         env:
           VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
 
       - name: Deploy to celery workers
         run: |
-          ansible-playbook -i ${{ matrix.environment }} celery_workers.yml
+          ansible-playbook -i environments/${{ matrix.environment }} celery_workers.yml
         env:
           VAULT_PASSWORD: "${{ secrets.VAULT_PASSWORD }}"
