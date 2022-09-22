@@ -315,7 +315,11 @@ def register_request(request):
     return render(
         request=request,
         template_name="registration/register.html",
-        context={"register_form": form},
+        context={
+            "register_form": form,
+            "is_codecon": settings.ENVIRONMENT == "CODECON",
+            "base_url": request.build_absolute_uri("/"),
+        },
     )
 
 
