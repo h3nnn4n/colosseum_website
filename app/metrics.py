@@ -5,7 +5,6 @@ from threading import Thread
 from django.conf import settings
 from django.utils import timezone
 from influxdb import InfluxDBClient
-from tenacity import retry, wait_random_exponential
 
 from . import tasks
 
@@ -39,7 +38,6 @@ def _push_metric(data):
         _process_points(data)
 
 
-@retry(wait=wait_random_exponential(multiplier=1, max=60))
 def _process_points(data):
     if settings.INFLUXDB_DISABLED:
         return
