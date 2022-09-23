@@ -77,7 +77,7 @@ def update_elo_change_before(match):
 
     # HACK: We are creating this here as necessary, but we shouldn't need to
     try:
-        match.player1.current_ratings
+        match.player1.ratings.get(season=match.season)
     except ObjectDoesNotExist:
         logger.info(
             f"lazily created agentratings for {match.player1.id} {match.season.id} {match.game.name}"
@@ -88,7 +88,7 @@ def update_elo_change_before(match):
 
     # HACK: Prepare for trouble, make it double
     try:
-        match.player2.current_ratings
+        match.player2.ratings.get(season=match.season)
     except ObjectDoesNotExist:
         logger.info(
             f"lazily created agentratings for {match.player2.id} {match.season.id} {match.game.name}"
