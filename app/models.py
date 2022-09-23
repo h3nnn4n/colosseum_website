@@ -602,6 +602,7 @@ class SeasonTrophies:
         self.first_places = first_places
         self.second_places = second_places
         self.third_places = third_places
+        self.elo = None
 
     @property
     def trophy_score(self):
