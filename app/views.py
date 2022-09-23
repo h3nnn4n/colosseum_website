@@ -176,6 +176,9 @@ class SeasonDetailView(generic.DetailView):
             str(game.id): game.pretty_name for game in season.games
         }
         context["trophies_by_game"] = dict(trophies_by_game)
+        context["agent_elo"] = {
+            rating.agent_id: rating.elo for rating in season.ratings.order_by("-elo")
+        }
 
         return context
 

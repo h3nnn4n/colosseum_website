@@ -58,6 +58,7 @@
             <thead>
               <th scope="col"> </th>
               <th scope="col"> Agent </th>
+              <th scope="col"> ELO </th>
               <th scope="col"> Trophies </th>
               <th scope="col"> Trophy count </th>
             </thead>
@@ -72,6 +73,10 @@
                   <a href={% url 'agent_detail' trophy.agent_id %}>
                     {{ trophy.agent_name }}
                   </a>
+                </td>
+
+                <td>
+                  {{ agent_elo | lookup:trophy.agent_id }}
                 </td>
 
                 <td>
