@@ -204,6 +204,11 @@ class Season(BaseModel):
     @property
     def time_left(self):
         now = timezone.now()
+
+        # If the season hasn't started, the time left is the duration
+        if now < self.start_date:
+            return self.duration
+
         if self.end_date < now:
             return timedelta()
 
