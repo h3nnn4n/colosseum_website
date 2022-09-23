@@ -68,6 +68,15 @@ class Agent(BaseModel):
 
     @cached_property
     def current_ratings(self):
+        # FIXME: We shouldn't be creating stuff on a getter
+        # TODO: Cache this so we are not querrying the database all the time.
+        # We might also use a try except instead, since the excep path is much
+        # more unlikely to get executed anyways. It might mess up transactions
+        # thought, so idk if it is worth it.
+        if not self.ratings.filter(season__active=True, season__main=True).exists():
+            season = Season.objects.get(active=True, main=True)
+            AgentRatings.objects.create(season=season, agent=self, game=self.game)
+
         return self.ratings.get(season__active=True, season__main=True)
 
     @property
