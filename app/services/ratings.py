@@ -23,11 +23,6 @@ def update_ratings_from_match(match):
     player1_id = str(player1.name)
     player2_id = str(player2.name)
 
-    elos = {player1_id: float(player1.elo), player2_id: float(player2.elo)}
-    match_result = {(player1_id, player2_id): float(match.result)}
-
-    updated_elos = compute_updated_ratings(elos, match_result)
-
     # HACK: Not gonna lie, idk if this is even safe. Seems to be prone to race
     # conditions and record duplication because of that. Ideally we would
     # ensure that all agent / season pair have a respective AgentRating
@@ -44,6 +39,11 @@ def update_ratings_from_match(match):
         p2_ratings = AgentRatings.objects.create(
             season=match.season, agent=match.player2, game=match.game
         )
+
+    elos = {player1_id: float(p1_ratings.elo), player2_id: float(p2_ratings.elo)}
+    match_result = {(player1_id, player2_id): float(match.result)}
+
+    updated_elos = compute_updated_ratings(elos, match_result)
 
     if match.result == 1:
         p1_ratings.wins += 1
