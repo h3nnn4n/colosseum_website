@@ -204,6 +204,11 @@ class Season(BaseModel):
     @property
     def time_left(self):
         now = timezone.now()
+
+        # If the season hasn't started, the time left is the duration
+        if now < self.start_date:
+            return self.duration
+
         if self.end_date < now:
             return timedelta()
 
@@ -602,6 +607,7 @@ class SeasonTrophies:
         self.first_places = first_places
         self.second_places = second_places
         self.third_places = third_places
+        self.elo = None
 
     @property
     def trophy_score(self):

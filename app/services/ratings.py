@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -5,6 +6,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from app.models import AgentRatings
 
 from .elo import compute_updated_ratings
+
+
+logger = logging.getLogger(__name__)
 
 
 def update_ratings_from_match(match):
@@ -71,9 +75,27 @@ def update_elo_change_before(match):
     match.player1.refresh_from_db()
     match.player2.refresh_from_db()
 
-    # HACK: This is here to make sure we always have a ratings object
-    match.player1.current_ratings
-    match.player2.current_ratings
+    # HACK: We are creating this here as necessary, but we shouldn't need to
+    try:
+        match.player1.ratings.get(season=match.season)
+    except ObjectDoesNotExist:
+        logger.info(
+            f"lazily created agentratings for {match.player1.id} {match.season.id} {match.game.name}"
+        )
+        AgentRatings.objects.create(
+            season=match.season, agent=match.player1, game=match.game
+        )
+
+    # HACK: Prepare for trouble, make it double
+    try:
+        match.player2.ratings.get(season=match.season)
+    except ObjectDoesNotExist:
+        logger.info(
+            f"lazily created agentratings for {match.player2.id} {match.season.id} {match.game.name}"
+        )
+        AgentRatings.objects.create(
+            season=match.season, agent=match.player2, game=match.game
+        )
 
     p1_ratings = match.player1.ratings.get(season=match.season)
     p2_ratings = match.player2.ratings.get(season=match.season)

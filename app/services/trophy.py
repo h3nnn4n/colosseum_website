@@ -33,6 +33,7 @@ def trophies_for_season(season):
     for trophy in season.trophies.all():
         if trophy.agent_id not in data.keys():
             data[trophy.agent_id] = SeasonTrophies(trophy.agent)
+            data[trophy.agent_id].elo = trophy.agent.ratings.get(season=season).elo
 
         match trophy.type:
             case "FIRST":
@@ -42,7 +43,7 @@ def trophies_for_season(season):
             case "THIRD":
                 data[trophy.agent_id].third_places += 1
 
-    rankings = sorted((data.values()), reverse=True, key=lambda t: t.trophy_score)
+    rankings = sorted((data.values()), reverse=True, key=lambda t: t.elo)
 
     return rankings
 
