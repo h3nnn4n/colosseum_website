@@ -183,6 +183,33 @@ class SeasonDetailView(generic.DetailView):
         return context
 
 
+class SeasonWinnersView(generic.DetailView):
+    model = models.Season
+    template_name = "seasons/winners.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        season = self.get_object()
+        context["ratings"] = season.ratings.all().order_by("-elo")
+        context["ranking"] = {}
+
+        owner_list = set(
+            models.User.objects.filter(is_superuser=True).values_list("id", flat=True)
+        )
+
+        ranking = 1
+        for rating in context["ratings"]:
+            if rating.agent.owner.id not in owner_list:
+                context["ranking"][rating.agent_id] = ranking
+                owner_list.add(rating.agent.owner.id)
+                ranking += 1
+            else:
+                context["ranking"][rating.agent_id] = ""
+
+        return context
+
+
 class MatchListView(generic.ListView):
     template_name = "matches/index.html"
     context_object_name = "matches"

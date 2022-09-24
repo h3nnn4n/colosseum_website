@@ -29,6 +29,11 @@ urlpatterns = [
     # Seasons pages
     path("seasons/", views.SeasonListView.as_view(), name="seasons"),
     path("seasons/<str:pk>/", views.SeasonDetailView.as_view(), name="season_detail"),
+    path(
+        "seasons/<str:pk>/winners/",
+        views.SeasonWinnersView.as_view(),
+        name="season_winners",
+    ),
     # Match pages
     path("matches/", views.MatchListView.as_view(), name="matches"),
     path("matches/<str:pk>/", views.MatchDetailView.as_view(), name="match_detail"),
