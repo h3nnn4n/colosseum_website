@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% load lookup %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>{{ object.name }}</h1>
+      <table class="table table-hover table-striped table-sm">
+        <tbody>
+          <tr>
+            <td> Tournaments </td>
+            <td> {{ object.tournaments_count }} </td>
+          </tr>
+          <tr>
+            <td> Matches played </td>
+            <td> {{ object.matches_played_count }} </td>
+          </tr>
+          <tr>
+            <td> Start Date </td>
+            <td> {{ object.start_date }} </td>
+          </tr>
+          <tr>
+            <td> End Date </td>
+            <td> {{ object.end_date }} </td>
+          </tr>
+          <tr>
+            <td> Duration </td>
+            <td> {{ object.duration_humanized }} </td>
+          </tr>
+          <tr>
+            <td> Active </td>
+            <td> {{ object.active }} </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2> Results </h2>
+
+  <div>
+    <table class="table table-hover table-striped table-sm">
+      <thead>
+        <th scope="col"> </th>
+        <th scope="col"> ELO </th>
+        <th scope="col"> Agent </th>
+        <th scope="col"> User </th>
+        {% if user.is_authenticated and user.is_staff %}
+        <th scope="col"> Email </th>
+        {% endif %}
+      </thead>
+      <tbody>
+        {% for rating in ratings %}
+        <tr>
+          <td> {{ ranking | lookup:rating.agent.id }} </td>
+          <td> {{ rating.elo | floatformat:"0" }} </td>
+
+          <td>
+            <a href={% url 'agent_detail' rating.agent.id %}>
+              {{ rating.agent.name }}
+            </a>
+          </td>
+
+          <td>
+            <a href={% url 'user_detail' rating.agent.owner.id %}>
+              {{ rating.agent.owner.username }}
+            </a>
+          </td>
+
+          {% if user.is_authenticated and user.is_staff %}
+            <td> {{ rating.agent.owner.email }} </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  <div>
+</div>
+
+
+{% endblock %}
