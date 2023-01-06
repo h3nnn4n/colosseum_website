@@ -89,7 +89,6 @@ class AgentCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_codecon"] = settings.ENVIRONMENT == "CODECON"
         context["base_url"] = self.request.build_absolute_uri("/")
         return context
 
@@ -110,7 +109,6 @@ class AgentUpdateView(permissions.IsOwnerPermissionMixin, generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_codecon"] = settings.ENVIRONMENT == "CODECON"
         context["base_url"] = self.request.build_absolute_uri("/")
         return context
 
@@ -359,7 +357,6 @@ def register_request(request):
         template_name="registration/register.html",
         context={
             "register_form": form,
-            "is_codecon": settings.ENVIRONMENT == "CODECON",
             "base_url": request.build_absolute_uri("/"),
         },
     )
@@ -367,12 +364,6 @@ def register_request(request):
 
 class HomeView(generic.TemplateView):
     template_name = "home.html"
-
-    def __init__(self, *args, **kwargs):
-        if settings.ENVIRONMENT == "CODECON":
-            self.template_name = "home_codecon.html"
-
-        super().__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
