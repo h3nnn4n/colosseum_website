@@ -5,13 +5,6 @@
 {% load crispy_forms_tags %}
 
 <div class="container py-5">
-  {% if is_codecon %}
-    <div class="alert alert-warning" role="alert">
-      PS: O site não funciona corretamente dentro do Gather por conta dos
-      cookies. Recomendamos utilizar o navegador:
-      <a href={{ base_url }}>{{ base_url }}</a>
-    </div>
-  {% endif %}
   <h1>Agent</h1>
   <form action="{% url 'agent_edit' object.id %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
