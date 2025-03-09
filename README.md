@@ -84,6 +84,11 @@ poetry run python manage.py createsuperuser --username=admin --email=admin@admin
 poetry run python manage.py drf_create_token admin
 ```
 
+- Setup `.env` from `.env.example`:
+```
+cp .env.example .env
+```
+
 - Start the server
 ```
 poetry run python manage.py runserver
