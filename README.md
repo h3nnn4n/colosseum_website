@@ -79,7 +79,7 @@ poetry run python manage.py drf_create_token admin
 poetry run python manage.py runserver
 ```
 
-- Start celery. Some functionality of the site depents on the celery workers
+- Start celery. Some functionality of the site depends on the celery workers
   being running.
 ```
 poetry run celery --app app worker --loglevel=INFO --beat
