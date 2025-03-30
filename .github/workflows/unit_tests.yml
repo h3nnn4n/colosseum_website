@@ -57,21 +57,21 @@ jobs:
           python-version: "3.10"
 
       - name: Cache Poetry cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pypoetry
           key: poetry-cache-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}
 
       - name: Cache Packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.local
           key: poetry-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
 
       - name: Install poetry
-        run: |
-          curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+        uses: snok/install-poetry@v1
+        with:
+          version: 2.1.1
 
       - name: Install project deps
         run: |

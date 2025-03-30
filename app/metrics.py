@@ -10,6 +10,7 @@ from tenacity import retry, wait_random_exponential
 from . import tasks
 
 
+logging.config.dictConfig(settings.LOGGING)
 logger = logging.getLogger("METRICS")
 
 
@@ -91,6 +92,9 @@ def push_metric(data):
     # single one (i.e. a dict) we should wrap it in a list
     if not isinstance(data, list):
         data = [data]
+
+    for d in data:
+        logger.info(f"Pushing metric: {d['measurement']}")
 
     _ensure_timestamp(data)
     _ensure_tag(data, "environment", settings.ENVIRONMENT)

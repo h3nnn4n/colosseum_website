@@ -37,6 +37,11 @@ poetry install
 pyenv rehash
 ```
 
+- Install pre-commit
+```
+pip install pre-commit
+```
+
 - Install the git hooks
 ```
 pre-commit install -t pre-commit -t pre-push
@@ -56,6 +61,11 @@ pre-commit install -t pre-commit -t pre-push
   - Grant access to the new user to the newly created table
   `GRANT ALL PRIVILEGES ON DATABASE postgres TO postgres;`
 
+- Set the Django settings module environment variable
+```
+export DJANGO_SETTINGS_MODULE=colosseum_website.settings.local
+```
+
 - Run the migrations
 ```
 poetry run python manage.py migrate
@@ -74,12 +84,17 @@ poetry run python manage.py createsuperuser --username=admin --email=admin@admin
 poetry run python manage.py drf_create_token admin
 ```
 
+- Setup `.env` from `.env.example`:
+```
+cp .env.example .env
+```
+
 - Start the server
 ```
 poetry run python manage.py runserver
 ```
 
-- Start celery. Some functionality of the site depents on the celery workers
+- Start celery. Some functionality of the site depends on the celery workers
   being running.
 ```
 poetry run celery --app app worker --loglevel=INFO --beat
@@ -100,6 +115,22 @@ poetry run celery --app app worker --loglevel=INFO --beat
 
 - Running fails with `ModuleNotFoundError: No module named '_lzma'`
   - If you are using `pyenv`, you need to install `xz` and then rebuild python
+
+- Getting `django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured`
+  - Make sure to set the `DJANGO_SETTINGS_MODULE` environment variable:
+    ```
+    export DJANGO_SETTINGS_MODULE=colosseum_website.settings.local
+    ```
+
+- Getting `ModuleNotFoundError: No module named 'pkg_resources'`
+  - Install setuptools in your Python environment:
+    ```
+    pip install setuptools
+    ```
+    or with poetry:
+    ```
+    poetry add setuptools
+    ```
 
 # LICENSE
 

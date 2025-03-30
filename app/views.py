@@ -658,9 +658,9 @@ class MatchViewSet(viewsets.ModelViewSet):
         match = self.get_object()
         if not match.ran:
             metrics.register_replay_uploaded_for_unplayed_match(match.game.name)
-            logger.warning("tryied to upload a match to an unplayed match. Refusing")
+            logger.warning("tried to upload a match to an unplayed match. Refusing")
             return Response(
-                "tryied to upload a match to an unplayed match. Refusing",
+                "tried to upload a match to an unplayed match. Refusing",
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY,
             )
 

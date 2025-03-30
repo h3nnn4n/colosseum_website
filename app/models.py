@@ -69,7 +69,7 @@ class Agent(BaseModel):
     @cached_property
     def current_ratings(self):
         # FIXME: We shouldn't be creating stuff on a getter
-        # TODO: Cache this so we are not querrying the database all the time.
+        # TODO: Cache this so we are not querying the database all the time.
         # We might also use a try except instead, since the excep path is much
         # more unlikely to get executed anyways. It might mess up transactions
         # thought, so idk if it is worth it.

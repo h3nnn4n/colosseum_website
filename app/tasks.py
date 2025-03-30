@@ -32,6 +32,7 @@ def automated_manager():
     """
     Creates things automatically
     """
+    logger.info("Running automated manager")
     automated_seasons.update_seasons_state()
     automated_seasons.create_automated_seasons()
     automated_tournaments.create_automated_tournaments()
@@ -103,6 +104,7 @@ def metrics_logger():
 
 @celery.task
 def regenerate_queue():
+    logger.info("Regenerating match queue")
     match_queue.regenerate_queue()
 
 

@@ -30,8 +30,10 @@ def update_season_state(season):
 
 def create_automated_seasons():
     if not settings.ENABLE_AUTOMATED_SEASONS:
+        logger.info("Automated seasons are disabled")
         return
 
+    logger.info("Creating automated seasons")
     now = timezone.now()
     start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
     end_date = now.replace(
