@@ -15,7 +15,7 @@ jobs:
 
       - name: Install isort
         run: |
-          python3 -m pip install isort==5.10.1
+          python3 -m pip install isort==6.0.1
 
       - name: Run isort
         run: |
